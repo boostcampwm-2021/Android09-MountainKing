@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'kotlin-android'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -68,4 +69,8 @@ dependencies {
     kapt  "androidx.room:room-compiler:$room_version"
 
     implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+
+    //Firebase
+    implementation platform('com.google.firebase:firebase-bom:28.4.2')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 }
