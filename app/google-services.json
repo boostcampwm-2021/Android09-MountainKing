@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "898614412963",
+    "project_id": "mountainking-d5724",
+    "storage_bucket": "mountainking-d5724.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898614412963:android:7cd8c0b856bfa30d4da116",
+        "android_client_info": {
+          "package_name": "com.yoo.mountainking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898614412963-n9funuo5pk8oj02cq16t2d3ss8gcu0n8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqS9KxA2VJlhd0-GgqtFtEeBwt2UI23aM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898614412963-n9funuo5pk8oj02cq16t2d3ss8gcu0n8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
