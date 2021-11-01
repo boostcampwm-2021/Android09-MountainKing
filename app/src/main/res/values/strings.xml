@@ -7,4 +7,7 @@
     <string name="tl_achievement_category_total">전체</string>
     <string name="tl_achievement_category_complete">달성</string>
     <string name="tl_achievement_category_incomplete">미달성</string>
+    <string name="tv_achievement_complete_date">달성일:</string>
+    <string name="iv_achievement_item_thumbnail_description">업적 이미지</string>
+    <string name="iv_achievement_item_share_description">공유하기</string>
 </resources>
