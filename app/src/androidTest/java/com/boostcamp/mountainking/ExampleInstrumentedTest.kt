@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.yoo.mountainking", appContext.packageName)
+        assertEquals("com.boostcamp.mountainking", appContext.packageName)
     }
 }

@@ -8,7 +8,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.boostcamp.mountainking.databinding.ActivityMainBinding
-import com.boostcamp.mountainking.R
 
 class MainActivity : AppCompatActivity() {
 
