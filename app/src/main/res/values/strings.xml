@@ -4,4 +4,7 @@
     <string name="title_tracking">등산</string>
     <string name="title_achievement">업적</string>
     <string name="title_mountain">산 정보</string>
+    <string name="tl_achievement_category_total">전체</string>
+    <string name="tl_achievement_category_complete">달성</string>
+    <string name="tl_achievement_category_incomplete">미달성</string>
 </resources>
