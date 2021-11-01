@@ -1,4 +1,4 @@
-package com.yoo.mountainking
+package com.boostcamp.mountainking
 
 import org.junit.Test
 
