@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MountainKing</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="title_tracking">등산</string>
+    <string name="title_achievement">업적</string>
+    <string name="title_mountain">산 정보</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.yoo.mountainking
+package com.boostcamp.mountainking
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
