@@ -1,5 +1,6 @@
 package com.boostcamp.mountainking.ui.achievement
 
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -42,8 +43,17 @@ class AchievementAdapter(private val onClick: (Achievement) -> Unit) :
         }
 
         fun bind(achievement: Achievement) {
+            currentAchievement = achievement
+
             binding.achievement = achievement
             binding.executePendingBindings()
+            binding.root.setBackgroundColor(
+                if (achievement.isComplete) {
+                    Color.GREEN
+                } else {
+                    Color.RED
+                }
+            )
             Log.d("bindtest", achievement.name)
         }
 
