@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentAchievementBinding
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.AchievementType
@@ -65,16 +66,20 @@ class AchievementFragment : Fragment() {
             300
         )
 
-        val achievementList = listOf(achievement, achievement2)
+        val achievementList = listOf(achievement, achievement2).sortedBy { !it.isComplete }
         adapter.submitList(achievementList)
 
         binding.tlAchievementCategory.addOnTabSelectedListener(object :
             TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                when (tab?.position) {
-                    0 -> adapter.submitList(achievementList)
-                    1 -> adapter.submitList(achievementList.filter { it.isComplete })
-                    2 -> adapter.submitList(achievementList.filter { !it.isComplete })
+                when (tab?.text.toString()) {
+                    getString(R.string.tl_achievement_category_total) -> adapter.submitList(
+                        achievementList
+                    )
+                    getString(R.string.tl_achievement_category_complete) -> adapter.submitList(
+                        achievementList.filter { it.isComplete })
+                    getString(R.string.tl_achievement_category_incomplete) -> adapter.submitList(
+                        achievementList.filter { !it.isComplete })
                 }
             }
 
