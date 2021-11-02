@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentAchievementBinding
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.AchievementType
+import com.google.android.material.tabs.TabLayout
 import java.util.*
 
 class AchievementFragment : Fragment() {
@@ -51,8 +53,45 @@ class AchievementFragment : Fragment() {
             30
         )
 
-        adapter.submitList(listOf(achievement))
-        Log.d("fragment", achievement.name)
+        val achievement2 = Achievement(
+            "2",
+            "한라산 정복자",
+            "한라산 등산",
+            "",
+            AchievementType.TRACKING_COUNT,
+            2,
+            2,
+            true,
+            Date(),
+            300
+        )
+
+        val achievementList = listOf(achievement, achievement2).sortedBy { !it.isComplete }
+        adapter.submitList(achievementList)
+
+        binding.tlAchievementCategory.addOnTabSelectedListener(object :
+            TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when (tab?.text.toString()) {
+                    getString(R.string.tl_achievement_category_total) -> adapter.submitList(
+                        achievementList
+                    )
+                    getString(R.string.tl_achievement_category_complete) -> adapter.submitList(
+                        achievementList.filter { it.isComplete })
+                    getString(R.string.tl_achievement_category_incomplete) -> adapter.submitList(
+                        achievementList.filter { !it.isComplete })
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+        })
+
     }
 
     override fun onDestroyView() {
@@ -61,7 +100,7 @@ class AchievementFragment : Fragment() {
     }
 
     private fun onClick(achievement: Achievement) {
-
+        Log.d("onClick", achievement.name)
     }
 
 }

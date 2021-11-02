@@ -1,5 +1,6 @@
 package com.boostcamp.mountainking.ui.achievement
 
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,8 +12,6 @@ import com.boostcamp.mountainking.entity.Achievement
 
 class AchievementAdapter(private val onClick: (Achievement) -> Unit) :
     ListAdapter<Achievement, AchievementAdapter.AchievementViewHolder>(AchievementDiffCallback) {
-    private val items = mutableListOf<Achievement>()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AchievementViewHolder {
 
         val binding =
@@ -22,10 +21,9 @@ class AchievementAdapter(private val onClick: (Achievement) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: AchievementViewHolder, position: Int) {
-        holder.bind(items[position])
+        val achievement = getItem(position)
+        holder.bind(achievement)
     }
-
-    override fun getItemCount(): Int = items.size
 
     class AchievementViewHolder(
         private val binding: ItemAchievementBinding,
@@ -45,8 +43,17 @@ class AchievementAdapter(private val onClick: (Achievement) -> Unit) :
         }
 
         fun bind(achievement: Achievement) {
+            currentAchievement = achievement
+
             binding.achievement = achievement
             binding.executePendingBindings()
+            binding.root.setBackgroundColor(
+                if (achievement.isComplete) {
+                    Color.GREEN
+                } else {
+                    Color.RED
+                }
+            )
             Log.d("bindtest", achievement.name)
         }
 
