@@ -55,10 +55,14 @@
             app:layout_constraintTop_toBottomOf="@id/tv_achievement_item_name"
             tools:text="불암산을 2회 등산" />
 
-        <View
+        <ProgressBar
             android:id="@+id/view_achievement_item_progress"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="100dp"
             android:layout_height="16dp"
+            android:indeterminateOnly="false"
+            android:max="@{achievement.maxProgress}"
+            android:progress="@{achievement.curProgress}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_achievement_item_name"
             app:layout_constraintTop_toBottomOf="@id/tv_achievement_item_description"
