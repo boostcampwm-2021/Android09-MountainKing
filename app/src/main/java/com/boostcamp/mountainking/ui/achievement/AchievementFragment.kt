@@ -20,78 +20,29 @@ class AchievementFragment : Fragment() {
     private var _binding: FragmentAchievementBinding? = null
 
     private val binding get() = _binding!!
-    private lateinit var adapter: AchievementAdapter
+    var adapter = AchievementAdapter { achievement -> onClick(achievement) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        achievementViewModel =
-            ViewModelProvider(this).get(AchievementViewModel::class.java)
-
+        achievementViewModel = ViewModelProvider(this)[AchievementViewModel::class.java]
         _binding = FragmentAchievementBinding.inflate(inflater, container, false)
-
-        adapter = AchievementAdapter { achievement -> onClick(achievement) }
-        binding.rvAchievementList.adapter = adapter
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val achievement = Achievement(
-            "1",
-            "불암산 정복자",
-            "불암산 등산",
-            "",
-            AchievementType.TRACKING_COUNT,
-            1,
-            2,
-            false,
-            Date(),
-            30
-        )
+        initView()
+        initObserve()
+        initListener()
+    }
 
-        val achievement2 = Achievement(
-            "2",
-            "한라산 정복자",
-            "한라산 등산",
-            "",
-            AchievementType.TRACKING_COUNT,
-            2,
-            2,
-            true,
-            Date(),
-            300
-        )
-
-        val achievementList = listOf(achievement, achievement2).sortedBy { !it.isComplete }
-        adapter.submitList(achievementList)
-
-        binding.tlAchievementCategory.addOnTabSelectedListener(object :
-            TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                when (tab?.text.toString()) {
-                    getString(R.string.tl_achievement_category_total) -> adapter.submitList(
-                        achievementList
-                    )
-                    getString(R.string.tl_achievement_category_complete) -> adapter.submitList(
-                        achievementList.filter { it.isComplete })
-                    getString(R.string.tl_achievement_category_incomplete) -> adapter.submitList(
-                        achievementList.filter { !it.isComplete })
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
-
-        })
-
+    override fun onResume() {
+        super.onResume()
+        achievementViewModel.loadAchievementList()
     }
 
     override fun onDestroyView() {
@@ -99,8 +50,43 @@ class AchievementFragment : Fragment() {
         _binding = null
     }
 
-    private fun onClick(achievement: Achievement) {
-        Log.d("onClick", achievement.name)
+    private fun initView() {
+        binding.rvAchievementList.adapter = adapter
     }
 
+    private fun initObserve() {
+        achievementViewModel.achievementListLiveData.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
+    }
+
+    private fun initListener() = with(binding) {
+        tlAchievementCategory.addOnTabSelectedListener(object :
+            TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) = with(achievementViewModel) {
+                when (tab?.text.toString()) {
+                    getString(R.string.tl_achievement_category_total) -> {
+                        loadAchievementList()
+                    }
+                    getString(R.string.tl_achievement_category_complete) -> {
+                        loadAchievementList(true)
+                    }
+                    getString(R.string.tl_achievement_category_incomplete) -> {
+                        loadAchievementList(false)
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+        })
+    }
+
+    private fun onClick(achievement: Achievement) {
+        Log.d("onClick", achievement.name)
+        //TODO: 공유하기
+    }
 }
