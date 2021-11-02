@@ -2,6 +2,7 @@ package com.boostcamp.mountainking.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Entity
@@ -17,4 +18,7 @@ data class Achievement(
     var isComplete: Boolean,
     var completeDate: Date,
     var score: Int
-)
+) {
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ko", "KR"))
+    val completeDateString: String get() = dateFormat.format(completeDate)
+}
