@@ -7,11 +7,10 @@ import java.util.*
 @Entity
 data class Tracking(
     @PrimaryKey
-    var id: String,
-    var date: Date,
-    var mountainName: String,
-    var startTime: String,
-    var endTime: String,
-    var coordinates: List<Pair<Float, Float>>,
-    var lenght: Int
+    val id: String,
+    val mountainName: String,
+    val startTime: String,
+    val endTime: String,
+    val coordinates: List<Pair<Float, Float>>,
+    val length: Int
 )
