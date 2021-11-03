@@ -77,9 +77,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     //hilt
-    implementation "com.google.dagger:hilt-android:2.28-alpha"
-    kapt "com.google.dagger:hilt-android-compiler:2.28-alpha"
+    implementation 'com.google.dagger:hilt-android:2.40'
+    kapt 'com.google.dagger:hilt-compiler:2.40'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
 
     //gson
     implementation 'com.google.code.gson:gson:2.8.9'
+}
+
+kapt {
+    correctErrorTypes true
 }
