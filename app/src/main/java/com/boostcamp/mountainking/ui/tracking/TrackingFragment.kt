@@ -32,6 +32,8 @@ class TrackingFragment : Fragment() {
         val root: View = binding.root
 
         val textView: TextView = binding.textHome
+        binding.viewModel = trackingViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         trackingViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
