@@ -6,17 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.boostcamp.mountainking.databinding.FragmentTrackingBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class TrackingFragment : Fragment() {
 
-    private lateinit var trackingViewModel: TrackingViewModel
+    private val trackingViewModel: TrackingViewModel by viewModels()
     private var _binding: FragmentTrackingBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -24,11 +25,13 @@ class TrackingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        trackingViewModel =
-            ViewModelProvider(this).get(TrackingViewModel::class.java)
-
         _binding = FragmentTrackingBinding.inflate(inflater, container, false)
-        return binding.root
+
+        val root: View = binding.root
+        binding.viewModel = trackingViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+       
+        return root
     }
 
     override fun onDestroyView() {
