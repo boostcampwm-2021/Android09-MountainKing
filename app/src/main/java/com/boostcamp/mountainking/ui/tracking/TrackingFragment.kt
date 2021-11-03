@@ -28,13 +28,7 @@ class TrackingFragment : Fragment() {
             ViewModelProvider(this).get(TrackingViewModel::class.java)
 
         _binding = FragmentTrackingBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        trackingViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+        return binding.root
     }
 
     override fun onDestroyView() {
