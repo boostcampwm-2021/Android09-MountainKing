@@ -11,4 +11,8 @@
     <string name="iv_achievement_item_thumbnail_description">업적 이미지</string>
     <string name="iv_achievement_item_share_description">공유하기</string>
     <string name="tv_achievement_item_progress_text">%s/%s</string>
+    <string name="title_start_tracking">등산 시작</string>
+    <string name="title_time">등산 시간</string>
+    <string name="title_distance">등산 거리</string>
+    <string name="title_check_report">나의 등산 기록</string>
 </resources>
