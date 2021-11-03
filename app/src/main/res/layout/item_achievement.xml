@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="achievement"
+            type="com.boostcamp.mountainking.entity.Achievement" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/iv_achievement_item_thumbnail"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="@string/iv_achievement_item_thumbnail_description"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_achievement_svgrepo_com" />
+
+        <ImageView
+            android:id="@+id/iv_achievement_item_share"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:contentDescription="@string/iv_achievement_item_share_description"
+            android:src="@drawable/ic_baseline_share_24"
+            app:layout_constraintBottom_toTopOf="@id/tv_achievement_complete_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_achievement_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{achievement.name}"
+            app:layout_constraintBottom_toTopOf="@id/tv_achievement_item_description"
+            app:layout_constraintStart_toEndOf="@id/iv_achievement_item_thumbnail"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="불암산 정복자:" />
+
+        <TextView
+            android:id="@+id/tv_achievement_item_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{achievement.description}"
+            app:layout_constraintBottom_toTopOf="@id/view_achievement_item_progress"
+            app:layout_constraintStart_toStartOf="@id/tv_achievement_item_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_achievement_item_name"
+            tools:text="불암산을 2회 등산" />
+
+        <ProgressBar
+            android:id="@+id/view_achievement_item_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="100dp"
+            android:layout_height="16dp"
+            android:indeterminateOnly="false"
+            android:max="@{achievement.maxProgress}"
+            android:progress="@{achievement.curProgress}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_achievement_item_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_achievement_item_description"
+            tools:background="@color/black" />
+
+        <TextView
+            android:id="@+id/tv_achievement_item_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@{@string/tv_achievement_item_progress_text(achievement.curProgress, achievement.maxProgress)}"
+            app:layout_constraintBottom_toBottomOf="@id/view_achievement_item_progress"
+            app:layout_constraintStart_toEndOf="@id/view_achievement_item_progress"
+            app:layout_constraintTop_toTopOf="@id/view_achievement_item_progress"
+            tools:text="2/2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="@string/tv_achievement_complete_date"
+            app:layout_constraintBottom_toBottomOf="@id/view_achievement_item_progress"
+            app:layout_constraintEnd_toStartOf="@id/tv_achievement_complete_date"
+            app:layout_constraintTop_toTopOf="@id/view_achievement_item_progress" />
+
+        <TextView
+            android:id="@+id/tv_achievement_complete_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{achievement.completeDateString}"
+            app:layout_constraintBottom_toBottomOf="@id/view_achievement_item_progress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/view_achievement_item_progress"
+            tools:text="2021-10-21" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
