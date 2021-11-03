@@ -18,8 +18,6 @@ class TrackingFragment : Fragment() {
     private val trackingViewModel: TrackingViewModel by viewModels()
     private var _binding: FragmentTrackingBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -27,16 +25,12 @@ class TrackingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentTrackingBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textHome
+        val root: View = binding.root
         binding.viewModel = trackingViewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        trackingViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+       
         return root
     }
 

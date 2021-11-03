@@ -11,10 +11,13 @@ class TrackingViewModel @Inject constructor(
     private val locationServiceManager: LocationServiceManager
 ) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
-    }
-    val text: LiveData<String> = _text
+    private val _trackingTime = MutableLiveData<String>()
+    val trackingTime: LiveData<String> get() = _trackingTime
+
+    private val _trackingDistance = MutableLiveData<String>()
+    val trackingDistance: LiveData<String> get() = _trackingDistance
+
+
 
     fun startService() {
         locationServiceManager.startService()
