@@ -1,7 +1,7 @@
 # :mountain: 등산왕 (MountainKing)
 
 ## :raised_hands: 안드로이드 산악회 팀원 소개
-|[K007 김수명](https://github.com/kykapple)|[K021 박유진](https://github.com/illlama)|[K036 윤형식](https://github.com/imnotmoon)|[K038 이도경](https://github.com/Alencion)|[K049 임종현](https://github.com/Alencion)|
+|[K007 김수명](https://github.com/lifespank)|[K021 박유진](https://github.com/evyooo)|[K036 윤형식](https://github.com/puhahaha3000)|[K038 이도경](https://github.com/dokyeonglee)|[K049 임종현](https://github.com/JongDO-android)|
 |------|---|---|---|------|
 |<img src="https://github.com/lifespank.png" width="80"> |<img src="https://github.com/evyooo.png" width="80">|<img src="https://github.com/puhahaha3000.png" width="80">|<img src="https://github.com/dokyeonglee.png" width="80">|<img src="https://github.com/JongDO-android.png" width="80">|
 
