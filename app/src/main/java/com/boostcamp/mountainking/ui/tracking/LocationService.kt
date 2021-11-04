@@ -66,7 +66,7 @@ class LocationService : Service() {
 
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("등산 이력 기록중 ...")
-            .setContentText("시간 : $curTime")
+            .setContentText("시간 : ${timeConverter(curTime)}")
             .setContentIntent(pendingIntent)
             .setOnlyAlertOnce(true)
             .setSmallIcon(R.drawable.ic_achievement_svgrepo_com)
@@ -76,12 +76,20 @@ class LocationService : Service() {
         CoroutineScope(Dispatchers.IO).launch {
             while(isBound) {
                 delay(1000)
-                notificationBuilder.setContentText("시간 : ${++curTime}")
+                notificationBuilder.setContentText("시간 : ${timeConverter(++curTime)}")
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
             }
         }
 
         return START_STICKY
+    }
+
+    private fun timeConverter(time: Int): String {
+        val div = time / 60
+        val hour = div / 60
+        val minute = div - (hour * 60)
+        val second = time - (div * 60)
+        return "$hour:$minute:$second"
     }
 
     // notification channel 생성
