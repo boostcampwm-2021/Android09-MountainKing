@@ -1,11 +1,15 @@
 package com.boostcamp.mountainking.data
 
 import android.content.Context
+import android.util.Log
 import com.boostcamp.mountainking.entity.Achievement
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class Repository(private val context: Context) : RepositoryInterface {
+
+    val database = AchievementDatabase.provideAchievementDao(context)
+
     override suspend fun getMountain() {
         //TODO("산정보불러오기")
     }
@@ -14,12 +18,21 @@ class Repository(private val context: Context) : RepositoryInterface {
         //TODO("등산기록불러오기")
     }
 
-    override suspend fun getAchievement(): Result<List<Achievement>> =
-        withContext(Dispatchers.IO) {
-            kotlin.runCatching {
-                getInitAchievementList()
-            }
+    override fun getAchievement(): List<Achievement> {
+
+        //Log.d("count", database.countData().toString())
+
+        getInitAchievementList().forEach {
+            //database.insert(it)
+            Log.d("achievement", it.name)
         }
+//                val list = database.getAchievementData()
+//                list.forEach {
+//                    Log.d("db", it.name)
+//                }
+//                list
+        return getInitAchievementList()
+    }
 
     override suspend fun getStatistics() {
         //TODO("통계불러오기")

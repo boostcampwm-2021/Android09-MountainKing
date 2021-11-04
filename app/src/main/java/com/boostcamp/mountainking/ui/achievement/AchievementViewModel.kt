@@ -24,7 +24,7 @@ class AchievementViewModel @Inject constructor(
     private var achievementList = listOf<Achievement>()
 
     fun loadAchievementList() = viewModelScope.launch {
-        achievementList = repository.getAchievement().getOrNull() ?: listOf()
+        achievementList = repository.getAchievement()
         _achievementListLiveData.value = achievementList
     }
 

@@ -9,21 +9,25 @@ import java.util.*
 @Entity
 data class Achievement(
     @PrimaryKey
-    var id: Long,
-    var name: String,
-    var description: String,
-    var thumbnailUrl: String,
-    var type: AchievementType,
-    var curProgress: Int,
-    var maxProgress: Int,
-    var isComplete: Boolean,
-    var completeDate: Date?,
-    var score: Int,
-    // 업적 타입에 따라 필요한 데이터 전달
-    var typeArgument: Any? = null,
+    var id: Long = 0,
+    var name: String = "",
+    var description: String = "",
+    var thumbnailUrl: String = "",
+    var type: AchievementType = AchievementType.TRACKING_TOTAL_COUNT,
+    var curProgress: Int = 0,
+    var maxProgress: Int = 1,
+    var isComplete: Boolean = false,
+    var completeDate: Date? = Date(),
+    var score: Int = 0,
 ) {
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ko", "KR"))
-    val completeDateString: String get() = completeDate?.let { dateFormat.format(it) } ?: ""
+
+    val completeDateString: String
+        get() = completeDate?.let {
+            SimpleDateFormat(
+                "yyyy-MM-dd",
+                Locale("ko", "KR")
+            ).format(it)
+        } ?: ""
 
     fun progressAchievement(statistics: Statistics) {
         curProgress = when (type) {
@@ -35,13 +39,11 @@ data class Achievement(
             }
             AchievementType.TRACKING_PERIOD_COUNT -> TODO()
             AchievementType.MOUNTAIN_COUNT -> {
-                statistics.mountainMap[typeArgument]?:0
+                statistics.mountainMap[0] ?: 0
             }
             AchievementType.MOUNTAIN_KIND_COUNT -> {
                 statistics.mountainMap.filter { entry ->
                     entry.value != 0
-                }.filter { entry ->
-                    (typeArgument as List<Int>).contains(entry.key)
                 }.size
             }
         }
