@@ -18,6 +18,7 @@ import androidx.fragment.app.viewModels
 import com.boostcamp.mountainking.BuildConfig
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentTrackingBinding
+import com.boostcamp.mountainking.util.EventObserver
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,7 +30,7 @@ class TrackingFragment : Fragment() {
     private val requestLocationPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGranted ->
             if (isGranted.values.all { it }) {
-                startLocationService()
+                trackingViewModel.startService()
             } else {
                 Snackbar.make(
                     binding.root,
@@ -66,7 +67,13 @@ class TrackingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setListener()
+        trackingViewModel.checkPermission.observe(viewLifecycleOwner, EventObserver {
+            if (isPermissionNotGranted()) {
+                requestPermissions()
+            } else {
+                trackingViewModel.startService()
+            }
+        })
     }
 
     private fun isPermissionNotGranted(): Boolean {
@@ -106,22 +113,6 @@ class TrackingFragment : Fragment() {
                 )
             )
         }
-    }
-
-    private fun setListener() {
-        with(binding) {
-            btnTrackingStart.setOnClickListener {
-                if (isPermissionNotGranted()) {
-                    requestPermissions()
-                } else {
-                    startLocationService()
-                }
-            }
-        }
-    }
-
-    private fun startLocationService() {
-        trackingViewModel.startService()
     }
 
     override fun onStart() {

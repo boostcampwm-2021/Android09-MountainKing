@@ -9,17 +9,17 @@ import android.os.IBinder
 import android.util.Log
 
 class LocationServiceManager(private val context: Context) {
-    private lateinit var locationService : LocationService
+    private var locationService: LocationService? = null
 
     private var _isBound = false
-    val isBound : Boolean get() = _isBound
+    private val isBound: Boolean get() = _isBound
+    private val intent = Intent(context, LocationService::class.java)
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             Log.i("LocationServiceManager", "onServiceConnected")
             val binder = service as LocationService.LocationBinder
             locationService = binder.getService()
-            locationService.requestLocationUpdates()
             _isBound = true
         }
 
@@ -30,14 +30,12 @@ class LocationServiceManager(private val context: Context) {
     }
 
     fun startService() {
-        val intent = Intent(context, LocationService::class.java)
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(intent)
         } else {
             context.startService(intent)
         }
-
+        bindService()
     }
 
     fun bindService() {
@@ -46,9 +44,17 @@ class LocationServiceManager(private val context: Context) {
         }
     }
 
-    fun unBindService() {
-        context.unbindService(serviceConnection)
-        _isBound = false
+    fun stopService() {
+        unBindService()
+        locationService?.removeLocationUpdates()
     }
 
+    fun unBindService() {
+        if (isServiceRunning() == true) {
+            context.unbindService(serviceConnection)
+            _isBound = false
+        }
+    }
+
+    fun isServiceRunning() = locationService?.serviceIsRunningInForeground(context)
 }
