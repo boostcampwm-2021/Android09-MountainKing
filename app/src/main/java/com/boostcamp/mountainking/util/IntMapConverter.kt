@@ -3,6 +3,7 @@ package com.boostcamp.mountainking.util
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.*
 
 class IntMapConverter {
 
@@ -21,5 +22,18 @@ class IntMapConverter {
             val gson = Gson()
             return gson.toJson(map)
         }
+
+        @JvmStatic
+        @TypeConverter
+        fun fromTimestamp(value: Long?): Date? {
+            return value?.let { Date(it) }
+        }
+
+        @JvmStatic
+        @TypeConverter
+        fun dateToTimestamp(date: Date?): Long? {
+            return date?.time?.toLong()
+        }
+
     }
 }

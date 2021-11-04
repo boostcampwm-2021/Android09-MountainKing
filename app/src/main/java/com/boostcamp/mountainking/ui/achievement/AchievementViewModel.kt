@@ -3,44 +3,32 @@ package com.boostcamp.mountainking.ui.achievement
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.boostcamp.mountainking.R
+import com.boostcamp.mountainking.data.Repository
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.AchievementType
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class AchievementViewModel : ViewModel() {
+@HiltViewModel
+class AchievementViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
     private val _achievementListLiveData = MutableLiveData<List<Achievement>>()
     val achievementListLiveData: LiveData<List<Achievement>> get() = _achievementListLiveData
-    val achievement = Achievement(
-        "1",
-        "불암산 정복자",
-        "불암산 등산",
-        "",
-        AchievementType.TRACKING_COUNT,
-        1,
-        2,
-        false,
-        Date(),
-        30
-    )
 
-    val achievement2 = Achievement(
-        "2",
-        "한라산 정복자",
-        "한라산 등산",
-        "",
-        AchievementType.TRACKING_COUNT,
-        2,
-        2,
-        true,
-        Date(),
-        300
-    )
+    private var achievementList = listOf<Achievement>()
 
-    var achievementList = listOf(achievement, achievement2).sortedBy { !it.isComplete }
+    fun loadAchievementList() = viewModelScope.launch {
+        achievementList = repository.getAchievement()
+        _achievementListLiveData.value = achievementList
+    }
 
-    fun loadAchievementList(filter: Boolean? = null) {
+    fun filterAchievementList(filter: Boolean? = null) {
         _achievementListLiveData.value = filter?.let {
             achievementList.filter { it.isComplete == filter }
         } ?: achievementList
