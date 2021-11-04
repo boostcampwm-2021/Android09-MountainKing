@@ -1,6 +1,13 @@
 package com.boostcamp.mountainking.data
 
-class Repository : RepositoryInterface {
+import android.content.Context
+import com.boostcamp.mountainking.entity.Achievement
+import com.boostcamp.mountainking.entity.AchievementType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.util.*
+
+class Repository(private val context: Context) : RepositoryInterface {
     override suspend fun getMountain() {
         //TODO("산정보불러오기")
     }
@@ -9,9 +16,12 @@ class Repository : RepositoryInterface {
         //TODO("등산기록불러오기")
     }
 
-    override suspend fun getAchievement() {
-        //TODO("업적불러오기")
-    }
+    override suspend fun getAchievement(): Result<List<Achievement>> =
+        withContext(Dispatchers.IO) {
+            kotlin.runCatching {
+                getInitAchievementList()
+            }
+        }
 
     override suspend fun getStatistics() {
         //TODO("통계불러오기")

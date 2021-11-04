@@ -28,7 +28,7 @@ class TrackingFragment : Fragment() {
         _binding = FragmentTrackingBinding.inflate(inflater, container, false)
 
         val root: View = binding.root
-        binding.viewModel = trackingViewModel
+        binding.trackingViewModel = trackingViewModel
         binding.lifecycleOwner = viewLifecycleOwner
        
         return root
