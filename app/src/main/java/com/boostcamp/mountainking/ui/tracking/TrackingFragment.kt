@@ -1,24 +1,21 @@
 package com.boostcamp.mountainking.ui.tracking
 
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.boostcamp.mountainking.databinding.FragmentTrackingBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class TrackingFragment : Fragment() {
-
     private val trackingViewModel: TrackingViewModel by viewModels()
     private var _binding: FragmentTrackingBinding? = null
-
     private val binding get() = _binding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,12 +23,36 @@ class TrackingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTrackingBinding.inflate(inflater, container, false)
-
-        val root: View = binding.root
-        binding.viewModel = trackingViewModel
+        binding.trackingViewModel = trackingViewModel
         binding.lifecycleOwner = viewLifecycleOwner
-       
-        return root
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setListener()
+    }
+
+    private fun setListener() {
+        with(binding) {
+            btnTrackingStart.setOnClickListener {
+                startLocationService()
+            }
+        }
+    }
+
+    private fun startLocationService() {
+        trackingViewModel.startService()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        trackingViewModel.bindService()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        trackingViewModel.unbindService()
     }
 
     override fun onDestroyView() {
