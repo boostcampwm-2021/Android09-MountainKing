@@ -5,11 +5,11 @@ import com.boostcamp.mountainking.entity.Achievement
 interface RepositoryInterface {
     suspend fun getMountain()
     suspend fun getTracking()
-    fun getAchievement(): List<Achievement>
+    suspend fun getAchievement(): List<Achievement>
     suspend fun getStatistics()
     suspend fun getWeather()
 
     suspend fun putTracking()
     suspend fun updateStatistics()
-    suspend fun updateAchievement()
+    suspend fun updateAchievement(achievement: Achievement)
 }

@@ -19,4 +19,7 @@ interface AchievementDao {
     @Query("SELECT COUNT(*) FROM Achievement")
     fun countData(): Int
 
+    @Update
+    suspend fun updateAchievement(achievement: Achievement)
+
 }
