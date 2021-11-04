@@ -1,27 +1,29 @@
 # :mountain: 등산왕 (MountainKing)
 
-## 팀원
-| K007 | K021 | K036 | K038 | K049 |
-| -------- | -------- | -------- | -------- | -------- |
-| 김수명 | 박유진 | 윤형식 | 이도경 | 임종현 |
+## :raised_hands: 안드로이드 산악회 팀원 소개
+|[K007 김수명](https://github.com/kykapple)|[K021 박유진](https://github.com/illlama)|[K036 윤형식](https://github.com/imnotmoon)|[K038 이도경](https://github.com/Alencion)|[K049 임종현](https://github.com/Alencion)|
+|------|---|---|---|------|
+|<img src="https://github.com/lifespank.png" width="80"> |<img src="https://github.com/evyooo.png" width="80">|<img src="https://github.com/puhahaha3000.png" width="80">|<img src="https://github.com/dokyeonglee.png" width="80">|<img src="https://github.com/JongDO-android.png" width="80">|
+
+## :information_desk_person: 기획 목표
+- 자신의 등산 이력을 기록해요!
+    - 쉽고 편리한 등산 코스기록
+- 오늘도 내일도 등산왕!
+    - 업적 시스템을 통해 동기부여 및 성취감 제고
+- 전국 곳곳의 산 알아보기!
+    - 전국 산 정보와 실시간 날씨 제공
 
 
-## 어플리케이션 설명
-    - 자신만의 등산 이력을 기록한다.
-    - 업적 시스템을 적용해 등산에 대한 동기부여
-    - 전국 산 정보를 날씨와 더불어 제공
-
-
-
-## Feature List
-### 등산 Tab
+## :ok_hand: 세부 기능
 - 등산 기록하기
     - 등산에 걸린 시간(시작, 끝만 기록)
     - 등산 코스 기록(백그라운드 위치 추적)
 - 자신의 등산정보 통계 제공
     - 등산 이력 확인(gps추적 결과와 지도를 합쳐 이미지 제공)
-
-### 산 정보 Tab
+- 업적 목록을 표시
+    - 전체, 미달성, 달성을 기준으로 분류하여 볼수 있게함
+    - 업적에는 이름, 내용, 달성일, 진행도를 표시
+    - 공유하기 버튼을 눌러 카톡으로 업적 내용을 공유 가능
 - 지역별 산 정보 제공
     - 산 정보 제공(간단하게 이미지로만 제공)
         - 산 사진
@@ -31,13 +33,7 @@
         - 관광정보
         - 전화걸기
     - 검색기능(이름, 위치)
-        
 
-### 업적 Tab
-- 업적 목록을 표시
-    - 전체, 미달성, 달성을 기준으로 분류하여 볼수 있게함
-    - 업적에는 이름, 내용, 달성일, 진행도를 표시
-    - 공유하기 버튼을 눌러 카톡으로 업적 내용을 공유 가능
 
 ## [프로토타입](https://www.figma.com/proto/QV7K6OTle8wdLX7Zsvz3Y2/%EC%95%B1?node-id=6%3A10&scaling=scale-down&page-id=0%3A1)
 ### 등산 기록 화면
