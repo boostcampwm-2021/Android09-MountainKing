@@ -1,10 +1,8 @@
 package com.boostcamp.mountainking.ui.tracking
 
-import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.boostcamp.mountainking.LogApplication
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.StringGetter
