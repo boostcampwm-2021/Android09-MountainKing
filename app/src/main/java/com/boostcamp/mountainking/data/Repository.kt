@@ -19,32 +19,7 @@ class Repository(private val context: Context) : RepositoryInterface {
     override suspend fun getAchievement(): Result<List<Achievement>> =
         withContext(Dispatchers.IO) {
             kotlin.runCatching {
-                val achievement = Achievement(
-                    "1",
-                    "불암산 정복자",
-                    "불암산 등산",
-                    "",
-                    AchievementType.TRACKING_COUNT,
-                    1,
-                    2,
-                    false,
-                    Date(),
-                    30
-                )
-
-                val achievement2 = Achievement(
-                    "2",
-                    "한라산 정복자",
-                    "한라산 등산",
-                    "",
-                    AchievementType.TRACKING_COUNT,
-                    2,
-                    2,
-                    true,
-                    Date(),
-                    300
-                )
-                listOf(achievement, achievement2)
+                getInitAchievementList()
             }
         }
 
