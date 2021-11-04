@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.round
 
 class LocationService : Service() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -142,14 +143,16 @@ class LocationService : Service() {
 
     // locationCallback 안에서 실행될 메소드
     private fun onNewLocation(lastLocation: Location) {
-        Log.i(TAG, "New location: $lastLocation")
+        val distance = location?.distanceTo(lastLocation)?.toInt()
+        curDistance += distance ?: 0
+        Log.i(TAG, "New location: $lastLocation distance: $curDistance")
+
         this.location = lastLocation
         // Notify anyone listening for broadcasts about the new location.
         val intent = Intent(ACTION_BROADCAST)
         intent.putExtra(EXTRA_LOCATION, lastLocation)
         LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
     }
-
 
     override fun onBind(intent: Intent?): IBinder {
         Log.i(TAG, "onBind")
