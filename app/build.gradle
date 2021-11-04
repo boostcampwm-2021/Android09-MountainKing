@@ -68,6 +68,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2-native-mt"
 
     implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
     kapt  "androidx.room:room-compiler:$room_version"
 
     implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
