@@ -61,6 +61,7 @@ class AchievementAdapter(private val onClick: (Achievement) -> Unit) :
 
 }
 
+
 object AchievementDiffCallback : DiffUtil.ItemCallback<Achievement>() {
     override fun areItemsTheSame(oldItem: Achievement, newItem: Achievement): Boolean {
         return oldItem == newItem

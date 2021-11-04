@@ -7,14 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentAchievementBinding
 import com.boostcamp.mountainking.entity.Achievement
-import com.boostcamp.mountainking.entity.AchievementType
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @AndroidEntryPoint
 class AchievementFragment : Fragment() {
@@ -54,11 +51,21 @@ class AchievementFragment : Fragment() {
 
     private fun initView() {
         binding.rvAchievementList.adapter = adapter
+        binding.btnAchievementTest.setOnClickListener {
+            achievementViewModel.increaseDistanceTest()
+        }
     }
 
     private fun initObserve() {
         achievementViewModel.achievementListLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+            adapter.notifyDataSetChanged()
+            it.forEach { achievement ->
+                Log.d("UpdateTest", "${achievement.name}: ${achievement.curProgress}")
+            }
+        }
+        achievementViewModel.statisticsLiveData.observe(viewLifecycleOwner) {
+            achievementViewModel.updateAchievement()
         }
     }
 

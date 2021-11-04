@@ -37,7 +37,7 @@ data class Achievement(
             AchievementType.TRACKING_TOTAL_COUNT -> {
                 statistics.mountainMap.values.sum()
             }
-            AchievementType.TRACKING_PERIOD_COUNT -> TODO()
+            AchievementType.TRACKING_PERIOD_COUNT -> { 0 }
             AchievementType.MOUNTAIN_COUNT -> {
                 statistics.mountainMap[0] ?: 0
             }
