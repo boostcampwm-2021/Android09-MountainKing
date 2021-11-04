@@ -8,17 +8,17 @@ import java.util.*
 @Entity
 data class Achievement(
     @PrimaryKey
-    var id: Long,
-    var name: String,
-    var description: String,
-    var thumbnailUrl: String,
-    var type: AchievementType,
-    var curProgress: Int,
-    var maxProgress: Int,
-    var isComplete: Boolean,
-    var completeDate: Date?,
-    var score: Int
+    var id: Long = 0,
+    var name: String = "",
+    var description: String = "",
+    var thumbnailUrl: String = "",
+    var type: AchievementType = AchievementType.TRACKING_COUNT,
+    var curProgress: Int = 0,
+    var maxProgress: Int = 1,
+    var isComplete: Boolean = false,
+    var completeDate: Date? = Date(),
+    var score: Int = 0
 ) {
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ko", "KR"))
-    val completeDateString: String get() = completeDate?.let { dateFormat.format(it) } ?: ""
+
+    val completeDateString: String get() = completeDate?.let { SimpleDateFormat("yyyy-MM-dd", Locale("ko", "KR")).format(it) } ?: ""
 }

@@ -5,7 +5,7 @@ import com.boostcamp.mountainking.entity.Achievement
 interface RepositoryInterface {
     suspend fun getMountain()
     suspend fun getTracking()
-    suspend fun getAchievement(): Result<List<Achievement>>
+    fun getAchievement(): List<Achievement>
     suspend fun getStatistics()
     suspend fun getWeather()
 
