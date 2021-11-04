@@ -25,10 +25,11 @@
             android:onClick="@{() -> trackingViewModel.toggleService()}"
             android:paddingStart="30dp"
             android:paddingEnd="30dp"
-            android:text="@string/title_start_tracking"
+            android:text="@{trackingViewModel.buttonText}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/title_start_tracking" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_time_default"
