@@ -3,6 +3,8 @@ package com.boostcamp.mountainking.data
 import android.content.Context
 import android.util.Log
 import com.boostcamp.mountainking.entity.Achievement
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class Repository(private val context: Context) : RepositoryInterface {
 
