@@ -18,8 +18,15 @@ class TrackingViewModel @Inject constructor(
     val trackingDistance: LiveData<String> get() = _trackingDistance
 
 
-
     fun startService() {
         locationServiceManager.startService()
+    }
+
+    fun bindService() {
+        locationServiceManager.bindService()
+    }
+
+    fun unbindService() {
+        locationServiceManager.unBindService()
     }
 }
