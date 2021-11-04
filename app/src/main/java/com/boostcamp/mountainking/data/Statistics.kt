@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class Statistics(
     @PrimaryKey
     val id: Int = 0,
-    val distance: Int,
-    val time: Int,
-    val mountainMap: Map<Int, Int>
+    var distance: Int = 0,
+    var time: Int = 0,
+    var mountainMap: Map<Int, Int> = mapOf()
 )
