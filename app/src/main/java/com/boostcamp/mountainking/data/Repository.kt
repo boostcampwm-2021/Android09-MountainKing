@@ -2,10 +2,8 @@ package com.boostcamp.mountainking.data
 
 import android.content.Context
 import com.boostcamp.mountainking.entity.Achievement
-import com.boostcamp.mountainking.entity.AchievementType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.*
 
 class Repository(private val context: Context) : RepositoryInterface {
     override suspend fun getMountain() {
