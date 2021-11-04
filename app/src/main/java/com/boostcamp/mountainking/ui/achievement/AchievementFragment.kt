@@ -6,17 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentAchievementBinding
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.AchievementType
 import com.google.android.material.tabs.TabLayout
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+@AndroidEntryPoint
 class AchievementFragment : Fragment() {
 
-    private lateinit var achievementViewModel: AchievementViewModel
+    private val achievementViewModel: AchievementViewModel by viewModels()
     private var _binding: FragmentAchievementBinding? = null
 
     private val binding get() = _binding!!
@@ -27,7 +30,6 @@ class AchievementFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        achievementViewModel = ViewModelProvider(this)[AchievementViewModel::class.java]
         _binding = FragmentAchievementBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -66,13 +68,13 @@ class AchievementFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) = with(achievementViewModel) {
                 when (tab?.text.toString()) {
                     getString(R.string.tl_achievement_category_total) -> {
-                        loadAchievementList()
+                        filterAchievementList()
                     }
                     getString(R.string.tl_achievement_category_complete) -> {
-                        loadAchievementList(true)
+                        filterAchievementList(true)
                     }
                     getString(R.string.tl_achievement_category_incomplete) -> {
-                        loadAchievementList(false)
+                        filterAchievementList(false)
                     }
                 }
             }
