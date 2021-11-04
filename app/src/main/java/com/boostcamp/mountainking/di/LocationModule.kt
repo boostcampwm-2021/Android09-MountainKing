@@ -2,6 +2,7 @@ package com.boostcamp.mountainking.di
 
 import android.content.Context
 import com.boostcamp.mountainking.ui.tracking.LocationServiceManager
+import com.boostcamp.mountainking.util.StringGetter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,5 +19,11 @@ class LocationModule {
     @Provides
     fun provideLocationServiceManager(@ApplicationContext context: Context): LocationServiceManager {
         return LocationServiceManager(context)
+    }
+
+    @ViewModelScoped
+    @Provides
+    fun provideStringGetter(@ApplicationContext context: Context): StringGetter {
+        return StringGetter(context)
     }
 }

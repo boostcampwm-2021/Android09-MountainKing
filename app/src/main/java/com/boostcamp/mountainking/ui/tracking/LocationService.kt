@@ -1,6 +1,7 @@
 package com.boostcamp.mountainking.ui.tracking
 
 import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.location.Location
@@ -13,11 +14,7 @@ import com.boostcamp.mountainking.MainActivity
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.util.setRequestingLocationUpdates
 import com.google.android.gms.location.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlin.math.round
+import kotlinx.coroutines.*
 
 class LocationService : Service() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -35,6 +32,7 @@ class LocationService : Service() {
     lateinit var serviceHandler: Handler
 
     private var isBound = true
+    var timer: Job? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -62,7 +60,8 @@ class LocationService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(TAG, "onStartCommand")
         val activityIntent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent =
+            PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("등산 이력 기록중 ...")
@@ -73,15 +72,16 @@ class LocationService : Service() {
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
 
-        CoroutineScope(Dispatchers.IO).launch {
-            while(isBound) {
+        timer = CoroutineScope(Dispatchers.IO).launch {
+            while (isBound) {
                 delay(1000)
                 notificationBuilder.setContentText("시간 : ${timeConverter(++curTime)}")
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
             }
         }
-
-        return START_STICKY
+        Log.d("timer", timer.toString())
+        requestLocationUpdates()
+        return START_NOT_STICKY
     }
 
     private fun timeConverter(time: Int): String {
@@ -149,6 +149,23 @@ class LocationService : Service() {
         }
     }
 
+    fun removeLocationUpdates() {
+        Log.i(TAG, "Removing location updates")
+        try {
+            fusedLocationClient.removeLocationUpdates(locationCallback)
+            setRequestingLocationUpdates(this, false)
+            Log.d("timer", timer.toString())
+            timer?.cancel()
+            stopForeground(true)
+            stopSelf()
+        } catch (unlikely: SecurityException) {
+            setRequestingLocationUpdates(this, true)
+            Log.e(
+                TAG, "Lost location permission. Could not remove updates. $unlikely"
+            )
+        }
+    }
+
     // locationCallback 안에서 실행될 메소드
     private fun onNewLocation(lastLocation: Location) {
         val distance = location?.distanceTo(lastLocation)?.toInt()
@@ -168,7 +185,21 @@ class LocationService : Service() {
     }
 
     inner class LocationBinder : Binder() {
-        fun getService() : LocationService = this@LocationService
+        fun getService(): LocationService = this@LocationService
+    }
+
+    fun serviceIsRunningInForeground(context: Context): Boolean {
+        val manager = context.getSystemService(
+            ACTIVITY_SERVICE
+        ) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (javaClass.name == service.service.className) {
+                if (service.foreground) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     companion object {
