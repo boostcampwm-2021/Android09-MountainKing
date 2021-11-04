@@ -13,17 +13,21 @@ data class Achievement(
     var name: String = "",
     var description: String = "",
     var thumbnailUrl: String = "",
-    var type: AchievementType = AchievementType.TRACKING_COUNT,
+    var type: AchievementType = AchievementType.TRACKING_TOTAL_COUNT,
     var curProgress: Int = 0,
     var maxProgress: Int = 1,
     var isComplete: Boolean = false,
     var completeDate: Date? = Date(),
     var score: Int = 0,
-    // 업적 타입에 따라 필요한 데이터 전달
-    var typeArgument: Any? = null,
 ) {
 
-    val completeDateString: String get() = completeDate?.let { dateFormat.format(it) } ?: ""
+    val completeDateString: String
+        get() = completeDate?.let {
+            SimpleDateFormat(
+                "yyyy-MM-dd",
+                Locale("ko", "KR")
+            ).format(it)
+        } ?: ""
 
     fun progressAchievement(statistics: Statistics) {
         curProgress = when (type) {
@@ -35,13 +39,11 @@ data class Achievement(
             }
             AchievementType.TRACKING_PERIOD_COUNT -> TODO()
             AchievementType.MOUNTAIN_COUNT -> {
-                statistics.mountainMap[typeArgument]?:0
+                statistics.mountainMap[0] ?: 0
             }
             AchievementType.MOUNTAIN_KIND_COUNT -> {
                 statistics.mountainMap.filter { entry ->
                     entry.value != 0
-                }.filter { entry ->
-                    (typeArgument as List<Int>).contains(entry.key)
                 }.size
             }
         }

@@ -16,7 +16,6 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 100,
-            typeArgument = 0,
         ),
         Achievement(
             id = 1,
@@ -29,7 +28,6 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 10,
-            typeArgument = 1
         ),
         Achievement(
             id = 2,
@@ -54,7 +52,6 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 100,
-            typeArgument = 2,
         ),
         Achievement(
             id = 4,
@@ -67,7 +64,6 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 50,
-            typeArgument = 2,
         ),
         Achievement(
             id = 5,
@@ -80,7 +76,6 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 50,
-            typeArgument = 3,
         ),
         Achievement(
             id = 6,
@@ -93,7 +88,6 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 70,
-            typeArgument = 4,
         ),
         Achievement(
             id = 7,
@@ -118,7 +112,6 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 100,
-            typeArgument = List(100) { it }
         ),
         Achievement(
             id = 9,
@@ -131,7 +124,6 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 1000,
-            typeArgument = 5
         ),
     )
 }
