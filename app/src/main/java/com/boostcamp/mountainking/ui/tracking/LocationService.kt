@@ -9,6 +9,8 @@ import android.os.*
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.boostcamp.mountainking.MainActivity
 import com.boostcamp.mountainking.R
@@ -16,7 +18,7 @@ import com.boostcamp.mountainking.util.setRequestingLocationUpdates
 import com.google.android.gms.location.*
 import kotlinx.coroutines.*
 
-class LocationService : Service() {
+class LocationService : LifecycleService() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var notificationManager: NotificationManager
     private lateinit var locationCallback: LocationCallback
@@ -29,10 +31,9 @@ class LocationService : Service() {
 
     private var curTime: Int = 0
     private var curDistance: Int = 0
-    lateinit var serviceHandler: Handler
+    private lateinit var serviceHandler: Handler
 
     private var isBound = true
-    var timer: Job? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -58,6 +59,7 @@ class LocationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
         Log.i(TAG, "onStartCommand")
         val activityIntent = Intent(this, MainActivity::class.java)
         val pendingIntent =
@@ -72,14 +74,13 @@ class LocationService : Service() {
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
 
-        timer = CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             while (isBound) {
                 delay(1000)
                 notificationBuilder.setContentText("시간 : ${timeConverter(++curTime)}")
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
             }
         }
-        Log.d("timer", timer.toString())
         requestLocationUpdates()
         return START_NOT_STICKY
     }
@@ -132,7 +133,7 @@ class LocationService : Service() {
         }
     }
 
-    fun requestLocationUpdates() {
+    private fun requestLocationUpdates() {
         Log.i(TAG, "Requesting location updates")
         setRequestingLocationUpdates(this, true)
 
@@ -154,8 +155,6 @@ class LocationService : Service() {
         try {
             fusedLocationClient.removeLocationUpdates(locationCallback)
             setRequestingLocationUpdates(this, false)
-            Log.d("timer", timer.toString())
-            timer?.cancel()
             stopForeground(true)
             stopSelf()
         } catch (unlikely: SecurityException) {
@@ -179,7 +178,8 @@ class LocationService : Service() {
         LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
     }
 
-    override fun onBind(intent: Intent?): IBinder {
+    override fun onBind(intent: Intent): IBinder {
+        super.onBind(intent)
         Log.i(TAG, "onBind")
         return binder
     }
