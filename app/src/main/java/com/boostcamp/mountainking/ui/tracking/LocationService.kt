@@ -131,6 +131,7 @@ class LocationService : LifecycleService() {
         locationRequest = LocationRequest.create().apply {
             interval = UPDATE_INTERVAL_IN_MILLISECONDS
             fastestInterval = FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
+            smallestDisplacement = 10F
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
