@@ -19,7 +19,7 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
     override suspend fun getAchievement(): List<Achievement> = withContext(Dispatchers.IO) {
-        if(database?.countData() == 0){
+        if (database?.countData() == 0) {
             getInitAchievementList().forEach {
                 database.insert(it)
             }
@@ -46,5 +46,17 @@ class Repository(context: Context) : RepositoryInterface {
 
     override suspend fun updateAchievement(achievement: Achievement) {
         database?.updateAchievement(achievement)
+    }
+
+    companion object {
+        private var instance: Repository? = null
+
+        @JvmStatic
+        fun getInstance(context: Context): Repository =
+            instance ?: synchronized(this) {
+                instance ?: Repository(context).also {
+                    instance = it
+                }
+            }
     }
 }

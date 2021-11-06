@@ -15,6 +15,6 @@ class RepositoryModule {
     @ViewModelScoped
     @Provides
     fun provideRepository(@ApplicationContext context: Context): Repository {
-        return Repository(context)
+        return Repository.getInstance(context)
     }
 }
