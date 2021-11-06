@@ -1,7 +1,6 @@
 package com.boostcamp.mountainking.ui.tracking
 
 import android.app.*
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.location.Location
@@ -14,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.boostcamp.mountainking.MainActivity
 import com.boostcamp.mountainking.R
+import com.boostcamp.mountainking.data.Repository
 import com.boostcamp.mountainking.util.setRequestingLocationUpdates
 import com.google.android.gms.location.*
 import kotlinx.coroutines.*
@@ -34,6 +34,7 @@ class LocationService : LifecycleService() {
     private lateinit var serviceHandler: Handler
 
     private var isBound = true
+    private val repository = Repository.getInstance(this)
 
     override fun onCreate() {
         super.onCreate()
@@ -60,6 +61,7 @@ class LocationService : LifecycleService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+        repository.isRunning = true
         Log.i(TAG, "onStartCommand")
         val activityIntent = Intent(this, MainActivity::class.java)
         val pendingIntent =
@@ -151,6 +153,7 @@ class LocationService : LifecycleService() {
 
     fun removeLocationUpdates() {
         Log.i(TAG, "Removing location updates")
+        repository.isRunning = false
         try {
             fusedLocationClient.removeLocationUpdates(locationCallback)
             setRequestingLocationUpdates(this, false)
@@ -190,20 +193,6 @@ class LocationService : LifecycleService() {
 
     inner class LocationBinder : Binder() {
         fun getService(): LocationService = this@LocationService
-    }
-
-    fun serviceIsRunningInForeground(context: Context): Boolean {
-        val manager = context.getSystemService(
-            ACTIVITY_SERVICE
-        ) as ActivityManager
-        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
-            if (javaClass.name == service.service.className) {
-                if (service.foreground) {
-                    return true
-                }
-            }
-        }
-        return false
     }
 
     companion object {

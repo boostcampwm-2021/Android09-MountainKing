@@ -9,6 +9,7 @@ import kotlinx.coroutines.withContext
 class Repository(context: Context) : RepositoryInterface {
 
     val database = AppDatabase.getInstance(context)?.achievementDao()
+    var isRunning = false
 
     override suspend fun getMountain() {
         //TODO("산정보불러오기")

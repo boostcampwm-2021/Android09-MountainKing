@@ -50,11 +50,8 @@ class LocationServiceManager(private val context: Context) {
     }
 
     fun unBindService() {
-        if (isServiceRunning() == true) {
-            context.unbindService(serviceConnection)
-            _isBound = false
-        }
+        context.unbindService(serviceConnection)
+        _isBound = false
     }
 
-    fun isServiceRunning() = locationService?.serviceIsRunningInForeground(context)
 }
