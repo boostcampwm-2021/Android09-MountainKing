@@ -138,12 +138,11 @@ class LocationService : LifecycleService() {
         setRequestingLocationUpdates(this, true)
 
         try {
-            Looper.myLooper()?.let {
-                fusedLocationClient.requestLocationUpdates(
-                    locationRequest,
-                    locationCallback, it
-                )
-            }
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                serviceHandler.looper
+            )
         } catch (unlikely: SecurityException) {
             setRequestingLocationUpdates(this, false)
             Log.e(TAG, "Lost location permission. Could not request updates. $unlikely")
@@ -182,6 +181,11 @@ class LocationService : LifecycleService() {
         super.onBind(intent)
         Log.i(TAG, "onBind")
         return binder
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        serviceHandler.removeCallbacksAndMessages(null)
     }
 
     inner class LocationBinder : Binder() {
