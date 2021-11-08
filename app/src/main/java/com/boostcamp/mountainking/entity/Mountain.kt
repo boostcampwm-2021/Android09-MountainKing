@@ -17,6 +17,6 @@ data class Mountain(
     val mountainDetails: String?,
     val transportationDetails: String?,
     val tourDetails: String?,
-    val mountainImageURL: String?,
+    val mountainImageURL: String,
     val mountainSubtitle: String?
 )
