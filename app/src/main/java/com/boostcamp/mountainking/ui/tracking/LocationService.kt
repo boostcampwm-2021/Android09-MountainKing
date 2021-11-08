@@ -1,7 +1,6 @@
 package com.boostcamp.mountainking.ui.tracking
 
 import android.app.*
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.location.Location
@@ -9,14 +8,17 @@ import android.os.*
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.boostcamp.mountainking.MainActivity
 import com.boostcamp.mountainking.R
+import com.boostcamp.mountainking.data.Repository
 import com.boostcamp.mountainking.util.setRequestingLocationUpdates
 import com.google.android.gms.location.*
 import kotlinx.coroutines.*
 
-class LocationService : Service() {
+class LocationService : LifecycleService() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var notificationManager: NotificationManager
     private lateinit var locationCallback: LocationCallback
@@ -29,10 +31,10 @@ class LocationService : Service() {
 
     private var curTime: Int = 0
     private var curDistance: Int = 0
-    lateinit var serviceHandler: Handler
+    private lateinit var serviceHandler: Handler
 
     private var isBound = true
-    var timer: Job? = null
+    private val repository = Repository.getInstance(this)
 
     override fun onCreate() {
         super.onCreate()
@@ -58,6 +60,8 @@ class LocationService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        super.onStartCommand(intent, flags, startId)
+        repository.isRunning = true
         Log.i(TAG, "onStartCommand")
         val activityIntent = Intent(this, MainActivity::class.java)
         val pendingIntent =
@@ -72,14 +76,13 @@ class LocationService : Service() {
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
 
-        timer = CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             while (isBound) {
                 delay(1000)
                 notificationBuilder.setContentText("시간 : ${timeConverter(++curTime)}")
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
             }
         }
-        Log.d("timer", timer.toString())
         requestLocationUpdates()
         return START_NOT_STICKY
     }
@@ -128,21 +131,21 @@ class LocationService : Service() {
         locationRequest = LocationRequest.create().apply {
             interval = UPDATE_INTERVAL_IN_MILLISECONDS
             fastestInterval = FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
+            smallestDisplacement = 10F
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
 
-    fun requestLocationUpdates() {
+    private fun requestLocationUpdates() {
         Log.i(TAG, "Requesting location updates")
         setRequestingLocationUpdates(this, true)
 
         try {
-            Looper.myLooper()?.let {
-                fusedLocationClient.requestLocationUpdates(
-                    locationRequest,
-                    locationCallback, it
-                )
-            }
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                serviceHandler.looper
+            )
         } catch (unlikely: SecurityException) {
             setRequestingLocationUpdates(this, false)
             Log.e(TAG, "Lost location permission. Could not request updates. $unlikely")
@@ -151,11 +154,10 @@ class LocationService : Service() {
 
     fun removeLocationUpdates() {
         Log.i(TAG, "Removing location updates")
+        repository.isRunning = false
         try {
             fusedLocationClient.removeLocationUpdates(locationCallback)
             setRequestingLocationUpdates(this, false)
-            Log.d("timer", timer.toString())
-            timer?.cancel()
             stopForeground(true)
             stopSelf()
         } catch (unlikely: SecurityException) {
@@ -179,27 +181,19 @@ class LocationService : Service() {
         LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
     }
 
-    override fun onBind(intent: Intent?): IBinder {
+    override fun onBind(intent: Intent): IBinder {
+        super.onBind(intent)
         Log.i(TAG, "onBind")
         return binder
     }
 
-    inner class LocationBinder : Binder() {
-        fun getService(): LocationService = this@LocationService
+    override fun onDestroy() {
+        super.onDestroy()
+        serviceHandler.removeCallbacksAndMessages(null)
     }
 
-    fun serviceIsRunningInForeground(context: Context): Boolean {
-        val manager = context.getSystemService(
-            ACTIVITY_SERVICE
-        ) as ActivityManager
-        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
-            if (javaClass.name == service.service.className) {
-                if (service.foreground) {
-                    return true
-                }
-            }
-        }
-        return false
+    inner class LocationBinder : Binder() {
+        fun getService(): LocationService = this@LocationService
     }
 
     companion object {

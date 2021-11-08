@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.boostcamp.mountainking.R
+import com.boostcamp.mountainking.data.Repository
 import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.StringGetter
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +13,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TrackingViewModel @Inject constructor(
     private val locationServiceManager: LocationServiceManager,
-    private val stringGetter: StringGetter
+    private val stringGetter: StringGetter,
+    private val repository: Repository
 ) : ViewModel() {
 
     private val _trackingTime = MutableLiveData<String>()
@@ -28,11 +30,15 @@ class TrackingViewModel @Inject constructor(
     val buttonText: LiveData<String> get() = _buttonText
 
     init {
-        _buttonText.value = stringGetter.getString(R.string.title_start_tracking)
+        if (repository.isRunning) {
+            _buttonText.value = stringGetter.getString(R.string.title_stop_tracking)
+        } else {
+            _buttonText.value = stringGetter.getString(R.string.title_start_tracking)
+        }
     }
 
     fun toggleService() {
-        if (locationServiceManager.isServiceRunning() == true) {
+        if (repository.isRunning) {
             _buttonText.value = stringGetter.getString(R.string.title_start_tracking)
             locationServiceManager.stopService()
         } else {
@@ -50,6 +56,8 @@ class TrackingViewModel @Inject constructor(
     }
 
     fun unbindService() {
-        locationServiceManager.unBindService()
+        if (repository.isRunning) {
+            locationServiceManager.unBindService()
+        }
     }
 }
