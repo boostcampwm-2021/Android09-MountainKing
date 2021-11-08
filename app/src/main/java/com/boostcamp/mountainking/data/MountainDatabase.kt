@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.boostcamp.mountainking.entity.Mountain
 
 
@@ -11,6 +12,8 @@ import com.boostcamp.mountainking.entity.Mountain
     entities = [Mountain::class], version = 1
 )
 abstract class MountainDatabase : RoomDatabase() {
+
+    abstract fun mountainDao(): MountainDao
 
     companion object {
         private var instance: MountainDatabase? = null
