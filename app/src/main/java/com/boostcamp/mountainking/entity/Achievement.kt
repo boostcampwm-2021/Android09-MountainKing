@@ -30,6 +30,7 @@ data class Achievement(
         } ?: ""
 
     fun progressAchievement(statistics: Statistics) {
+        if(isComplete) return
         curProgress = when (type) {
             AchievementType.TRACKING_TOTAL_DISTANCE -> {
                 statistics.distance
@@ -47,5 +48,13 @@ data class Achievement(
                 }.size
             }
         }
+        if(curProgress >= maxProgress) {
+            completeAchievement()
+        }
+    }
+
+    private fun completeAchievement() {
+        isComplete = true
+        completeDate = Date()
     }
 }
