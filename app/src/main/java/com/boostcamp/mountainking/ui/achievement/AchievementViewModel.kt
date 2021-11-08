@@ -46,9 +46,11 @@ class AchievementViewModel @Inject constructor(
         }
     }
 
-    fun updateAchievement() {
+    fun updateAchievement() = viewModelScope.launch {
         achievementList.forEach {
-            it.progressAchievement(statistics)
+            if (it.progressAchievement(statistics)){
+                repository.updateAchievement(it)
+            }
         }
         filterAchievementList()
     }

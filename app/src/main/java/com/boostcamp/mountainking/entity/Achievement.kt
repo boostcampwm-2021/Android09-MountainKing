@@ -29,8 +29,8 @@ data class Achievement(
             ).format(it)
         } ?: ""
 
-    fun progressAchievement(statistics: Statistics) {
-        if(isComplete) return
+    fun progressAchievement(statistics: Statistics): Boolean {
+        if(isComplete) return false
         curProgress = when (type) {
             AchievementType.TRACKING_TOTAL_DISTANCE -> {
                 statistics.distance
@@ -51,6 +51,7 @@ data class Achievement(
         if(curProgress >= maxProgress) {
             completeAchievement()
         }
+        return true
     }
 
     private fun completeAchievement() {
