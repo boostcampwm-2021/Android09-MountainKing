@@ -56,6 +56,8 @@ class TrackingViewModel @Inject constructor(
     }
 
     fun unbindService() {
-        locationServiceManager.unBindService()
+        if (repository.isRunning) {
+            locationServiceManager.unBindService()
+        }
     }
 }
