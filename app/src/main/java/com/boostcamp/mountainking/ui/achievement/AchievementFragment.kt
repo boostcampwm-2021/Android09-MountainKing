@@ -56,16 +56,19 @@ class AchievementFragment : Fragment() {
         }
     }
 
-    private fun initObserve() {
-        achievementViewModel.achievementListLiveData.observe(viewLifecycleOwner) {
+    private fun initObserve() = with(achievementViewModel) {
+        achievementListLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
             it.forEach { achievement ->
                 Log.d("UpdateTest", "${achievement.name}: ${achievement.curProgress}")
             }
         }
-        achievementViewModel.statisticsLiveData.observe(viewLifecycleOwner) {
-            achievementViewModel.updateAchievement()
+        statisticsLiveData.observe(viewLifecycleOwner) {
+            updateAchievement()
+        }
+        tabNameLiveData.observe(viewLifecycleOwner) {
+            filterAchievementList()
         }
     }
 
@@ -75,13 +78,13 @@ class AchievementFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) = with(achievementViewModel) {
                 when (tab?.text.toString()) {
                     getString(R.string.tl_achievement_category_total) -> {
-                        filterAchievementList()
+                        setTabName(AchievementViewModel.TabName.TOTAL)
                     }
                     getString(R.string.tl_achievement_category_complete) -> {
-                        filterAchievementList(true)
+                        setTabName(AchievementViewModel.TabName.COMPLETE)
                     }
                     getString(R.string.tl_achievement_category_incomplete) -> {
-                        filterAchievementList(false)
+                        setTabName(AchievementViewModel.TabName.INCOMPLETE)
                     }
                 }
             }
