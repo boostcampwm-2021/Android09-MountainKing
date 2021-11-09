@@ -8,11 +8,12 @@ import kotlinx.coroutines.withContext
 
 class Repository(context: Context) : RepositoryInterface {
 
+    val mountainDao = MountainDatabase.getInstance(context).mountainDao()
     val database = AppDatabase.getInstance(context)?.achievementDao()
     var isRunning = false
 
     override suspend fun getMountain() {
-        //TODO("산정보불러오기")
+        //TODO("산정보 불러오기")
     }
 
     override suspend fun getTracking() {
