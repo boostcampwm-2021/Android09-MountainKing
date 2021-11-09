@@ -21,4 +21,5 @@
     <string name="settings">설정</string>
     <string name="mountain_name">산 이름</string>
     <string name="cancel">취소</string>
+    <string name="mountain_image">산 사진</string>
 </resources>

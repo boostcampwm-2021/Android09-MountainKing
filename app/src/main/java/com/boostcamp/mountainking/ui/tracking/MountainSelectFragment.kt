@@ -15,6 +15,7 @@ class MountainSelectFragment : DialogFragment() {
     private var _binding: FragmentMountainSelectBinding? = null
     private val binding get() = _binding!!
     private val mountainSelectViewModel: MountainSelectViewModel by viewModels()
+    private val mountainListAdapter = MountainListAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,6 +30,10 @@ class MountainSelectFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = mountainSelectViewModel
+        setRecyclerView()
+        mountainSelectViewModel.mountainNameList.observe(viewLifecycleOwner) {
+            mountainListAdapter.submitList(it)
+        }
     }
 
     override fun onStart() {
@@ -39,6 +44,10 @@ class MountainSelectFragment : DialogFragment() {
             val height = ViewGroup.LayoutParams.MATCH_PARENT
             dialog.window?.setLayout(width, height)
         }
+    }
+
+    private fun setRecyclerView() {
+        binding.rvMountainList.adapter = mountainListAdapter
     }
 
     override fun onDestroyView() {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="mountain"
+            type="com.boostcamp.mountainking.entity.Mountain" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/iv_mountain"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/mountain_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_baseline_terrain_24" />
+
+        <TextView
+            android:id="@+id/tv_mountain_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:text="@{mountain.mountainName}"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/iv_mountain"
+            app:layout_constraintTop_toTopOf="@id/iv_mountain"
+            tools:text="산 이름" />
+
+        <TextView
+            android:id="@+id/tv_location_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@{mountain.locationName}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_mountain_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_mountain_name"
+            tools:text="산 위치" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
