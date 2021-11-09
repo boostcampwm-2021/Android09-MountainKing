@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentAchievementBinding
 import com.boostcamp.mountainking.entity.Achievement
+import com.boostcamp.mountainking.util.AchievementReceiver
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,8 +52,11 @@ class AchievementFragment : Fragment() {
 
     private fun initView() {
         binding.rvAchievementList.adapter = adapter
-        binding.btnAchievementTest.setOnClickListener {
+        binding.btnAchievementDistanceTest.setOnClickListener {
             achievementViewModel.increaseDistanceTest()
+        }
+        binding.btnAchievementCompleteTest.setOnClickListener {
+            AchievementReceiver().notifyAchievementComplete(requireContext(), "TEST")
         }
     }
 
