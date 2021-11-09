@@ -18,33 +18,55 @@ class AchievementViewModel @Inject constructor(
 
     private val _achievementListLiveData = MutableLiveData<List<Achievement>>()
     val achievementListLiveData: LiveData<List<Achievement>> get() = _achievementListLiveData
+    private val _tabNameLiveData = MutableLiveData<TabName>()
+    val tabNameLiveData: LiveData<TabName> get() = _tabNameLiveData
+
+    enum class TabName {
+        TOTAL,
+        COMPLETE,
+        INCOMPLETE
+    }
 
     private var achievementList = listOf<Achievement>()
     private val statistics = Statistics()
     private val _statisticsLiveData = MutableLiveData<Statistics>()
     val statisticsLiveData: LiveData<Statistics> get() = _statisticsLiveData
+    private val _completedAchievementLiveData = MutableLiveData<Achievement>()
+    val completedAchievementLiveData: LiveData<Achievement> get() = _completedAchievementLiveData
 
     fun loadAchievementList() = viewModelScope.launch {
         achievementList = repository.getAchievement()
-        _achievementListLiveData.value = achievementList
+        filterAchievementList()
     }
 
-    fun filterAchievementList(filter: Boolean? = null) {
-        _achievementListLiveData.value = filter?.let {
-            achievementList.filter { it.isComplete == filter }
-        } ?: achievementList
-    }
-
-    fun updateAchievement() {
-        achievementList.forEach {
-            it.progressAchievement(statistics)
+    fun filterAchievementList() {
+        _achievementListLiveData.value = when(_tabNameLiveData.value) {
+            TabName.TOTAL -> achievementList
+            TabName.COMPLETE -> achievementList.filter { it.isComplete }
+            TabName.INCOMPLETE -> achievementList.filter { !it.isComplete }
+            null -> achievementList
         }
-        _achievementListLiveData.value = achievementList
+    }
+
+    fun updateAchievement() = viewModelScope.launch {
+        achievementList.forEach {
+            if (it.progressAchievement(statistics)){
+                repository.updateAchievement(it)
+                if (it.isComplete) {
+                    _completedAchievementLiveData.value = it
+                }
+            }
+        }
+        filterAchievementList()
     }
 
     fun increaseDistanceTest(){
         statistics.distance += 10
         statistics.time += 5
         _statisticsLiveData.value = statistics
+    }
+
+    fun setTabName(tabName: TabName) {
+        _tabNameLiveData.value = tabName
     }
 }
