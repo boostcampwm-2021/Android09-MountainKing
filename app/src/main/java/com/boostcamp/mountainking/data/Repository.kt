@@ -10,7 +10,7 @@ class Repository(context: Context) : RepositoryInterface {
 
     val mountainDao = MountainDatabase.getInstance(context).mountainDao()
     val database = AppDatabase.getInstance(context)?.achievementDao()
-    var isRunning = false
+    override var isRunning = false
 
     override suspend fun getMountain() {
         //TODO("산정보 불러오기")

@@ -12,4 +12,6 @@ interface RepositoryInterface {
     suspend fun putTracking()
     suspend fun updateStatistics()
     suspend fun updateAchievement(achievement: Achievement)
+
+    var isRunning: Boolean
 }

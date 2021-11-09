@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.boostcamp.mountainking.R
-import com.boostcamp.mountainking.data.Repository
+import com.boostcamp.mountainking.data.RepositoryInterface
 import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.StringGetter
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +14,7 @@ import javax.inject.Inject
 class TrackingViewModel @Inject constructor(
     private val locationServiceManager: LocationServiceManager,
     private val stringGetter: StringGetter,
-    private val repository: Repository
+    private val repository: RepositoryInterface
 ) : ViewModel() {
 
     private val _trackingTime = MutableLiveData<String>()
