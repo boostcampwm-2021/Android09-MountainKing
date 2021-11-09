@@ -31,6 +31,8 @@ class AchievementViewModel @Inject constructor(
     private val statistics = Statistics()
     private val _statisticsLiveData = MutableLiveData<Statistics>()
     val statisticsLiveData: LiveData<Statistics> get() = _statisticsLiveData
+    private val _completedAchievementLiveData = MutableLiveData<Achievement>()
+    val completedAchievementLiveData: LiveData<Achievement> get() = _completedAchievementLiveData
 
     fun loadAchievementList() = viewModelScope.launch {
         achievementList = repository.getAchievement()
@@ -50,6 +52,9 @@ class AchievementViewModel @Inject constructor(
         achievementList.forEach {
             if (it.progressAchievement(statistics)){
                 repository.updateAchievement(it)
+                if (it.isComplete) {
+                    _completedAchievementLiveData.value = it
+                }
             }
         }
         filterAchievementList()

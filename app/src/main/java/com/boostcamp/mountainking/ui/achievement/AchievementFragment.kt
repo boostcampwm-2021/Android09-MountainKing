@@ -56,7 +56,7 @@ class AchievementFragment : Fragment() {
             achievementViewModel.increaseDistanceTest()
         }
         binding.btnAchievementCompleteTest.setOnClickListener {
-            AchievementReceiver().notifyAchievementComplete(requireContext(), "TEST")
+            onAchievementComplete("TEST")
         }
     }
 
@@ -73,6 +73,9 @@ class AchievementFragment : Fragment() {
         }
         tabNameLiveData.observe(viewLifecycleOwner) {
             filterAchievementList()
+        }
+        completedAchievementLiveData.observe(viewLifecycleOwner) {
+            onAchievementComplete(it.name)
         }
     }
 
@@ -104,5 +107,9 @@ class AchievementFragment : Fragment() {
     private fun onClick(achievement: Achievement) {
         Log.d("onClick", achievement.name)
         //TODO: 공유하기
+    }
+
+    private fun onAchievementComplete(achievementName: String) {
+        AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
     }
 }
