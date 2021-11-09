@@ -87,7 +87,7 @@ class LocationService : LifecycleService() {
                 delay(1000)
                 notificationBuilder.setContentText("시간 : ${timeConverter(++curTime)}")
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
-                repository.curTime.postValue(curTime)
+                repository.curTime.postValue(timeConverter(curTime))
             }
         }
         requestLocationUpdates()
@@ -99,7 +99,17 @@ class LocationService : LifecycleService() {
         val hour = div / 60
         val minute = div - (hour * 60)
         val second = time - (div * 60)
-        return "$hour:$minute:$second"
+
+        return "${digitConverter(hour)}:${digitConverter(minute)}:${digitConverter(second)}"
+    }
+
+    private fun digitConverter(time: Int): String {
+        return if (time.toString().length == 1){
+            "0$time"
+        }
+        else{
+            time.toString()
+        }
     }
 
     // notification channel 생성

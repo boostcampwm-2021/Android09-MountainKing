@@ -17,7 +17,7 @@ class Repository(context: Context) : RepositoryInterface {
     val database = AppDatabase.getInstance(context)?.achievementDao()
     val trackingDatabase = AppDatabase.getInstance(context)?.trackingDao()
     var isRunning = false
-    var curTime = MutableLiveData<Int>()
+    var curTime = MutableLiveData<String>()
     var curDistance = MutableLiveData<Int>()
     var date = MutableLiveData<String>()
 

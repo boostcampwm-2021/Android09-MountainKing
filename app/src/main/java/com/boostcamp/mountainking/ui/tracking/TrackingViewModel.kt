@@ -24,7 +24,7 @@ class TrackingViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
 
-    val trackingTime: LiveData<Int> get() = repository.curTime
+    val trackingTime: LiveData<String> get() = repository.curTime
     val trackingDistance: LiveData<Int> get() = repository.curDistance
     val date: LiveData<String> get() = repository.date
 
