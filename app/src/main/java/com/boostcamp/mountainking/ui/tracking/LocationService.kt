@@ -92,7 +92,7 @@ class LocationService : LifecycleService() {
         val hour = div / 60
         val minute = div - (hour * 60)
         val second = time - (div * 60)
-        return "$hour:$minute:$second"
+        return String.format("%02d:%02d:%02d", hour,minute,second)
     }
 
     // notification channel 생성
