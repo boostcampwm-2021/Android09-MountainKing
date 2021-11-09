@@ -3,12 +3,13 @@ package com.boostcamp.mountainking.data
 import android.content.Context
 import android.util.Log
 import com.boostcamp.mountainking.entity.Achievement
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class Repository(context: Context) : RepositoryInterface {
 
-    val mountainDao = MountainDatabase.getInstance(context).mountainDao()
+    private val mountainDao = MountainDatabase.getInstance(context).mountainDao()
     val database = AppDatabase.getInstance(context)?.achievementDao()
     override var isRunning = false
 
@@ -36,6 +37,12 @@ class Repository(context: Context) : RepositoryInterface {
 
     override suspend fun getWeather() {
         //TODO("날씨불러오기")
+    }
+
+    override suspend fun searchMountainName(name: String): List<String> {
+        return withContext(Dispatchers.IO) {
+            mountainDao.searchMountainName(name)
+        }
     }
 
     override suspend fun putTracking() {

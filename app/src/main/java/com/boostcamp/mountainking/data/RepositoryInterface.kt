@@ -8,6 +8,7 @@ interface RepositoryInterface {
     suspend fun getAchievement(): List<Achievement>
     suspend fun getStatistics()
     suspend fun getWeather()
+    suspend fun searchMountainName(name: String): List<String>
 
     suspend fun putTracking()
     suspend fun updateStatistics()
