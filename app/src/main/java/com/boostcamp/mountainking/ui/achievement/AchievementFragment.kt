@@ -10,8 +10,18 @@ import androidx.fragment.app.viewModels
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentAchievementBinding
 import com.boostcamp.mountainking.entity.Achievement
+import com.boostcamp.mountainking.util.AchievementReceiver
 import com.google.android.material.tabs.TabLayout
+import com.kakao.kakaolink.v2.KakaoLinkResponse
+import com.kakao.kakaolink.v2.KakaoLinkService
+import com.kakao.message.template.ButtonObject
+import com.kakao.message.template.ContentObject
+import com.kakao.message.template.FeedTemplate
+import com.kakao.message.template.LinkObject
+import com.kakao.network.ErrorResult
+import com.kakao.network.callback.ResponseCallback
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class AchievementFragment : Fragment() {
@@ -51,21 +61,30 @@ class AchievementFragment : Fragment() {
 
     private fun initView() {
         binding.rvAchievementList.adapter = adapter
-        binding.btnAchievementTest.setOnClickListener {
+        binding.btnAchievementDistanceTest.setOnClickListener {
             achievementViewModel.increaseDistanceTest()
+        }
+        binding.btnAchievementCompleteTest.setOnClickListener {
+            onAchievementComplete("TEST")
         }
     }
 
-    private fun initObserve() {
-        achievementViewModel.achievementListLiveData.observe(viewLifecycleOwner) {
+    private fun initObserve() = with(achievementViewModel) {
+        achievementListLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
             it.forEach { achievement ->
                 Log.d("UpdateTest", "${achievement.name}: ${achievement.curProgress}")
             }
         }
-        achievementViewModel.statisticsLiveData.observe(viewLifecycleOwner) {
-            achievementViewModel.updateAchievement()
+        statisticsLiveData.observe(viewLifecycleOwner) {
+            updateAchievement()
+        }
+        tabNameLiveData.observe(viewLifecycleOwner) {
+            filterAchievementList()
+        }
+        completedAchievementLiveData.observe(viewLifecycleOwner) {
+            onAchievementComplete(it.name)
         }
     }
 
@@ -75,13 +94,13 @@ class AchievementFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) = with(achievementViewModel) {
                 when (tab?.text.toString()) {
                     getString(R.string.tl_achievement_category_total) -> {
-                        filterAchievementList()
+                        setTabName(AchievementViewModel.TabName.TOTAL)
                     }
                     getString(R.string.tl_achievement_category_complete) -> {
-                        filterAchievementList(true)
+                        setTabName(AchievementViewModel.TabName.COMPLETE)
                     }
                     getString(R.string.tl_achievement_category_incomplete) -> {
-                        filterAchievementList(false)
+                        setTabName(AchievementViewModel.TabName.INCOMPLETE)
                     }
                 }
             }
@@ -95,7 +114,53 @@ class AchievementFragment : Fragment() {
     }
 
     private fun onClick(achievement: Achievement) {
+        //TODO "complete 일때만 클릭 가능하게"
         Log.d("onClick", achievement.name)
-        //TODO: 공유하기
+        sendKakao(achievement)
+    }
+
+    private fun sendKakao(achievement: Achievement) {
+
+        val params = FeedTemplate.newBuilder(
+            ContentObject.newBuilder(
+                "${achievement.name} 달성",
+                achievement.thumbnailUrl,
+                LinkObject.newBuilder()
+                    .setWebUrl("")
+                    .setMobileWebUrl("")
+                    .build()
+            )
+                .setDescrption("업적을 달성했습니다.")
+                .build()
+        )
+            .addButton(
+                ButtonObject(
+                    "앱 연결",
+                    LinkObject.newBuilder()
+                        .setAndroidExecutionParams("key1=value1")
+                        .build()
+                )
+            )
+            .build()
+
+        KakaoLinkService.getInstance()
+            .sendDefault(requireContext(), params, object : ResponseCallback<KakaoLinkResponse>() {
+                override fun onFailure(errorResult: ErrorResult) {
+                    Log.e("KAKAO_API", "카카오링크 공유 실패: $errorResult")
+                }
+
+                override fun onSuccess(result: KakaoLinkResponse) {
+                    Log.i("KAKAO_API", "카카오링크 공유 성공")
+
+                    // 카카오링크 보내기에 성공했지만 아래 경고 메시지가 존재할 경우 일부 컨텐츠가 정상 동작하지 않을 수 있습니다.
+                    Log.w("KAKAO_API", "warning messages: " + result.warningMsg)
+                    Log.w("KAKAO_API", "argument messages: " + result.argumentMsg)
+                }
+            })
+
+    }
+
+    private fun onAchievementComplete(achievementName: String) {
+        AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
     }
 }
