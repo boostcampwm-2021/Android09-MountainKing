@@ -14,6 +14,7 @@ import java.util.*
 
 class Repository(context: Context) : RepositoryInterface {
 
+    val mountainDao = MountainDatabase.getInstance(context).mountainDao()
     val database = AppDatabase.getInstance(context)?.achievementDao()
     val trackingDatabase = AppDatabase.getInstance(context)?.trackingDao()
     var isRunning = false
@@ -23,7 +24,7 @@ class Repository(context: Context) : RepositoryInterface {
     var coordinates = MutableLiveData<List<Pair<Float, Float>>>()
 
     override suspend fun getMountain() {
-        //TODO("산정보불러오기")
+        //TODO("산정보 불러오기")
     }
 
     override suspend fun getTracking(): List<Tracking> = withContext(Dispatchers.IO) {

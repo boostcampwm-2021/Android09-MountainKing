@@ -9,7 +9,11 @@
         android:id="@+id/navigation_tracking"
         android:name="com.boostcamp.mountainking.ui.tracking.TrackingFragment"
         android:label="@string/title_tracking"
-        tools:layout="@layout/fragment_tracking" />
+        tools:layout="@layout/fragment_tracking" >
+        <action
+            android:id="@+id/action_tracking_to_history"
+            app:destination="@id/navigation_history" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_achievement"
@@ -22,4 +26,16 @@
         android:name="com.boostcamp.mountainking.ui.mountain.MountainFragment"
         android:label="@string/title_mountain"
         tools:layout="@layout/fragment_mountain" />
+
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.boostcamp.mountainking.ui.tracking.history.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_history_to_tracking"
+            app:popUpTo="@id/navigation_tracking"
+            app:popUpToInclusive="true"
+            app:destination="@id/navigation_tracking" />
+    </fragment>
 </navigation>

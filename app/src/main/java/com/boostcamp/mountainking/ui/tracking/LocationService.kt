@@ -100,16 +100,7 @@ class LocationService : LifecycleService() {
         val minute = div - (hour * 60)
         val second = time - (div * 60)
 
-        return "${digitConverter(hour)}:${digitConverter(minute)}:${digitConverter(second)}"
-    }
-
-    private fun digitConverter(time: Int): String {
-        return if (time.toString().length == 1){
-            "0$time"
-        }
-        else{
-            time.toString()
-        }
+        return String.format("%02d:%02d:%02d", hour,minute,second)
     }
 
     // notification channel 생성
