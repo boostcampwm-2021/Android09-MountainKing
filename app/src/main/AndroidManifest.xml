@@ -25,6 +25,13 @@
             </intent-filter>
         </activity>
         <service android:name=".ui.tracking.LocationService" />
+        <receiver android:name=".util.AchievementReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
