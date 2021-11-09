@@ -54,11 +54,6 @@ class TrackingViewModel @Inject constructor(
             }
         } else {
             _checkPermission.value = Event(Unit)
-            CoroutineScope(Dispatchers.IO).launch { // TODO delete
-                withContext(Dispatchers.Main) {
-                    Log.d("temp", "${repository.getTracking().size}")
-                }
-            }
         }
     }
 
