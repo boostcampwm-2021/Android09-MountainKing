@@ -1,5 +1,7 @@
 package com.boostcamp.mountainking.entity
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.boostcamp.mountainking.data.Statistics
@@ -29,8 +31,9 @@ data class Achievement(
             ).format(it)
         } ?: ""
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun progressAchievement(statistics: Statistics): Boolean {
-        if(isComplete) return false
+        if (isComplete) return false
         curProgress = when (type) {
             AchievementType.TRACKING_TOTAL_DISTANCE -> {
                 statistics.distance
@@ -38,7 +41,9 @@ data class Achievement(
             AchievementType.TRACKING_TOTAL_COUNT -> {
                 statistics.mountainMap.values.sum()
             }
-            AchievementType.TRACKING_PERIOD_COUNT -> { 0 }
+            AchievementType.TRACKING_PERIOD_COUNT -> {
+                0
+            }
             AchievementType.MOUNTAIN_COUNT -> {
                 statistics.mountainMap[0] ?: 0
             }
@@ -48,7 +53,7 @@ data class Achievement(
                 }.size
             }
         }
-        if(curProgress >= maxProgress) {
+        if (curProgress >= maxProgress) {
             completeAchievement()
         }
         return true
