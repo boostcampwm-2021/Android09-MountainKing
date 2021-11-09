@@ -74,7 +74,7 @@ class LocationService : LifecycleService() {
             PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("등산 이력 기록중 ...")
+            .setContentTitle("${repository.trackingMountain?.substringBefore("(")} 등산 중...")
             .setContentText("시간 : ${timeConverter(curTime)}")
             .setContentIntent(pendingIntent)
             .setOnlyAlertOnce(true)

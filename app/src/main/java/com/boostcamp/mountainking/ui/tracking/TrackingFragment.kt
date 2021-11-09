@@ -2,6 +2,7 @@ package com.boostcamp.mountainking.ui.tracking
 
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -24,7 +25,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TrackingFragment : Fragment() {
+class TrackingFragment : Fragment(), DialogInterface.OnDismissListener {
     private val trackingViewModel: TrackingViewModel by viewModels()
     private var _binding: FragmentTrackingBinding? = null
     private val binding get() = _binding!!
@@ -80,6 +81,14 @@ class TrackingFragment : Fragment() {
                 trackingViewModel.startService()
             }
         })
+        trackingViewModel.showDialog.observe(viewLifecycleOwner, EventObserver {
+            showDialog()
+        })
+    }
+
+    private fun showDialog() {
+        val dialog = MountainSelectFragment()
+        dialog.show(childFragmentManager, DIALOG)
     }
 
     private fun isPermissionNotGranted(): Boolean {
@@ -138,5 +147,10 @@ class TrackingFragment : Fragment() {
 
     companion object {
         private val TAG = TrackingFragment::class.simpleName
+        private const val DIALOG = "dialog"
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        trackingViewModel.checkPermission()
     }
 }

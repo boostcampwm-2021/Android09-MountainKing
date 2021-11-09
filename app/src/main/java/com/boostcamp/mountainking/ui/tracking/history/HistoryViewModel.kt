@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.mountainking.data.Repository
+import com.boostcamp.mountainking.data.RepositoryInterface
 import com.boostcamp.mountainking.entity.Tracking
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: RepositoryInterface
 ) : ViewModel() {
 
     private val _historyList = MutableLiveData<List<Tracking>>()

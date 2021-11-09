@@ -11,7 +11,9 @@ import androidx.navigation.fragment.findNavController
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentHistoryBinding
 import com.boostcamp.mountainking.ui.tracking.history.adapter.HistoryAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HistoryFragment
     : Fragment(), OnHistoryItemClickListener {
     private lateinit var binding: FragmentHistoryBinding
