@@ -79,7 +79,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_time_default" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_tracking_report"
+            android:id="@+id/btn_tracking_history"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
