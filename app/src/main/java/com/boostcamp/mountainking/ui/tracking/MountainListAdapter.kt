@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.mountainking.databinding.ItemMountainBinding
 import com.boostcamp.mountainking.entity.Mountain
+import com.bumptech.glide.Glide
 
 class MountainListAdapter : ListAdapter<Mountain, MountainListAdapter.MountainViewHolder>(object :
     DiffUtil.ItemCallback<Mountain>() {
@@ -30,6 +31,11 @@ class MountainListAdapter : ListAdapter<Mountain, MountainListAdapter.MountainVi
         )
     }
 
+    override fun onViewRecycled(holder: MountainViewHolder) {
+        super.onViewRecycled(holder)
+        holder.freeImage()
+    }
+
     override fun onBindViewHolder(holder: MountainViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
@@ -41,7 +47,7 @@ class MountainListAdapter : ListAdapter<Mountain, MountainListAdapter.MountainVi
         }
 
         fun freeImage() {
-            //TODO: Free glide image
+            Glide.with(itemView.context).clear(binding.ivMountain)
         }
     }
 }
