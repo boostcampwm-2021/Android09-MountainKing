@@ -9,17 +9,18 @@ import com.boostcamp.mountainking.databinding.ItemMountainBinding
 import com.boostcamp.mountainking.entity.Mountain
 import com.bumptech.glide.Glide
 
-class MountainListAdapter : ListAdapter<Mountain, MountainListAdapter.MountainViewHolder>(object :
-    DiffUtil.ItemCallback<Mountain>() {
+class MountainListAdapter(private val onClick: (Mountain) -> Unit) :
+    ListAdapter<Mountain, MountainListAdapter.MountainViewHolder>(object :
+        DiffUtil.ItemCallback<Mountain>() {
 
-    override fun areItemsTheSame(oldItem: Mountain, newItem: Mountain): Boolean {
-        return oldItem.id == newItem.id
-    }
+        override fun areItemsTheSame(oldItem: Mountain, newItem: Mountain): Boolean {
+            return oldItem.id == newItem.id
+        }
 
-    override fun areContentsTheSame(oldItem: Mountain, newItem: Mountain): Boolean {
-        return oldItem == newItem
-    }
-}) {
+        override fun areContentsTheSame(oldItem: Mountain, newItem: Mountain): Boolean {
+            return oldItem == newItem
+        }
+    }) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MountainViewHolder {
         return MountainViewHolder(
@@ -27,7 +28,8 @@ class MountainListAdapter : ListAdapter<Mountain, MountainListAdapter.MountainVi
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            onClick
         )
     }
 
@@ -40,10 +42,23 @@ class MountainListAdapter : ListAdapter<Mountain, MountainListAdapter.MountainVi
         holder.bind(getItem(position))
     }
 
-    class MountainViewHolder(private val binding: ItemMountainBinding) :
+    class MountainViewHolder(
+        private val binding: ItemMountainBinding,
+        private val onClick: (Mountain) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
+
+        lateinit var mountain: Mountain
+
+        init {
+            itemView.setOnClickListener {
+                onClick(mountain)
+            }
+        }
+
         fun bind(mountain: Mountain) {
             binding.mountain = mountain
+            this.mountain = mountain
         }
 
         fun freeImage() {

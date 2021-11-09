@@ -41,4 +41,9 @@ class MountainSelectViewModel @Inject constructor(private val repository: Reposi
             Log.d("mountains", it.toString())
         }
     }
+
+    fun setTrackingMountainName(mountainName: String) {
+        repository.trackingMountain = mountainName
+        cancel()
+    }
 }

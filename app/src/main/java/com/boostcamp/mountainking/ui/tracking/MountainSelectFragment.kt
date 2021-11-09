@@ -2,13 +2,13 @@ package com.boostcamp.mountainking.ui.tracking
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.boostcamp.mountainking.databinding.FragmentMountainSelectBinding
+import com.boostcamp.mountainking.entity.Mountain
 import com.boostcamp.mountainking.util.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,7 +18,7 @@ class MountainSelectFragment : DialogFragment() {
     private var _binding: FragmentMountainSelectBinding? = null
     private val binding get() = _binding!!
     private val mountainSelectViewModel: MountainSelectViewModel by viewModels()
-    private val mountainListAdapter = MountainListAdapter()
+    private val mountainListAdapter = MountainListAdapter { mountain -> onMountainClicked(mountain)}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,6 +62,10 @@ class MountainSelectFragment : DialogFragment() {
 
     private fun setRecyclerView() {
         binding.rvMountainList.adapter = mountainListAdapter
+    }
+
+    private fun onMountainClicked(mountain: Mountain) {
+        mountainSelectViewModel.setTrackingMountainName(mountain.toString())
     }
 
     override fun onDestroyView() {

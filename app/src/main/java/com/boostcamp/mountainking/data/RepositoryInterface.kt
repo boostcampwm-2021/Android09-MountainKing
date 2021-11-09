@@ -16,5 +16,5 @@ interface RepositoryInterface {
     suspend fun updateAchievement(achievement: Achievement)
 
     var isRunning: Boolean
-    var trackingMountain: Mountain?
+    var trackingMountain: String?
 }
