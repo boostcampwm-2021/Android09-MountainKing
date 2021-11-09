@@ -19,4 +19,8 @@ data class Mountain(
     val tourDetails: String?,
     val mountainImageURL: String,
     val mountainSubtitle: String?
-)
+) {
+    override fun toString(): String {
+        return "$mountainName($locationName)"
+    }
+}

@@ -3,6 +3,7 @@ package com.boostcamp.mountainking.data
 import android.content.Context
 import android.util.Log
 import com.boostcamp.mountainking.entity.Achievement
+import com.boostcamp.mountainking.entity.Mountain
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -39,7 +40,7 @@ class Repository(context: Context) : RepositoryInterface {
         //TODO("날씨불러오기")
     }
 
-    override suspend fun searchMountainName(name: String): List<String> {
+    override suspend fun searchMountainName(name: String): List<Mountain> {
         return withContext(Dispatchers.IO) {
             mountainDao.searchMountainName(name)
         }
