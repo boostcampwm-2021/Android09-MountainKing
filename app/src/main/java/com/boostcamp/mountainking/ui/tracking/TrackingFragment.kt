@@ -2,6 +2,7 @@ package com.boostcamp.mountainking.ui.tracking
 
 
 import android.Manifest
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -14,9 +15,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.boostcamp.mountainking.BuildConfig
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentTrackingBinding
@@ -25,7 +24,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TrackingFragment : Fragment() {
+class TrackingFragment : Fragment(), DialogInterface.OnDismissListener {
     private val trackingViewModel: TrackingViewModel by viewModels()
     private var _binding: FragmentTrackingBinding? = null
     private val binding get() = _binding!!
@@ -82,7 +81,8 @@ class TrackingFragment : Fragment() {
     }
 
     private fun showDialog() {
-        findNavController().navigate(R.id.action_navigation_tracking_to_mountainSelectFragment)
+        val dialog = MountainSelectFragment()
+        dialog.show(childFragmentManager, DIALOG)
     }
 
     private fun isPermissionNotGranted(): Boolean {
@@ -141,5 +141,10 @@ class TrackingFragment : Fragment() {
 
     companion object {
         private val TAG = TrackingFragment::class.simpleName
+        private const val DIALOG = "dialog"
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        trackingViewModel.checkPermission()
     }
 }

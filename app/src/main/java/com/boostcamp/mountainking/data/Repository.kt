@@ -1,10 +1,8 @@
 package com.boostcamp.mountainking.data
 
 import android.content.Context
-import android.util.Log
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.Mountain
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -13,6 +11,7 @@ class Repository(context: Context) : RepositoryInterface {
     private val mountainDao = MountainDatabase.getInstance(context).mountainDao()
     val database = AppDatabase.getInstance(context)?.achievementDao()
     override var isRunning = false
+    override var trackingMountain: Mountain? = null
 
     override suspend fun getMountain() {
         //TODO("산정보 불러오기")

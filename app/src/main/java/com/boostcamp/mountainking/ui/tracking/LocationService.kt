@@ -155,6 +155,7 @@ class LocationService : LifecycleService() {
     fun removeLocationUpdates() {
         Log.i(TAG, "Removing location updates")
         repository.isRunning = false
+        repository.trackingMountain = null
         try {
             fusedLocationClient.removeLocationUpdates(locationCallback)
             setRequestingLocationUpdates(this, false)

@@ -1,12 +1,15 @@
 package com.boostcamp.mountainking.ui.tracking
 
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.boostcamp.mountainking.databinding.FragmentMountainSelectBinding
+import com.boostcamp.mountainking.util.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,6 +37,9 @@ class MountainSelectFragment : DialogFragment() {
         mountainSelectViewModel.mountainNameList.observe(viewLifecycleOwner) {
             mountainListAdapter.submitList(it)
         }
+        mountainSelectViewModel.dismiss.observe(viewLifecycleOwner, EventObserver{
+            dismiss()
+        })
     }
 
     override fun onStart() {
@@ -43,6 +49,14 @@ class MountainSelectFragment : DialogFragment() {
             val width = ViewGroup.LayoutParams.MATCH_PARENT
             val height = ViewGroup.LayoutParams.MATCH_PARENT
             dialog.window?.setLayout(width, height)
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        val parentFragment = parentFragment
+        if (parentFragment is DialogInterface.OnDismissListener) {
+            parentFragment.onDismiss(dialog)
         }
     }
 

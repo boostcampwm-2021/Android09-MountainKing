@@ -1,13 +1,13 @@
 package com.boostcamp.mountainking.ui.tracking
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.util.Log
+import androidx.lifecycle.*
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.data.RepositoryInterface
 import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.StringGetter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,8 +17,6 @@ class TrackingViewModel @Inject constructor(
     private val repository: RepositoryInterface
 ) : ViewModel() {
 
-    private val _trackingTime = MutableLiveData<String>()
-    val trackingTime: LiveData<String> get() = _trackingTime
 
     private val _trackingDistance = MutableLiveData<String>()
     val trackingDistance: LiveData<String> get() = _trackingDistance
@@ -46,6 +44,11 @@ class TrackingViewModel @Inject constructor(
             locationServiceManager.stopService()
         } else {
             _showDialog.value = Event(Unit)
+        }
+    }
+
+    fun checkPermission() {
+        if (repository.trackingMountain != null) {
             _checkPermission.value = Event(Unit)
         }
     }

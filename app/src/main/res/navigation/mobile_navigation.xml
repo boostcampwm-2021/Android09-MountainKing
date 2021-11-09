@@ -9,7 +9,7 @@
         android:id="@+id/navigation_tracking"
         android:name="com.boostcamp.mountainking.ui.tracking.TrackingFragment"
         android:label="@string/title_tracking"
-        tools:layout="@layout/fragment_tracking" >
+        tools:layout="@layout/fragment_tracking">
         <action
             android:id="@+id/action_navigation_tracking_to_mountainSelectFragment"
             app:destination="@id/mountainSelectFragment" />
