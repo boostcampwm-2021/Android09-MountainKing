@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.boostcamp.mountainking.BuildConfig
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentTrackingBinding
@@ -62,7 +63,12 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener {
     ): View {
         _binding = FragmentTrackingBinding.inflate(inflater, container, false)
         binding.trackingViewModel = trackingViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
+        with(binding) {
+            lifecycleOwner = viewLifecycleOwner
+            btnTrackingHistory.setOnClickListener {
+                findNavController().navigate(R.id.action_tracking_to_history)
+            }
+        }
         return binding.root
     }
 

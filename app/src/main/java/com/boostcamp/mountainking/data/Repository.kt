@@ -3,8 +3,11 @@ package com.boostcamp.mountainking.data
 import android.content.Context
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.Mountain
+import androidx.lifecycle.MutableLiveData
+import com.boostcamp.mountainking.entity.Tracking
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class Repository(context: Context) : RepositoryInterface {
 
@@ -12,13 +15,18 @@ class Repository(context: Context) : RepositoryInterface {
     val database = AppDatabase.getInstance(context)?.achievementDao()
     override var isRunning = false
     override var trackingMountain: String? = null
+    val trackingDatabase = AppDatabase.getInstance(context)?.trackingDao()
+    override var curTime = MutableLiveData<String>()
+    override var curDistance = MutableLiveData<Int>()
+    override var date = MutableLiveData<String>()
+    var coordinates = MutableLiveData<List<Pair<Float, Float>>>()
 
     override suspend fun getMountain() {
         //TODO("산정보 불러오기")
     }
 
-    override suspend fun getTracking() {
-        //TODO("등산기록불러오기")
+    override suspend fun getTracking(): List<Tracking> = withContext(Dispatchers.IO) {
+        trackingDatabase?.getTrackingData() ?: listOf()
     }
 
     override suspend fun getAchievement(): List<Achievement> = withContext(Dispatchers.IO) {
@@ -45,8 +53,8 @@ class Repository(context: Context) : RepositoryInterface {
         }
     }
 
-    override suspend fun putTracking() {
-        //TODO("등산기록저장하기")
+    override suspend fun putTracking(tracking: Tracking) {
+        trackingDatabase?.insert(tracking)
     }
 
     override suspend fun updateStatistics() {

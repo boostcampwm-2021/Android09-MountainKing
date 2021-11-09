@@ -8,6 +8,11 @@ import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.StringGetter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import com.boostcamp.mountainking.entity.Tracking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,8 +23,9 @@ class TrackingViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private val _trackingDistance = MutableLiveData<String>()
-    val trackingDistance: LiveData<String> get() = _trackingDistance
+    val trackingTime: LiveData<String> get() = repository.curTime
+    val trackingDistance: LiveData<Int> get() = repository.curDistance
+    val date: LiveData<String> get() = repository.date
 
     private val _checkPermission = MutableLiveData<Event<Unit>>()
     val checkPermission: LiveData<Event<Unit>> get() = _checkPermission
@@ -42,6 +48,22 @@ class TrackingViewModel @Inject constructor(
         if (repository.isRunning) {
             _buttonText.value = stringGetter.getString(R.string.title_start_tracking)
             locationServiceManager.stopService()
+
+            CoroutineScope(Dispatchers.IO).launch { // TODO mountainName 추가 필요
+                withContext(Dispatchers.Main) {
+                    repository.putTracking(
+                        Tracking(
+                            id = 0,
+                            repository.trackingMountain.toString(),
+                            date.value,
+                            "",
+                            trackingTime.value.toString(),
+                            trackingDistance.value.toString()
+                        )
+                    )
+                    repository.trackingMountain = null
+                }
+            }
         } else {
             _showDialog.value = Event(Unit)
         }
