@@ -2,6 +2,7 @@ package com.boostcamp.mountainking.di
 
 import android.content.Context
 import com.boostcamp.mountainking.data.Repository
+import com.boostcamp.mountainking.data.RepositoryInterface
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +15,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 class RepositoryModule {
     @ViewModelScoped
     @Provides
-    fun provideRepository(@ApplicationContext context: Context): Repository {
+    fun provideRepository(@ApplicationContext context: Context): RepositoryInterface {
         return Repository.getInstance(context)
     }
 }

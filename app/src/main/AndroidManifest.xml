@@ -9,12 +9,12 @@
 
     <application
         android:name=".LogApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MountainKing">
+        android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
         <activity
             android:name="com.boostcamp.mountainking.MainActivity"
             android:exported="true">
@@ -24,7 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".ui.tracking.LocationService" />
+        <service
+            android:name=".ui.tracking.LocationService"
+            android:foregroundServiceType="location" />
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="3d410dea6299c6acb95670e4cae1bd4f" />

@@ -14,9 +14,13 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.boostcamp.mountainking.MainActivity
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.data.Repository
+import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.setRequestingLocationUpdates
 import com.google.android.gms.location.*
 import kotlinx.coroutines.*
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
 
 class LocationService : LifecycleService() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -61,14 +65,16 @@ class LocationService : LifecycleService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        repository.isRunning = true
         Log.i(TAG, "onStartCommand")
+
+        repository.isRunning = true
+        repository.date.postValue(LocalDate.now().toString())
         val activityIntent = Intent(this, MainActivity::class.java)
         val pendingIntent =
             PendingIntent.getActivity(this, 0, activityIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("등산 이력 기록중 ...")
+            .setContentTitle("${repository.trackingMountain?.substringBefore("(")} 등산 중...")
             .setContentText("시간 : ${timeConverter(curTime)}")
             .setContentIntent(pendingIntent)
             .setOnlyAlertOnce(true)
@@ -81,6 +87,7 @@ class LocationService : LifecycleService() {
                 delay(1000)
                 notificationBuilder.setContentText("시간 : ${timeConverter(++curTime)}")
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
+                repository.curTime.postValue(timeConverter(curTime))
             }
         }
         requestLocationUpdates()
@@ -92,7 +99,8 @@ class LocationService : LifecycleService() {
         val hour = div / 60
         val minute = div - (hour * 60)
         val second = time - (div * 60)
-        return "$hour:$minute:$second"
+
+        return String.format("%02d:%02d:%02d", hour,minute,second)
     }
 
     // notification channel 생성
@@ -173,7 +181,8 @@ class LocationService : LifecycleService() {
         val distance = location?.distanceTo(lastLocation)?.toInt()
         curDistance += distance ?: 0
         Log.i(TAG, "New location: $lastLocation distance: $curDistance")
-
+        repository.curDistance.postValue(curDistance)
+//        repository.coordinates.postValue(locationList)
         this.location = lastLocation
         // Notify anyone listening for broadcasts about the new location.
         val intent = Intent(ACTION_BROADCAST)
