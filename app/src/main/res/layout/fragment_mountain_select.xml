@@ -25,10 +25,10 @@
             app:startIconDrawable="@drawable/ic_baseline_terrain_24">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_mountain_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:onTextChanged="@{viewModel.onTextChanged}" />
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.recyclerview.widget.RecyclerView
