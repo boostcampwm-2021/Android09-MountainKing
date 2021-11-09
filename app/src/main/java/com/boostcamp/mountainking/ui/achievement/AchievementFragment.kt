@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentAchievementBinding
 import com.boostcamp.mountainking.entity.Achievement
+import com.boostcamp.mountainking.util.AchievementReceiver
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,21 +52,30 @@ class AchievementFragment : Fragment() {
 
     private fun initView() {
         binding.rvAchievementList.adapter = adapter
-        binding.btnAchievementTest.setOnClickListener {
+        binding.btnAchievementDistanceTest.setOnClickListener {
             achievementViewModel.increaseDistanceTest()
+        }
+        binding.btnAchievementCompleteTest.setOnClickListener {
+            onAchievementComplete("TEST")
         }
     }
 
-    private fun initObserve() {
-        achievementViewModel.achievementListLiveData.observe(viewLifecycleOwner) {
+    private fun initObserve() = with(achievementViewModel) {
+        achievementListLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             adapter.notifyDataSetChanged()
             it.forEach { achievement ->
                 Log.d("UpdateTest", "${achievement.name}: ${achievement.curProgress}")
             }
         }
-        achievementViewModel.statisticsLiveData.observe(viewLifecycleOwner) {
-            achievementViewModel.updateAchievement()
+        statisticsLiveData.observe(viewLifecycleOwner) {
+            updateAchievement()
+        }
+        tabNameLiveData.observe(viewLifecycleOwner) {
+            filterAchievementList()
+        }
+        completedAchievementLiveData.observe(viewLifecycleOwner) {
+            onAchievementComplete(it.name)
         }
     }
 
@@ -75,13 +85,13 @@ class AchievementFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) = with(achievementViewModel) {
                 when (tab?.text.toString()) {
                     getString(R.string.tl_achievement_category_total) -> {
-                        filterAchievementList()
+                        setTabName(AchievementViewModel.TabName.TOTAL)
                     }
                     getString(R.string.tl_achievement_category_complete) -> {
-                        filterAchievementList(true)
+                        setTabName(AchievementViewModel.TabName.COMPLETE)
                     }
                     getString(R.string.tl_achievement_category_incomplete) -> {
-                        filterAchievementList(false)
+                        setTabName(AchievementViewModel.TabName.INCOMPLETE)
                     }
                 }
             }
@@ -97,5 +107,9 @@ class AchievementFragment : Fragment() {
     private fun onClick(achievement: Achievement) {
         Log.d("onClick", achievement.name)
         //TODO: 공유하기
+    }
+
+    private fun onAchievementComplete(achievementName: String) {
+        AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
     }
 }
