@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:text="@string/title_time"
+            android:text="@{trackingViewModel.trackingTime.toString()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_time_default"
             app:layout_constraintTop_toBottomOf="@id/btn_tracking_start" />
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:text="@string/title_distance"
+            android:text="@{trackingViewModel.trackingDistance.toString()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_time_default"
             app:layout_constraintTop_toBottomOf="@id/tv_time_default" />

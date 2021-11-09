@@ -1,13 +1,19 @@
 package com.boostcamp.mountainking.ui.tracking
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.util.Log
+import androidx.lifecycle.*
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.data.Repository
+import com.boostcamp.mountainking.entity.Tracking
 import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.StringGetter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,11 +23,8 @@ class TrackingViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
 
-    private val _trackingTime = MutableLiveData<String>()
-    val trackingTime: LiveData<String> get() = _trackingTime
-
-    private val _trackingDistance = MutableLiveData<String>()
-    val trackingDistance: LiveData<String> get() = _trackingDistance
+    val trackingTime: LiveData<Int> get() = repository.curTime
+    val trackingDistance: LiveData<Int> get() = repository.curDistance
 
     private val _checkPermission = MutableLiveData<Event<Unit>>()
     val checkPermission: LiveData<Event<Unit>> get() = _checkPermission
@@ -37,12 +40,24 @@ class TrackingViewModel @Inject constructor(
         }
     }
 
+    var count = 9 // TODO delete
     fun toggleService() {
         if (repository.isRunning) {
             _buttonText.value = stringGetter.getString(R.string.title_start_tracking)
             locationServiceManager.stopService()
+            // 여기서 저장
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main) {
+                    repository.putTracking(Tracking(id = 0, "", "", "", "", trackingDistance.value.toString()))
+                }
+            }
         } else {
             _checkPermission.value = Event(Unit)
+            CoroutineScope(Dispatchers.IO).launch { // TODO delete
+                withContext(Dispatchers.Main) {
+                    Log.d("temp", "${repository.getTracking().size}")
+                }
+            }
         }
     }
 
