@@ -28,7 +28,13 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="3d410dea6299c6acb95670e4cae1bd4f" />
-
+        <receiver android:name=".util.AchievementReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
