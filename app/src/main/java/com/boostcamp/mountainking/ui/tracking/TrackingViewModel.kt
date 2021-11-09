@@ -1,13 +1,20 @@
 package com.boostcamp.mountainking.ui.tracking
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.util.Log
+import androidx.lifecycle.*
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.data.Repository
+import com.boostcamp.mountainking.entity.Tracking
 import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.StringGetter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,11 +24,9 @@ class TrackingViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
 
-    private val _trackingTime = MutableLiveData<String>()
-    val trackingTime: LiveData<String> get() = _trackingTime
-
-    private val _trackingDistance = MutableLiveData<String>()
-    val trackingDistance: LiveData<String> get() = _trackingDistance
+    val trackingTime: LiveData<String> get() = repository.curTime
+    val trackingDistance: LiveData<Int> get() = repository.curDistance
+    val date: LiveData<String> get() = repository.date
 
     private val _checkPermission = MutableLiveData<Event<Unit>>()
     val checkPermission: LiveData<Event<Unit>> get() = _checkPermission
@@ -41,6 +46,12 @@ class TrackingViewModel @Inject constructor(
         if (repository.isRunning) {
             _buttonText.value = stringGetter.getString(R.string.title_start_tracking)
             locationServiceManager.stopService()
+
+            CoroutineScope(Dispatchers.IO).launch { // TODO mountainName 추가 필요
+                withContext(Dispatchers.Main) {
+                    repository.putTracking(Tracking(id = 0, "", date.value, "", trackingTime.value.toString(), trackingDistance.value.toString()))
+                }
+            }
         } else {
             _checkPermission.value = Event(Unit)
         }

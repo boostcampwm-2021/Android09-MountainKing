@@ -6,11 +6,11 @@ import java.util.*
 
 @Entity
 data class Tracking(
-    @PrimaryKey
-    val id: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
     val mountainName: String,
-    val startTime: String,
-    val endTime: String,
-    val coordinates: List<Pair<Float, Float>>,
-    val length: Int
+    val date: String?,
+    val coordinates: String,
+    val duration: String,
+    val distance: String?
 )
