@@ -9,9 +9,8 @@ data class Tracking(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val mountainName: String,
-    val startTime: String,
-    val endTime: String,
+    val date: String?,
     val coordinates: String,
-//    val coordinates: List<Pair<Float, Float>>,
-    val length: String?
+    val duration: String,
+    val distance: String?
 )

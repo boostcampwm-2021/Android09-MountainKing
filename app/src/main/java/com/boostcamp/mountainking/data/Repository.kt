@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class Repository(context: Context) : RepositoryInterface {
 
@@ -18,6 +19,7 @@ class Repository(context: Context) : RepositoryInterface {
     var isRunning = false
     var curTime = MutableLiveData<Int>()
     var curDistance = MutableLiveData<Int>()
+    var date = MutableLiveData<String>()
 
     override suspend fun getMountain() {
         //TODO("산정보불러오기")

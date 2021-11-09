@@ -18,6 +18,8 @@ import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.setRequestingLocationUpdates
 import com.google.android.gms.location.*
 import kotlinx.coroutines.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class LocationService : LifecycleService() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -63,6 +65,9 @@ class LocationService : LifecycleService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         repository.isRunning = true
+
+        val sdf = SimpleDateFormat("yyyy-M-dd")
+        repository.date.postValue(sdf.format(Date()))
         Log.i(TAG, "onStartCommand")
         val activityIntent = Intent(this, MainActivity::class.java)
         val pendingIntent =
