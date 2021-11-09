@@ -91,6 +91,9 @@ dependencies {
     //preference
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
+    // 카카오링크
+    implementation group: 'com.kakao.sdk', name: 'kakaolink', version: '1.30.6'
+
 }
 
 kapt {
