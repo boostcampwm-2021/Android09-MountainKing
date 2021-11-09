@@ -29,6 +29,9 @@ class TrackingViewModel @Inject constructor(
     private val _buttonText = MutableLiveData<String>()
     val buttonText: LiveData<String> get() = _buttonText
 
+    private val _showDialog = MutableLiveData<Event<Unit>>()
+    val showDialog: LiveData<Event<Unit>> get() = _showDialog
+
     init {
         if (repository.isRunning) {
             _buttonText.value = stringGetter.getString(R.string.title_stop_tracking)
@@ -42,6 +45,7 @@ class TrackingViewModel @Inject constructor(
             _buttonText.value = stringGetter.getString(R.string.title_start_tracking)
             locationServiceManager.stopService()
         } else {
+            _showDialog.value = Event(Unit)
             _checkPermission.value = Event(Unit)
         }
     }

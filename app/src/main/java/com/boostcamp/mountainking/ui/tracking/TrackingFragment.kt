@@ -14,7 +14,9 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.boostcamp.mountainking.BuildConfig
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentTrackingBinding
@@ -74,6 +76,13 @@ class TrackingFragment : Fragment() {
                 trackingViewModel.startService()
             }
         })
+        trackingViewModel.showDialog.observe(viewLifecycleOwner, EventObserver {
+            showDialog()
+        })
+    }
+
+    private fun showDialog() {
+        findNavController().navigate(R.id.action_navigation_tracking_to_mountainSelectFragment)
     }
 
     private fun isPermissionNotGranted(): Boolean {
