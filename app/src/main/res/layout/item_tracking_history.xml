@@ -95,7 +95,8 @@
             android:src="@drawable/round_stroke"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_default_date" />
+            app:layout_constraintTop_toBottomOf="@id/tv_default_date"
+            app:locationList="@{tracking.coordinates}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
