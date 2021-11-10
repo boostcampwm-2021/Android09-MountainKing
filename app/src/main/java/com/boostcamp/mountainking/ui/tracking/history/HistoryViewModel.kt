@@ -21,10 +21,8 @@ class HistoryViewModel @Inject constructor(
     private val _historyList = MutableLiveData<List<Tracking>>()
     val historyList: LiveData<List<Tracking>> get() = _historyList
 
-    fun getTrackingList() {
-        viewModelScope.launch(Dispatchers.IO) {
-            // TODO get Tracking data from database
-        }
+    fun getTrackingList() = viewModelScope.launch {
+        _historyList.value = repository.getTracking()
     }
 
 }

@@ -34,6 +34,10 @@ class HistoryFragment
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
         initView()
+        historyViewModel.getTrackingList()
+        historyViewModel.historyList.observe(viewLifecycleOwner) {
+            historyAdapter.submitList(it)
+        }
     }
 
     private fun initToolbar() {
