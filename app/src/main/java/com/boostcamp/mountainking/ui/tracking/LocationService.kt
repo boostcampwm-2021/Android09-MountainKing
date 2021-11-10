@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.boostcamp.mountainking.MainActivity
 import com.boostcamp.mountainking.R
+import com.boostcamp.mountainking.data.LatLngAlt
 import com.boostcamp.mountainking.data.Repository
 import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.setRequestingLocationUpdates
@@ -30,8 +31,8 @@ class LocationService : LifecycleService() {
 
     private val binder = LocationBinder()
     private var location: Location? = null
-    private val _locationList = mutableListOf<Location>()
-    val locationList: List<Location> get() = _locationList
+    private val _locationList = mutableListOf<LatLngAlt>()
+    val locationList: List<LatLngAlt> get() = _locationList
 
     private var curTime: Int = 0
     private var curDistance: Int = 0
@@ -48,7 +49,7 @@ class LocationService : LifecycleService() {
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
                 onNewLocation(locationResult.lastLocation)
-                _locationList.add(locationResult.lastLocation)
+                _locationList.add(LatLngAlt.fromLocation(locationResult.lastLocation))
             }
         }
         val handlerThread = HandlerThread(TAG)
@@ -100,7 +101,7 @@ class LocationService : LifecycleService() {
         val minute = div - (hour * 60)
         val second = time - (div * 60)
 
-        return String.format("%02d:%02d:%02d", hour,minute,second)
+        return String.format("%02d:%02d:%02d", hour, minute, second)
     }
 
     // notification channel 생성
@@ -139,7 +140,7 @@ class LocationService : LifecycleService() {
         locationRequest = LocationRequest.create().apply {
             interval = UPDATE_INTERVAL_IN_MILLISECONDS
             fastestInterval = FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS
-            smallestDisplacement = 10F
+            smallestDisplacement = SMALLEST_DISPLACEMENT
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
@@ -147,7 +148,7 @@ class LocationService : LifecycleService() {
     private fun requestLocationUpdates() {
         Log.i(TAG, "Requesting location updates")
         setRequestingLocationUpdates(this, true)
-
+        curDistance = 0
         try {
             fusedLocationClient.requestLocationUpdates(
                 locationRequest,
@@ -163,6 +164,7 @@ class LocationService : LifecycleService() {
     fun removeLocationUpdates() {
         Log.i(TAG, "Removing location updates")
         repository.isRunning = false
+        repository.locations = locationList
         try {
             fusedLocationClient.removeLocationUpdates(locationCallback)
             setRequestingLocationUpdates(this, false)
@@ -179,6 +181,7 @@ class LocationService : LifecycleService() {
     // locationCallback 안에서 실행될 메소드
     private fun onNewLocation(lastLocation: Location) {
         val distance = location?.distanceTo(lastLocation)?.toInt()
+        Log.d("distance", "$distance, $curDistance $location, $lastLocation")
         curDistance += distance ?: 0
         Log.i(TAG, "New location: $lastLocation distance: $curDistance")
         repository.curDistance.postValue(curDistance)
@@ -212,6 +215,7 @@ class LocationService : LifecycleService() {
         private const val UPDATE_INTERVAL_IN_MILLISECONDS = 10000.toLong()
         private const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2
+        private const val SMALLEST_DISPLACEMENT = 0F
         private const val PACKAGE_NAME = "com.boostcamp.mountainking.ui.tracking.locationservice"
         private const val ACTION_BROADCAST = "$PACKAGE_NAME.broadcast"
         private const val EXTRA_LOCATION = "$PACKAGE_NAME.location"
