@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.boostcamp.mountainking.data.Repository
+import com.boostcamp.mountainking.data.RepositoryInterface
 import com.boostcamp.mountainking.data.Statistics
 import com.boostcamp.mountainking.entity.Achievement
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AchievementViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: RepositoryInterface
 ) : ViewModel() {
 
     private val _achievementListLiveData = MutableLiveData<List<Achievement>>()
