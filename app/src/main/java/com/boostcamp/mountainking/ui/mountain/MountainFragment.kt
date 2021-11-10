@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.boostcamp.mountainking.databinding.FragmentMountainBinding
 
@@ -30,10 +29,12 @@ class MountainFragment : Fragment() {
         _binding = FragmentMountainBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        mountainViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+        binding.rpMap.findAllRichPaths().forEach { path ->
+            path.setOnPathClickListener {
+                Toast.makeText(requireContext(), it.name, Toast.LENGTH_SHORT).show()
+            }
+        }
+
         return root
     }
 
