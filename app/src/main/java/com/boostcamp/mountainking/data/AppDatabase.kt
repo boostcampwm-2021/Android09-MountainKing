@@ -7,13 +7,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.Tracking
-import com.boostcamp.mountainking.util.IntMapConverter
+import com.boostcamp.mountainking.util.Converters
 
 
 @Database(
-    entities = [Statistics::class, Achievement::class, Tracking::class], version = 1, exportSchema = false
+    entities = [Statistics::class, Achievement::class, Tracking::class],
+    version = 1,
+    exportSchema = false
 )
-@TypeConverters(IntMapConverter::class)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun achievementDao(): AchievementDao

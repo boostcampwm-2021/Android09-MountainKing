@@ -1,6 +1,5 @@
 package com.boostcamp.mountainking.ui.tracking
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.data.RepositoryInterface
@@ -49,19 +48,20 @@ class TrackingViewModel @Inject constructor(
             _buttonText.value = stringGetter.getString(R.string.title_start_tracking)
             locationServiceManager.stopService()
 
-            CoroutineScope(Dispatchers.IO).launch { // TODO mountainName 추가 필요
+            CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.Main) {
                     repository.putTracking(
                         Tracking(
                             id = 0,
                             repository.trackingMountain.toString(),
                             date.value,
-                            "",
+                            repository.locations,
                             trackingTime.value.toString(),
                             trackingDistance.value.toString()
                         )
                     )
                     repository.trackingMountain = null
+                    repository.locations = emptyList()
                 }
             }
         } else {
