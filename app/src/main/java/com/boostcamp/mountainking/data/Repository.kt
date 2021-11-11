@@ -54,6 +54,16 @@ class Repository(context: Context) : RepositoryInterface {
         }
     }
 
+    override suspend fun searchMountainNameInCity(
+        state: String,
+        cityName: String,
+        name: String
+    ): List<Mountain> {
+        return withContext(Dispatchers.IO) {
+            mountainDao.searchMountainNameInCity(state, cityName, name)
+        }
+    }
+
     override suspend fun putTracking(tracking: Tracking) {
         trackingDao?.insert(tracking)
     }
