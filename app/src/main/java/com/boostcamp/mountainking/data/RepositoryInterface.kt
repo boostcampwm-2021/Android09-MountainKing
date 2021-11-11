@@ -16,6 +16,7 @@ interface RepositoryInterface {
     suspend fun putTracking(tracking: Tracking)
     suspend fun updateStatistics()
     suspend fun updateAchievement(achievement: Achievement)
+    suspend fun deleteTracking(tracking: Tracking)
 
     var isRunning: Boolean
     var trackingMountain: String?
