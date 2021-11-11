@@ -47,7 +47,7 @@ class TrackingViewModel @Inject constructor(
         if (repository.isRunning) {
             _buttonText.value = stringGetter.getString(R.string.title_start_tracking)
             locationServiceManager.stopService()
-
+            //기록 저장
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.Main) {
                     repository.putTracking(
@@ -60,6 +60,7 @@ class TrackingViewModel @Inject constructor(
                             trackingDistance.value.toString()
                         )
                     )
+                    repository.updateStatistics()
                     repository.trackingMountain = null
                     repository.locations = emptyList()
                 }
