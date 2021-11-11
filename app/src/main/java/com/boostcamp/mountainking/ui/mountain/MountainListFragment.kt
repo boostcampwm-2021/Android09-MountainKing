@@ -6,9 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.data.city
 import com.boostcamp.mountainking.databinding.FragmentMountainListBinding
 import com.boostcamp.mountainking.entity.Mountain
@@ -30,6 +33,7 @@ class MountainListFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var state:String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,11 +51,12 @@ class MountainListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rvMountainList.adapter = mountainListAdapter
+
+        state = arguments?.getString("state") ?: "경기도"
+        initToolbar()
+
         initObserve()
 
-        val state = arguments?.getString("state") ?: "경기도"
-        Log.d("state", state)
-        Log.d("city", city[state].toString())
         binding.spMountainCityList.adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
@@ -91,6 +96,21 @@ class MountainListFragment : Fragment() {
 
     private fun onMountainClicked(mountain: Mountain) {
         //TODO "화면 전환"
+    }
+
+    private fun initToolbar() {
+        with(activity as AppCompatActivity) {
+            setSupportActionBar(binding.tbState)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayShowTitleEnabled(false)
+            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24)
+        }
+
+        binding.tbState.setNavigationOnClickListener {
+            findNavController().navigate(R.id.action_mountainListFragment_to_navigation_mountain)
+        }
+
+        binding.tbState.title = state
     }
 
 }
