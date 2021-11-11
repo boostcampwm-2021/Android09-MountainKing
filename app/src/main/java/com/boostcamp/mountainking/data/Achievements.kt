@@ -9,7 +9,7 @@ fun getInitAchievementList(): List<Achievement> {
             id = 0,
             name = "지리산 반달곰",
             description = "지리산을 10회 이상 등산하세요",
-            thumbnailUrl = "https://lh3.googleusercontent.com/proxy/XJytu3Iljo-7UXqApX3pJYynyQ9IUkZMPYcia_kfKA9iEH4YBQMamQQkRKRUYS3UZyRNrcTFWtgwVLfRl0N4QYitSAkggHwmHiqmMTMEAq4mtTrwN8sP",
+            thumbnailUrl = "https://lh3.googleusercontent.com/proxy/2Fj6vpYnhyCGW2s-J2Vmloualrg6zziAhsiHNetTzEK1aU_b5NXkV611-5vFTf135qjTrsxXf_CoB1NECrJFtxYKRSwKl-WBxnnbIwPQD8YNzhNZsyRI",
             type = AchievementType.MOUNTAIN_COUNT,
             curProgress = 0,
             maxProgress = 10,

@@ -7,6 +7,7 @@
             name="tracking"
             type="com.boostcamp.mountainking.entity.Tracking" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            android:text="@{tracking.duration}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/tv_default_time"
@@ -86,6 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            android:text="@{tracking.date}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/tv_default_date"
@@ -96,9 +99,10 @@
             android:layout_height="200dp"
             android:layout_marginTop="20dp"
             android:src="@drawable/round_stroke"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_default_date"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_default_date"
+            app:locationList="@{tracking.coordinates}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
