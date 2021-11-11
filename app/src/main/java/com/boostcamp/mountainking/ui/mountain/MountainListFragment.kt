@@ -67,7 +67,12 @@ class MountainListFragment : Fragment() {
             .debounce(500, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
         observableTextQuery.subscribe { name ->
-            mountainListViewModel.searchMountainNameInCity(state, "", name)
+            Log.d("cityName", binding.spMountainCityList.selectedItem.toString())
+            mountainListViewModel.searchMountainNameInCity(
+                state,
+                binding.spMountainCityList.selectedItem.toString(),
+                name
+            )
         }
     }
 
