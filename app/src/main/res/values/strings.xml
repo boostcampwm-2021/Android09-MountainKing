@@ -19,6 +19,7 @@
     <string name="title_distance">등산 거리</string>
     <string name="title_date">등산 날짜</string>
     <string name="title_check_report">나의 등산 기록</string>
+    <string name="check_delete_tracking_history">등산 기록을 지우시겠습니까?</string>
     <string name="permission_rationale">세부 위치 정보 권한 제공에 동의해야 등산 기록이 가능합니다</string>
     <string name="ok">동의</string>
     <string name="settings">설정</string>

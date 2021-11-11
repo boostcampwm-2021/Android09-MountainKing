@@ -12,10 +12,12 @@ interface RepositoryInterface {
     suspend fun getStatistics()
     suspend fun getWeather()
     suspend fun searchMountainName(name: String): List<Mountain>
+    suspend fun searchMountainNameInCity(state: String, cityName: String, name: String): List<Mountain>
 
     suspend fun putTracking(tracking: Tracking)
     suspend fun updateStatistics()
     suspend fun updateAchievement(achievement: Achievement)
+    suspend fun deleteTracking(tracking: Tracking)
 
     var isRunning: Boolean
     var trackingMountain: String?

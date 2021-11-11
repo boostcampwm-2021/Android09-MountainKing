@@ -8,17 +8,18 @@ import androidx.lifecycle.MutableLiveData
 import com.boostcamp.mountainking.entity.Tracking
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.*
 
 class Repository(context: Context) : RepositoryInterface {
 
+    private val appDatabase = AppDatabase.getInstance(context)
+
     private val mountainDao = MountainDatabase.getInstance(context).mountainDao()
-    private val statisticsDao = AppDatabase.getInstance(context).statisticsDao()
-    val database = AppDatabase.getInstance(context).achievementDao()
+    private val statisticsDao = appDatabase.statisticsDao()
     override var isRunning = false
     override var trackingMountain: String? = null
     override var trackingMountainID = -1
-    val trackingDatabase = AppDatabase.getInstance(context).trackingDao()
+    private val trackingDao = appDatabase.trackingDao()
+    private val achievementDao = appDatabase.achievementDao()
     override var curTime = MutableLiveData<String>()
     override var intTime = 0
     override var curDistance = MutableLiveData<Int>()
@@ -30,16 +31,16 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
     override suspend fun getTracking(): List<Tracking> = withContext(Dispatchers.IO) {
-        trackingDatabase.getTrackingData()
+        trackingDao.getTrackingData()
     }
 
     override suspend fun getAchievement(): List<Achievement> = withContext(Dispatchers.IO) {
-        if (database.countData() == 0) {
+        if (achievementDao.countData() == 0) {
             getInitAchievementList().forEach {
-                database.insert(it)
+                achievementDao.insert(it)
             }
         }
-        database.getAchievementData()
+        achievementDao.getAchievementData()
     }
 
 
@@ -57,8 +58,22 @@ class Repository(context: Context) : RepositoryInterface {
         }
     }
 
+    override suspend fun searchMountainNameInCity(
+        state: String,
+        cityName: String,
+        name: String
+    ): List<Mountain> {
+        return withContext(Dispatchers.IO) {
+            mountainDao.searchMountainNameInCity(state, cityName, name)
+        }
+    }
+
     override suspend fun putTracking(tracking: Tracking) {
-        trackingDatabase.insert(tracking)
+        trackingDao.insert(tracking)
+    }
+
+    override suspend fun deleteTracking(tracking: Tracking) {
+        trackingDao.delete(tracking)
     }
 
     override suspend fun updateStatistics(): Unit = withContext(Dispatchers.IO) {
@@ -73,7 +88,7 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
     override suspend fun updateAchievement(achievement: Achievement) {
-        database.updateAchievement(achievement)
+        achievementDao.updateAchievement(achievement)
     }
 
     companion object {

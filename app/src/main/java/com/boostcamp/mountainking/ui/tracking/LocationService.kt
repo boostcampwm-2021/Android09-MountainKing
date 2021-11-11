@@ -214,7 +214,7 @@ class LocationService : LifecycleService() {
         const val CHANNEL_ID = "primary_notification_channel"
         private val TAG = LocationService::class.java.simpleName
         private const val UPDATE_INTERVAL_IN_MILLISECONDS = 10000.toLong()
-        private const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+        const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2
         private const val SMALLEST_DISPLACEMENT = 0F
         private const val PACKAGE_NAME = "com.boostcamp.mountainking.ui.tracking.locationservice"
