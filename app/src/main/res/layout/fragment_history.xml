@@ -17,12 +17,15 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                style="@style/body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
+                android:text="@string/title_tracking_history"
                 android:textColor="@color/black"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                android:text="@string/title_tracking_history"/>
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="12dp" />
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView

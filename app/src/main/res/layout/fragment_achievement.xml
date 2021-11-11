@@ -51,6 +51,7 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tl_achievement_category"
+            style="@style/body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,16 +59,19 @@
             app:tabMode="scrollable">
 
             <com.google.android.material.tabs.TabItem
+                style="@style/body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tl_achievement_category_total" />
 
             <com.google.android.material.tabs.TabItem
+                style="@style/body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tl_achievement_category_complete" />
 
             <com.google.android.material.tabs.TabItem
+                style="@style/body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tl_achievement_category_incomplete" />

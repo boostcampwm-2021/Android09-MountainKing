@@ -17,20 +17,20 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_tracking_start"
+            style="@style/button"
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/round_stroke"
-            android:drawableEnd="@drawable/ic_baseline_directions_walk_24"
+            android:background="@drawable/shape_button_default"
             android:drawableTint="@color/black"
             android:onClick="@{() -> trackingViewModel.toggleService()}"
             android:paddingStart="30dp"
             android:paddingEnd="30dp"
             android:stateListAnimator="@null"
             android:text="@{trackingViewModel.buttonText}"
-            android:textColor="@color/black"
+            android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,25 +38,29 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_tracking_time"
+            style="@style/header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="332dp"
+            android:layout_marginTop="12dp"
             android:text="@{trackingViewModel.trackingTime.toString()}"
             android:textAlignment="center"
             android:textSize="34sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_tracking_history" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_tracking_mountain" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_distance"
+            style="@style/header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="@{trackingViewModel.trackingDistance.toString() + ` m`}"
             android:textAlignment="center"
             android:textSize="34sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_tracking_time" />
 
@@ -69,6 +73,16 @@
             android:src="@drawable/ic_archive"
             android:stateListAnimator="@null"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_tracking_mountain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="276dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

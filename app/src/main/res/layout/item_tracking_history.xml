@@ -14,75 +14,82 @@
 
         <TextView
             android:id="@+id/tv_mountain_name"
+            style="@style/header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{tracking.mountainName}"
-            android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_default_time"
+            style="@style/body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/title_time"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@id/tv_mountain_name"
-            app:layout_constraintTop_toBottomOf="@id/tv_mountain_name"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_mountain_name" />
 
         <TextView
+            style="@style/body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/black"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/tv_default_time"
-            app:layout_constraintTop_toBottomOf="@id/tv_mountain_name"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_mountain_name" />
 
         <TextView
             android:id="@+id/tv_default_distance"
+            style="@style/body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/title_distance"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@id/tv_default_time"
-            app:layout_constraintTop_toBottomOf="@id/tv_default_time"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_default_time" />
 
         <TextView
+            style="@style/body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="@{tracking.distance}"
-            android:textColor="@color/black"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            android:text="@{tracking.distance}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/tv_default_distance"
-            app:layout_constraintTop_toBottomOf="@id/tv_default_time"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_default_time" />
 
         <TextView
             android:id="@+id/tv_default_date"
+            style="@style/body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="@string/title_date"
             android:textSize="16sp"
-            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_default_distance"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_default_distance" />
 
         <TextView
+            style="@style/body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/black"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/tv_default_date"
-            app:layout_constraintTop_toBottomOf="@id/tv_default_distance"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_default_distance" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"

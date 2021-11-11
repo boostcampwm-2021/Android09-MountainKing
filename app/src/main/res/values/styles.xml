@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="header">
+        <item name="android:textSize">40dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/gmarket_sans_bold</item>
+    </style>
+
+    <style name="button">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/gmarket_sans_medium</item>
+    </style>
+
+    <style name="body1">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/gmarket_sans_bold</item>
+    </style>
+
+    <style name="body2">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/gmarket_sans_medium</item>
+    </style>
+
+    <style name="body3">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/gmarket_sans_medium</item>
+    </style>
+
+    <style name="caption">
+        <item name="android:textSize">10dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/gmarket_sans_light</item>
+    </style>
+
+</resources>
