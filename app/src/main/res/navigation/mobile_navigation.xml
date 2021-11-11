@@ -60,6 +60,10 @@
     <fragment
         android:id="@+id/mountainListFragment"
         android:name="com.boostcamp.mountainking.ui.mountain.MountainListFragment"
-        android:label="MountainListFragment" />
+        android:label="MountainListFragment" >
+        <action
+            android:id="@+id/action_mountainListFragment_to_navigation_mountain"
+            app:destination="@id/navigation_mountain" />
+    </fragment>
 
 </navigation>
