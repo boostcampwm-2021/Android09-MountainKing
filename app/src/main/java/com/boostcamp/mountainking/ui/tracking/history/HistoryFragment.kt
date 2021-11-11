@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.boostcamp.mountainking.R
+import com.boostcamp.mountainking.data.LatLngAlt
 import com.boostcamp.mountainking.databinding.FragmentHistoryBinding
 import com.boostcamp.mountainking.entity.Tracking
 import com.boostcamp.mountainking.ui.tracking.history.adapter.HistoryAdapter
@@ -62,8 +63,9 @@ class HistoryFragment
         }
     }
 
-    override fun onItemClick() {
-        // TODO History item click action
+    override fun onItemClick(altitudes: List<LatLngAlt>) {
+        val action = HistoryFragmentDirections.actionHistoryToHistoryDetails(altitudes.toTypedArray())
+        findNavController().navigate(action)
     }
 
     override fun onItemLongClick(tracking: Tracking): Boolean {
