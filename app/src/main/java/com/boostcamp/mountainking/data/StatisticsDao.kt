@@ -4,7 +4,7 @@ import androidx.room.*
 
 @Dao
 interface StatisticsDao {
-    @Insert(onConflict=OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(statistics: Statistics)
 
     @Update
@@ -12,4 +12,10 @@ interface StatisticsDao {
 
     @Delete
     fun delete(statistics: Statistics)
+
+    @Query("UPDATE Statistics SET distance = distance + :distance, time = time + :time, mountainMap = :mountainMap")
+    fun update(distance: Int, time: Int, mountainMap: Map<Int, Int>)
+
+    @Query("SELECT * FROM Statistics")
+    fun getStatistics(): Statistics
 }

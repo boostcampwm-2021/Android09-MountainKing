@@ -1,6 +1,7 @@
 package com.boostcamp.mountainking.data
 
 import android.content.Context
+import android.util.Log
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.Mountain
 import androidx.lifecycle.MutableLiveData
@@ -13,11 +14,14 @@ class Repository(context: Context) : RepositoryInterface {
     private val appDatabase = AppDatabase.getInstance(context)
 
     private val mountainDao = MountainDatabase.getInstance(context).mountainDao()
-    private val trackingDao = appDatabase?.trackingDao()
-    private val achievementDao = appDatabase?.achievementDao()
+    private val statisticsDao = appDatabase.statisticsDao()
     override var isRunning = false
     override var trackingMountain: String? = null
+    override var trackingMountainID = -1
+    private val trackingDao = appDatabase.trackingDao()
+    private val achievementDao = appDatabase.achievementDao()
     override var curTime = MutableLiveData<String>()
+    override var intTime = 0
     override var curDistance = MutableLiveData<Int>()
     override var date = MutableLiveData<String>()
     override var locations: List<LatLngAlt> = emptyList()
@@ -27,16 +31,16 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
     override suspend fun getTracking(): List<Tracking> = withContext(Dispatchers.IO) {
-        trackingDao?.getTrackingData() ?: listOf()
+        trackingDao.getTrackingData()
     }
 
     override suspend fun getAchievement(): List<Achievement> = withContext(Dispatchers.IO) {
-        if (achievementDao?.countData() == 0) {
+        if (achievementDao.countData() == 0) {
             getInitAchievementList().forEach {
                 achievementDao.insert(it)
             }
         }
-        achievementDao?.getAchievementData() ?: listOf()
+        achievementDao.getAchievementData()
     }
 
 
@@ -65,19 +69,26 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
     override suspend fun putTracking(tracking: Tracking) {
-        trackingDao?.insert(tracking)
+        trackingDao.insert(tracking)
     }
 
     override suspend fun deleteTracking(tracking: Tracking) {
-        trackingDao?.delete(tracking)
+        trackingDao.delete(tracking)
     }
 
-    override suspend fun updateStatistics() {
-        //TODO("통계최신화하기")
+    override suspend fun updateStatistics(): Unit = withContext(Dispatchers.IO) {
+        statisticsDao.insert(Statistics())
+        val statistics = statisticsDao.getStatistics()
+        val mountainMap = statistics.mountainMap.toMutableMap()
+        when (val count = mountainMap[trackingMountainID]) {
+            null -> mountainMap[trackingMountainID] = 1
+            else -> mountainMap[trackingMountainID] = count + 1
+        }
+        curDistance.value?.let { statisticsDao.update(it, intTime, mountainMap) }
     }
 
     override suspend fun updateAchievement(achievement: Achievement) {
-        achievementDao?.updateAchievement(achievement)
+        achievementDao.updateAchievement(achievement)
     }
 
     companion object {

@@ -21,7 +21,9 @@ interface RepositoryInterface {
 
     var isRunning: Boolean
     var trackingMountain: String?
+    var trackingMountainID: Int
     var curTime: MutableLiveData<String>
+    var intTime: Int
     var curDistance: MutableLiveData<Int>
     var date: MutableLiveData<String>
     var locations: List<LatLngAlt>

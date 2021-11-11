@@ -89,6 +89,7 @@ class LocationService : LifecycleService() {
                 notificationBuilder.setContentText("시간 : ${timeConverter(++curTime)}")
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
                 repository.curTime.postValue(timeConverter(curTime))
+                repository.intTime = curTime
             }
         }
         requestLocationUpdates()

@@ -54,8 +54,7 @@
             android:id="@+id/action_history_to_tracking"
             app:destination="@id/navigation_tracking"
             app:popUpTo="@id/navigation_tracking"
-            app:popUpToInclusive="true"
-            app:destination="@id/navigation_tracking" />
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_history_to_historyDetails"
             app:destination="@id/historyDetailsFragment" />
@@ -64,23 +63,23 @@
     <fragment
         android:id="@+id/historyDetailsFragment"
         android:name="com.boostcamp.mountainking.ui.tracking.history.HistoryDetailsFragment"
-        android:label="HistoryDetailsFragment" >
+        android:label="HistoryDetailsFragment">
         <action
             android:id="@+id/action_historyDetails_to_history"
+            app:destination="@id/navigation_history"
             app:popUpTo="@id/navigation_history"
-            app:popUpToInclusive="true"
-            app:destination="@id/navigation_history" />
+            app:popUpToInclusive="true" />
 
         <argument
             android:name="altitudeList"
-            app:argType="com.boostcamp.mountainking.data.LatLngAlt[]" />
+            app:argType="com.boostcamp.mountainking.data.LatLngAlt[]"
             app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
         android:id="@+id/mountainListFragment"
         android:name="com.boostcamp.mountainking.ui.mountain.MountainListFragment"
-        android:label="MountainListFragment" >
+        android:label="MountainListFragment">
         <action
             android:id="@+id/action_mountainListFragment_to_navigation_mountain"
             app:destination="@id/navigation_mountain" />
