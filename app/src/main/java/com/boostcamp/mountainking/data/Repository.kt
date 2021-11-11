@@ -17,6 +17,7 @@ class Repository(context: Context) : RepositoryInterface {
     val database = AppDatabase.getInstance(context).achievementDao()
     override var isRunning = false
     override var trackingMountain: String? = null
+    override var trackingMountainID = -1
     val trackingDatabase = AppDatabase.getInstance(context).trackingDao()
     override var curTime = MutableLiveData<String>()
     override var intTime = 0
@@ -61,8 +62,14 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
     override suspend fun updateStatistics(): Unit = withContext(Dispatchers.IO) {
-        statisticsDao.insert(Statistics(mountainMap = mapOf()))
-        curDistance.value?.let { statisticsDao.update(it, intTime) }
+        statisticsDao.insert(Statistics())
+        val statistics = statisticsDao.getStatistics()
+        val mountainMap = statistics.mountainMap.toMutableMap()
+        when (val count = mountainMap[trackingMountainID]) {
+            null -> mountainMap[trackingMountainID] = 1
+            else -> mountainMap[trackingMountainID] = count + 1
+        }
+        curDistance.value?.let { statisticsDao.update(it, intTime, mountainMap) }
     }
 
     override suspend fun updateAchievement(achievement: Achievement) {

@@ -10,14 +10,14 @@ import java.util.*
 class Converters {
 
     @TypeConverter
-    fun fromString(value: String): Map<Int, Int> {
+    fun stringToMap(value: String): Map<Int, Int> {
         val mapType = object : TypeToken<Map<Int, Int>>() {}.type
         val gson = Gson()
         return gson.fromJson(value, mapType)
     }
 
     @TypeConverter
-    fun toString(map: Map<Int, Int>): String {
+    fun mapToString(map: Map<Int, Int>): String {
         val gson = Gson()
         return gson.toJson(map)
     }

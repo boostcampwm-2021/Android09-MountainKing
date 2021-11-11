@@ -2,8 +2,6 @@ package com.boostcamp.mountainking.ui.tracking
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +14,6 @@ import com.boostcamp.mountainking.util.EventObserver
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
-import io.reactivex.rxjava3.core.ObservableOnSubscribe
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
@@ -87,7 +84,7 @@ class MountainSelectFragment : DialogFragment() {
     }
 
     private fun onMountainClicked(mountain: Mountain) {
-        mountainSelectViewModel.setTrackingMountainName(mountain.toString())
+        mountainSelectViewModel.setTrackingMountain(mountain.toString(), mountain.id)
     }
 
     override fun onDestroyView() {
