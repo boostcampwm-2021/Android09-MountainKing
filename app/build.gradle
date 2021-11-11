@@ -5,6 +5,8 @@ plugins {
     id 'kotlin-android'
     id 'com.google.gms.google-services'
     id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
+    id("kotlin-parcelize")
 }
 
 android {
@@ -38,6 +40,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    repositories {
+        maven { url 'https://jitpack.io' }
     }
     buildFeatures {
         viewBinding true
@@ -109,6 +114,9 @@ dependencies {
 
     //ZoomLayout
     implementation 'com.otaliastudios:zoomlayout:1.8.0'
+
+    //MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
 
 kapt {
