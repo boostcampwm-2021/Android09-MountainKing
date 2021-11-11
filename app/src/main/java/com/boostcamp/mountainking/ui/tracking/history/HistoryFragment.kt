@@ -5,13 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentHistoryBinding
+import com.boostcamp.mountainking.entity.Tracking
 import com.boostcamp.mountainking.ui.tracking.history.adapter.HistoryAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.IllegalStateException
 
 @AndroidEntryPoint
 class HistoryFragment
@@ -61,6 +64,23 @@ class HistoryFragment
 
     override fun onItemClick() {
         // TODO History item click action
+    }
+
+    override fun onItemLongClick(tracking: Tracking): Boolean {
+        activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.setMessage(R.string.check_delete_tracking_history)
+                .setPositiveButton(R.string.ok) { dialog, _ ->
+                    historyViewModel.deleteTrackingItem(tracking)
+                    dialog.dismiss()
+                }
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            builder.create()
+        }?.show() ?: throw IllegalStateException("Activity cannot be null")
+
+        return true
     }
 
     companion object {
