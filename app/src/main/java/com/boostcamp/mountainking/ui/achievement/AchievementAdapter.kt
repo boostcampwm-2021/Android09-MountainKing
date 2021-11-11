@@ -49,9 +49,9 @@ class AchievementAdapter(private val onClick: (Achievement) -> Unit) :
             binding.executePendingBindings()
             binding.root.setBackgroundColor(
                 if (achievement.isComplete) {
-                    Color.GREEN
+                    Color.WHITE
                 } else {
-                    Color.RED
+                    Color.LTGRAY
                 }
             )
             Log.d("bindtest", achievement.name)

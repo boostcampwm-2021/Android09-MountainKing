@@ -15,6 +15,7 @@
 
         <TextView
             android:id="@+id/tv_mountain_name"
+            style="@style/header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{tracking.mountainName}"
@@ -26,6 +27,7 @@
 
         <TextView
             android:id="@+id/tv_default_time"
+            style="@style/body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -35,6 +37,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_mountain_name" />
 
         <TextView
+            style="@style/body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -47,6 +50,7 @@
 
         <TextView
             android:id="@+id/tv_default_distance"
+            style="@style/body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -56,6 +60,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_default_time" />
 
         <TextView
+            style="@style/body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -68,6 +73,7 @@
 
         <TextView
             android:id="@+id/tv_default_date"
+            style="@style/body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -77,6 +83,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_default_distance" />
 
         <TextView
+            style="@style/body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
