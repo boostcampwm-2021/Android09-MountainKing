@@ -45,5 +45,23 @@
             app:popUpTo="@id/navigation_tracking"
             app:popUpToInclusive="true"
             app:destination="@id/navigation_tracking" />
+        <action
+            android:id="@+id/action_history_to_historyDetails"
+            app:destination="@id/historyDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyDetailsFragment"
+        android:name="com.boostcamp.mountainking.ui.tracking.history.HistoryDetailsFragment"
+        android:label="HistoryDetailsFragment" >
+        <action
+            android:id="@+id/action_historyDetails_to_history"
+            app:popUpTo="@id/navigation_history"
+            app:popUpToInclusive="true"
+            app:destination="@id/navigation_history" />
+
+        <argument
+            android:name="altitudeList"
+            app:argType="com.boostcamp.mountainking.data.LatLngAlt[]" />
     </fragment>
 </navigation>
