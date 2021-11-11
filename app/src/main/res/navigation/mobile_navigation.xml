@@ -28,7 +28,17 @@
         android:id="@+id/navigation_mountain"
         android:name="com.boostcamp.mountainking.ui.mountain.MountainFragment"
         android:label="@string/title_mountain"
-        tools:layout="@layout/fragment_mountain" />
+        tools:layout="@layout/fragment_mountain">
+        <action
+            android:id="@+id/action_navigation_mountain_to_mountainListFragment"
+            app:destination="@id/mountainListFragment">
+            <argument
+                android:name="city"
+                app:argType="string" />
+        </action>
+
+    </fragment>
+
     <dialog
         android:id="@+id/mountainSelectFragment"
         android:name="com.boostcamp.mountainking.ui.tracking.MountainSelectFragment"
@@ -39,11 +49,17 @@
         android:id="@+id/navigation_history"
         android:name="com.boostcamp.mountainking.ui.tracking.history.HistoryFragment"
         android:label="fragment_history"
-        tools:layout="@layout/fragment_history" >
+        tools:layout="@layout/fragment_history">
         <action
             android:id="@+id/action_history_to_tracking"
+            app:destination="@id/navigation_tracking"
             app:popUpTo="@id/navigation_tracking"
-            app:popUpToInclusive="true"
-            app:destination="@id/navigation_tracking" />
+            app:popUpToInclusive="true" />
     </fragment>
+
+    <fragment
+        android:id="@+id/mountainListFragment"
+        android:name="com.boostcamp.mountainking.ui.mountain.MountainListFragment"
+        android:label="MountainListFragment" />
+
 </navigation>
