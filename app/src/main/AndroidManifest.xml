@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.boostcamp.mountainking">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -9,7 +8,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-        tools:replace="android:allowBackup"
         android:name=".LogApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"

@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.boostcamp.mountainking.R
@@ -148,7 +147,6 @@ class AchievementFragment : Fragment() {
             .sendDefault(requireContext(), params, object : ResponseCallback<KakaoLinkResponse>() {
                 override fun onFailure(errorResult: ErrorResult) {
                     Log.e("KAKAO_API", "카카오링크 공유 실패: $errorResult")
-                    Toast.makeText(requireContext(), errorResult.toString(), Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onSuccess(result: KakaoLinkResponse) {

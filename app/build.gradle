@@ -5,7 +5,6 @@ plugins {
     id 'kotlin-android'
     id 'com.google.gms.google-services'
     id 'dagger.hilt.android.plugin'
-    id 'androidx.navigation.safeargs'
 }
 
 android {
@@ -19,7 +18,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
+        
         // Required when setting minSdkVersion to 20 or lower
         multiDexEnabled = true
     }
@@ -76,7 +75,7 @@ dependencies {
 
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    kapt  "androidx.room:room-compiler:$room_version"
 
     implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
 

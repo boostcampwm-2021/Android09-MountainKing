@@ -9,7 +9,4 @@ import com.boostcamp.mountainking.entity.Mountain
 interface MountainDao {
     @Query("SELECT * FROM Mountain WHERE mountainName LIKE :search||'%'")
     fun searchMountainName(search: String): List<Mountain>
-
-    @Query("SELECT * FROM Mountain WHERE locationName LIKE '%'||:state||'%' AND locationName LIKE '%'||:cityName||'%' AND mountainName LIKE '%'||:name||'%'")
-    fun searchMountainNameInCity(state: String, cityName: String, name: String): List<Mountain>
 }
