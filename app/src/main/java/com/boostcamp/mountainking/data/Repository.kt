@@ -7,15 +7,16 @@ import androidx.lifecycle.MutableLiveData
 import com.boostcamp.mountainking.entity.Tracking
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.*
 
 class Repository(context: Context) : RepositoryInterface {
 
+    private val appDatabase = AppDatabase.getInstance(context)
+
     private val mountainDao = MountainDatabase.getInstance(context).mountainDao()
-    val database = AppDatabase.getInstance(context)?.achievementDao()
+    private val trackingDao = appDatabase?.trackingDao()
+    private val achievementDao = appDatabase?.achievementDao()
     override var isRunning = false
     override var trackingMountain: String? = null
-    val trackingDatabase = AppDatabase.getInstance(context)?.trackingDao()
     override var curTime = MutableLiveData<String>()
     override var curDistance = MutableLiveData<Int>()
     override var date = MutableLiveData<String>()
@@ -26,16 +27,16 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
     override suspend fun getTracking(): List<Tracking> = withContext(Dispatchers.IO) {
-        trackingDatabase?.getTrackingData() ?: listOf()
+        trackingDao?.getTrackingData() ?: listOf()
     }
 
     override suspend fun getAchievement(): List<Achievement> = withContext(Dispatchers.IO) {
-        if (database?.countData() == 0) {
+        if (achievementDao?.countData() == 0) {
             getInitAchievementList().forEach {
-                database.insert(it)
+                achievementDao.insert(it)
             }
         }
-        database?.getAchievementData() ?: listOf()
+        achievementDao?.getAchievementData() ?: listOf()
     }
 
 
@@ -54,7 +55,11 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
     override suspend fun putTracking(tracking: Tracking) {
-        trackingDatabase?.insert(tracking)
+        trackingDao?.insert(tracking)
+    }
+
+    override suspend fun deleteTracking(tracking: Tracking) {
+        trackingDao?.delete(tracking)
     }
 
     override suspend fun updateStatistics() {
@@ -62,7 +67,7 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
     override suspend fun updateAchievement(achievement: Achievement) {
-        database?.updateAchievement(achievement)
+        achievementDao?.updateAchievement(achievement)
     }
 
     companion object {
