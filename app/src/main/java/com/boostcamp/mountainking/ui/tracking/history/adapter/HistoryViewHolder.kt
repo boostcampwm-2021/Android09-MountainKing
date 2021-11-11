@@ -13,8 +13,11 @@ class HistoryViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(tracking: Tracking) {
-        // TODO set view
-        itemView.setOnClickListener { onItemClickListener.onItemClick() }
+        binding.tracking = tracking
+        with(itemView) {
+            setOnClickListener { onItemClickListener.onItemClick(tracking.coordinates) }
+            setOnLongClickListener { onItemClickListener.onItemLongClick(tracking) }
+        }
     }
 
     companion object{

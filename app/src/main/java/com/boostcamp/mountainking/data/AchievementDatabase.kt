@@ -1,19 +1,17 @@
 package com.boostcamp.mountainking.data
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.boostcamp.mountainking.entity.Achievement
-import com.boostcamp.mountainking.util.IntMapConverter
+import com.boostcamp.mountainking.util.Converters
 
 @Database(
     entities = [Achievement::class], version = 1
 )
-@TypeConverters(IntMapConverter::class)
+@TypeConverters(Converters::class)
 abstract class AchievementDatabase : RoomDatabase() {
 
     abstract fun achievementDao(): AchievementDao
