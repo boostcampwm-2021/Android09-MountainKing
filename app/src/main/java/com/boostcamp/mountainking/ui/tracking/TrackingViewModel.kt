@@ -26,6 +26,9 @@ class TrackingViewModel @Inject constructor(
     val trackingDistance: LiveData<Int> get() = repository.curDistance
     val date: LiveData<String> get() = repository.date
 
+    private val _mountainName = MutableLiveData<String>()
+    val mountainName: LiveData<String> get() = _mountainName
+
     private val _checkPermission = MutableLiveData<Event<Unit>>()
     val checkPermission: LiveData<Event<Unit>> get() = _checkPermission
 
@@ -78,6 +81,7 @@ class TrackingViewModel @Inject constructor(
 
     fun startService() {
         _buttonText.value = stringGetter.getString(R.string.title_stop_tracking)
+        _mountainName.value = repository.trackingMountain?.substringBefore("(")
         locationServiceManager.startService()
     }
 
