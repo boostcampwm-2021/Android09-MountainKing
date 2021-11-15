@@ -9,5 +9,6 @@ data class Statistics(
     val id: Int = 0,
     var distance: Int = 0,
     var time: Int = 0,
-    var mountainMap: Map<Int, Int> = mapOf()
+    var mountainMap: Map<Int, Int> = mapOf(),
+    var trackingCountMap: Map<String, Int> = mapOf(),
 )

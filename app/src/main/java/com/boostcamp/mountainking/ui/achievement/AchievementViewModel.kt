@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.mountainking.data.RepositoryInterface
-import com.boostcamp.mountainking.data.Statistics
 import com.boostcamp.mountainking.entity.Achievement
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,6 +19,8 @@ class AchievementViewModel @Inject constructor(
     val achievementListLiveData: LiveData<List<Achievement>> get() = _achievementListLiveData
     private val _tabNameLiveData = MutableLiveData<TabName>()
     val tabNameLiveData: LiveData<TabName> get() = _tabNameLiveData
+    private val _completedAchievementLiveData = MutableLiveData<Achievement>()
+    val completedAchievementLiveData: LiveData<Achievement> get() = _completedAchievementLiveData
 
     enum class TabName {
         TOTAL,
@@ -28,14 +29,10 @@ class AchievementViewModel @Inject constructor(
     }
 
     private var achievementList = listOf<Achievement>()
-    private val statistics = Statistics()
-    private val _statisticsLiveData = MutableLiveData<Statistics>()
-    val statisticsLiveData: LiveData<Statistics> get() = _statisticsLiveData
-    private val _completedAchievementLiveData = MutableLiveData<Achievement>()
-    val completedAchievementLiveData: LiveData<Achievement> get() = _completedAchievementLiveData
 
     fun loadAchievementList() = viewModelScope.launch {
         achievementList = repository.getAchievement()
+        updateAchievement()
         filterAchievementList()
     }
 
@@ -48,22 +45,17 @@ class AchievementViewModel @Inject constructor(
         }
     }
 
-    fun updateAchievement() = viewModelScope.launch {
+    private fun updateAchievement() = viewModelScope.launch {
+        val statistics = repository.getStatistics()
+        val achievementList = repository.getAchievement()
         achievementList.forEach {
-            if (it.progressAchievement(statistics)){
+            if (it.progressAchievement(statistics)) {
                 repository.updateAchievement(it)
                 if (it.isComplete) {
                     _completedAchievementLiveData.value = it
                 }
             }
         }
-        filterAchievementList()
-    }
-
-    fun increaseDistanceTest(){
-        statistics.distance += 10
-        statistics.time += 5
-        _statisticsLiveData.value = statistics
     }
 
     fun setTabName(tabName: TabName) {

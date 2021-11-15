@@ -1,9 +1,12 @@
 package com.boostcamp.mountainking.data
 
+import android.util.Log
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.AchievementType
+import com.boostcamp.mountainking.entity.Mountain
 
-fun getInitAchievementList(): List<Achievement> {
+fun getInitAchievementList(namedMountainList: List<Mountain>): List<Achievement> {
+    Log.d("namedMountain", namedMountainList.size.toString())
     return listOf(
         Achievement(
             id = 0,
@@ -16,6 +19,7 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 100,
+            mountainIdList = listOf(1356)
         ),
         Achievement(
             id = 1,
@@ -28,6 +32,7 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 10,
+            mountainIdList = listOf(1456),
         ),
         Achievement(
             id = 2,
@@ -52,6 +57,7 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 100,
+            mountainIdList = listOf(461)
         ),
         Achievement(
             id = 4,
@@ -64,6 +70,7 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 50,
+            period = 2,
         ),
         Achievement(
             id = 5,
@@ -76,6 +83,7 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 50,
+            mountainIdList = listOf(257),
         ),
         Achievement(
             id = 6,
@@ -88,6 +96,7 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 70,
+            mountainIdList = listOf(1565),
         ),
         Achievement(
             id = 7,
@@ -112,6 +121,7 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 100,
+            mountainIdList = namedMountainList.map { it.id },
         ),
         Achievement(
             id = 9,
@@ -124,6 +134,7 @@ fun getInitAchievementList(): List<Achievement> {
             isComplete = false,
             completeDate = null,
             score = 1000,
+            mountainIdList = listOf(1478),
         ),
     )
 }

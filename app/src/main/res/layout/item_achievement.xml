@@ -94,9 +94,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:text="@string/tv_achievement_complete_date"
-            app:layout_constraintBottom_toBottomOf="@id/view_achievement_item_progress"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_achievement_complete_date"
-            app:layout_constraintTop_toTopOf="@id/view_achievement_item_progress" />
+            app:layout_constraintTop_toBottomOf="@id/view_achievement_item_progress" />
 
         <TextView
             android:id="@+id/tv_achievement_complete_date"
@@ -104,9 +104,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{achievement.completeDateString}"
-            app:layout_constraintBottom_toBottomOf="@id/view_achievement_item_progress"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/view_achievement_item_progress"
+            app:layout_constraintTop_toBottomOf="@id/view_achievement_item_progress"
             tools:text="2021-10-21" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
