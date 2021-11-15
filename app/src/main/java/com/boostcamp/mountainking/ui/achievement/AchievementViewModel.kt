@@ -19,6 +19,8 @@ class AchievementViewModel @Inject constructor(
     val achievementListLiveData: LiveData<List<Achievement>> get() = _achievementListLiveData
     private val _tabNameLiveData = MutableLiveData<TabName>()
     val tabNameLiveData: LiveData<TabName> get() = _tabNameLiveData
+    private val _completedAchievementLiveData = MutableLiveData<Achievement>()
+    val completedAchievementLiveData: LiveData<Achievement> get() = _completedAchievementLiveData
 
     enum class TabName {
         TOTAL,
@@ -30,6 +32,7 @@ class AchievementViewModel @Inject constructor(
 
     fun loadAchievementList() = viewModelScope.launch {
         achievementList = repository.getAchievement()
+        updateAchievement()
         filterAchievementList()
     }
 
@@ -39,6 +42,19 @@ class AchievementViewModel @Inject constructor(
             TabName.COMPLETE -> achievementList.filter { it.isComplete }
             TabName.INCOMPLETE -> achievementList.filter { !it.isComplete }
             null -> achievementList
+        }
+    }
+
+    private fun updateAchievement() = viewModelScope.launch {
+        val statistics = repository.getStatistics()
+        val achievementList = repository.getAchievement()
+        achievementList.forEach {
+            if (it.progressAchievement(statistics)) {
+                repository.updateAchievement(it)
+                if (it.isComplete) {
+                    _completedAchievementLiveData.value = it
+                }
+            }
         }
     }
 

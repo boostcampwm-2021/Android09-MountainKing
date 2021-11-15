@@ -72,7 +72,9 @@ class AchievementFragment : Fragment() {
                 Log.d("UpdateTest", "${achievement.name}: ${achievement.curProgress}")
             }
         }
-
+        completedAchievementLiveData.observe(viewLifecycleOwner) {
+            onAchievementComplete(it.name)
+        }
         tabNameLiveData.observe(viewLifecycleOwner) {
             filterAchievementList()
         }
@@ -152,4 +154,7 @@ class AchievementFragment : Fragment() {
 
     }
 
+    private fun onAchievementComplete(achievementName: String) {
+        AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
+    }
 }
