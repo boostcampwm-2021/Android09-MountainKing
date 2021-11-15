@@ -70,6 +70,7 @@ fun getInitAchievementList(namedMountainList: List<Mountain>): List<Achievement>
             isComplete = false,
             completeDate = null,
             score = 50,
+            period = 2,
         ),
         Achievement(
             id = 5,
