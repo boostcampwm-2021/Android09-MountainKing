@@ -76,7 +76,7 @@ class LocationService : LifecycleService() {
 
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("${repository.trackingMountain?.substringBefore("(")} 등산 중...")
-            .setContentText("시간 : ${timeConverter(curTime)}")
+            .setContentText("시간 : ${timeConverter(curTime)}   거리 : ${curDistance}m")
             .setContentIntent(pendingIntent)
             .setOnlyAlertOnce(true)
             .setSmallIcon(R.drawable.ic_achievement_svgrepo_com)
@@ -86,7 +86,7 @@ class LocationService : LifecycleService() {
         lifecycleScope.launch(Dispatchers.IO) {
             while (isBound) {
                 delay(1000)
-                notificationBuilder.setContentText("시간 : ${timeConverter(++curTime)}")
+                notificationBuilder.setContentText("시간 : ${timeConverter(++curTime)}   거리 : ${curDistance}m")
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
                 repository.curTime.postValue(timeConverter(curTime))
                 repository.intTime = curTime
