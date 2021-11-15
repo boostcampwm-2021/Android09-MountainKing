@@ -22,13 +22,17 @@ import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentTrackingBinding
 import com.boostcamp.mountainking.util.EventObserver
 import com.google.android.material.snackbar.Snackbar
+import com.naver.maps.map.MapView
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TrackingFragment : Fragment(), DialogInterface.OnDismissListener {
+class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapReadyCallback {
     private val trackingViewModel: TrackingViewModel by viewModels()
     private var _binding: FragmentTrackingBinding? = null
     private val binding get() = _binding!!
+    private lateinit var mapView: MapView
     private val requestLocationPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGranted ->
             if (isGranted.values.all { it }) {
@@ -84,6 +88,9 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener {
         trackingViewModel.showDialog.observe(viewLifecycleOwner, EventObserver {
             showDialog()
         })
+        mapView = binding.mvNaver
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
     }
 
     private fun showDialog() {
@@ -132,17 +139,40 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener {
 
     override fun onStart() {
         super.onStart()
+        mapView.onStart()
         trackingViewModel.bindService()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
     }
 
     override fun onStop() {
         super.onStop()
+        mapView.onStop()
         trackingViewModel.unbindService()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        mapView.onDestroy()
         _binding = null
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView.onLowMemory()
     }
 
     companion object {
@@ -152,5 +182,9 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener {
 
     override fun onDismiss(dialog: DialogInterface?) {
         trackingViewModel.checkPermission()
+    }
+
+    override fun onMapReady(p0: NaverMap) {
+        //TODO("Map is ready")
     }
 }

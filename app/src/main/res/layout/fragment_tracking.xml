@@ -15,6 +15,15 @@
         android:layout_height="match_parent"
         tools:context=".ui.tracking.TrackingFragment">
 
+        <com.naver.maps.map.MapView
+            android:id="@+id/mv_naver"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_tracking_start"
             style="@style/button"
@@ -87,6 +96,7 @@
             android:stateListAnimator="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_tracking_mountain"
