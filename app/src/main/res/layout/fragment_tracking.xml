@@ -15,6 +15,15 @@
         android:layout_height="match_parent"
         tools:context=".ui.tracking.TrackingFragment">
 
+        <com.naver.maps.map.MapView
+            android:id="@+id/mv_naver"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_tracking_start"
             style="@style/button"
@@ -41,28 +50,41 @@
             style="@style/header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:text="@{trackingViewModel.trackingTime.toString()}"
             android:textAlignment="center"
-            android:textSize="34sp"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/btn_tracking_start"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_distance"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_tracking_mountain" />
+            tools:text="00:00:00" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_distance"
             style="@style/header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@{trackingViewModel.trackingDistance.toString() + ` m`}"
             android:textAlignment="center"
-            android:textSize="34sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@id/tv_walk_count"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_tracking_time" />
+            app:layout_constraintStart_toEndOf="@id/tv_tracking_time"
+            app:layout_constraintTop_toTopOf="@id/tv_tracking_time"
+            app:tracking_distance="@{trackingViewModel.trackingDistance}"
+            tools:text="30 m" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_walk_count"
+            style="@style/header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_distance"
+            app:layout_constraintTop_toTopOf="@id/tv_tracking_time" />
 
         <ImageView
             android:id="@+id/btn_tracking_history"
@@ -75,14 +97,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_tracking_mountain"
+            style="@style/header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="276dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@{trackingViewModel.mountainName}"
+            android:textColor="@color/black"
+            android:textSize="35sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="산 이름" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

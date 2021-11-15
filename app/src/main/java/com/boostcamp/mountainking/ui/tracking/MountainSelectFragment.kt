@@ -48,6 +48,7 @@ class MountainSelectFragment : DialogFragment() {
         mountainSelectViewModel.dismiss.observe(viewLifecycleOwner, EventObserver {
             dismiss()
         })
+        mountainSelectViewModel.searchMountainName("")
         val observableTextQuery = Observable
             .create { emitter: ObservableEmitter<String>? ->
                 binding.etMountainName.addTextChangedListener { editable ->

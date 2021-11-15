@@ -16,8 +16,8 @@ android {
         applicationId "com.boostcamp.mountainking"
         minSdk 24
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -111,12 +111,14 @@ dependencies {
 
     //RichPath
     implementation 'com.github.tarek360.RichPath:animator:0.1.1'
-
     //ZoomLayout
     implementation 'com.otaliastudios:zoomlayout:1.8.0'
 
     //MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    //네이버 지도
+    implementation 'com.naver.maps:map-sdk:3.13.0'
 }
 
 kapt {
