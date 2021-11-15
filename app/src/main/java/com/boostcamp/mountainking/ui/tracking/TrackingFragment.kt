@@ -94,7 +94,9 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         mapView.getMapAsync(this)
 
         trackingViewModel.completedAchievementLiveData.observe(viewLifecycleOwner) {
-            onAchievementComplete(it.name)
+            if(it != null) {
+                onAchievementComplete(it.name)
+            }
         }
 
         trackingViewModel.statisticsLiveData.observe(viewLifecycleOwner) {

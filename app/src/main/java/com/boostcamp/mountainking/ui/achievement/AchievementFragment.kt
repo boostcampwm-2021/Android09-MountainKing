@@ -73,7 +73,9 @@ class AchievementFragment : Fragment() {
             }
         }
         completedAchievementLiveData.observe(viewLifecycleOwner) {
-            onAchievementComplete(it.name)
+            if(it != null) {
+                onAchievementComplete(it.name)
+            }
         }
         tabNameLiveData.observe(viewLifecycleOwner) {
             filterAchievementList()
