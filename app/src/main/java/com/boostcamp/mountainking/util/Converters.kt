@@ -17,7 +17,20 @@ class Converters {
     }
 
     @TypeConverter
+    fun stringToStringIntMap(value: String): Map<String, Int> {
+        val mapType = object : TypeToken<Map<String, Int>>() {}.type
+        val gson = Gson()
+        return gson.fromJson(value, mapType)
+    }
+
+    @TypeConverter
     fun mapToString(map: Map<Int, Int>): String {
+        val gson = Gson()
+        return gson.toJson(map)
+    }
+
+    @TypeConverter
+    fun stringIntMapToString(map: Map<String, Int>): String {
         val gson = Gson()
         return gson.toJson(map)
     }

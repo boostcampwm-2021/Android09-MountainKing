@@ -81,11 +81,20 @@ class Repository(context: Context) : RepositoryInterface {
         statisticsDao.insert(Statistics())
         val statistics = statisticsDao.getStatistics()
         val mountainMap = statistics.mountainMap.toMutableMap()
+        val trackingCountMap = statistics.trackingCountMap.toMutableMap()
+        val dateString = date.value
+
         when (val count = mountainMap[trackingMountainID]) {
             null -> mountainMap[trackingMountainID] = 1
             else -> mountainMap[trackingMountainID] = count + 1
         }
-        curDistance.value?.let { statisticsDao.update(it, intTime, mountainMap) }
+        dateString?.let { it ->
+            when (val count = trackingCountMap[it]) {
+                null -> trackingCountMap[it] = 1
+                else -> trackingCountMap[it] = count + 1
+            }
+        }
+        curDistance.value?.let { statisticsDao.update(it, intTime, mountainMap, trackingCountMap) }
     }
 
     override suspend fun updateStatistics(statistics: Statistics) = withContext(Dispatchers.IO) {
