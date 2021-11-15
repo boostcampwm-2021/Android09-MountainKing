@@ -31,8 +31,6 @@ class LocationService : LifecycleService() {
 
     private val binder = LocationBinder()
     private var location: Location? = null
-    private val _locationList = mutableListOf<LatLngAlt>()
-    val locationList: List<LatLngAlt> get() = _locationList
 
     private var curTime: Int = 0
     private var curDistance: Int = 0
@@ -49,7 +47,8 @@ class LocationService : LifecycleService() {
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
                 onNewLocation(locationResult.lastLocation)
-                _locationList.add(LatLngAlt.fromLocation(locationResult.lastLocation))
+                repository.locations.add(LatLngAlt.fromLocation(locationResult.lastLocation))
+                repository.locationLiveData.postValue(repository.locations)
             }
         }
         val handlerThread = HandlerThread(TAG)
@@ -165,7 +164,6 @@ class LocationService : LifecycleService() {
     fun removeLocationUpdates() {
         Log.i(TAG, "Removing location updates")
         repository.isRunning = false
-        repository.locations = locationList
         try {
             fusedLocationClient.removeLocationUpdates(locationCallback)
             setRequestingLocationUpdates(this, false)

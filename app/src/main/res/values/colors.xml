@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="thick_green">#FF008000</color>
     <color name="light_green">#FF3CB371</color>
+    <color name="mountain_blue">#8095FF</color>
+    <color name="orange">#FF7700</color>
+    <color name="blue">#194FDA</color>
 </resources>

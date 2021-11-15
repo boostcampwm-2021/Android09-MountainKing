@@ -2,6 +2,7 @@ package com.boostcamp.mountainking.ui.tracking
 
 import androidx.lifecycle.*
 import com.boostcamp.mountainking.R
+import com.boostcamp.mountainking.data.LatLngAlt
 import com.boostcamp.mountainking.data.RepositoryInterface
 import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.StringGetter
@@ -11,7 +12,6 @@ import com.boostcamp.mountainking.entity.Tracking
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,6 +25,7 @@ class TrackingViewModel @Inject constructor(
     val trackingTime: LiveData<String> get() = repository.curTime
     val trackingDistance: LiveData<Int> get() = repository.curDistance
     val date: LiveData<String> get() = repository.date
+    val locationList: LiveData<List<LatLngAlt>> get() = repository.locationLiveData
 
     private val _mountainName = MutableLiveData<String>()
     val mountainName: LiveData<String> get() = _mountainName
@@ -46,6 +47,10 @@ class TrackingViewModel @Inject constructor(
         }
     }
 
+    fun fetchMountainName() {
+        _mountainName.value = repository.trackingMountain?.substringBefore("(")
+    }
+
     fun toggleService() {
         if (repository.isRunning) {
             _buttonText.value = stringGetter.getString(R.string.title_start_tracking)
@@ -65,7 +70,8 @@ class TrackingViewModel @Inject constructor(
                     )
                     repository.updateStatistics()
                     repository.trackingMountain = null
-                    repository.locations = emptyList()
+                    repository.locations.clear()
+                    repository.locationLiveData.value = repository.locations
                 }
             }
         } else {
@@ -81,7 +87,7 @@ class TrackingViewModel @Inject constructor(
 
     fun startService() {
         _buttonText.value = stringGetter.getString(R.string.title_stop_tracking)
-        _mountainName.value = repository.trackingMountain?.substringBefore("(")
+        fetchMountainName()
         locationServiceManager.startService()
     }
 

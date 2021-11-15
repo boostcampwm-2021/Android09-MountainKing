@@ -22,9 +22,10 @@ import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentTrackingBinding
 import com.boostcamp.mountainking.util.EventObserver
 import com.google.android.material.snackbar.Snackbar
-import com.naver.maps.map.MapView
-import com.naver.maps.map.NaverMap
-import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.LatLngBounds
+import com.naver.maps.map.*
+import com.naver.maps.map.overlay.PathOverlay
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,6 +34,9 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     private var _binding: FragmentTrackingBinding? = null
     private val binding get() = _binding!!
     private lateinit var mapView: MapView
+    private var locationCoords = listOf<LatLng>()
+    private var naverMap: NaverMap? = null
+    private val path = PathOverlay()
     private val requestLocationPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGranted ->
             if (isGranted.values.all { it }) {
@@ -66,6 +70,11 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTrackingBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.trackingViewModel = trackingViewModel
         with(binding) {
             lifecycleOwner = viewLifecycleOwner
@@ -73,11 +82,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
                 findNavController().navigate(R.id.action_tracking_to_history)
             }
         }
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        trackingViewModel.fetchMountainName()
         trackingViewModel.checkPermission.observe(viewLifecycleOwner, EventObserver {
             if (isPermissionNotGranted()) {
                 requestPermissions()
@@ -88,9 +93,36 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         trackingViewModel.showDialog.observe(viewLifecycleOwner, EventObserver {
             showDialog()
         })
+        trackingViewModel.locationList.observe(viewLifecycleOwner) { locationList ->
+            locationCoords = locationList.map { LatLng(it.latitude, it.longitude) }
+            updatePath(locationCoords)
+        }
         mapView = binding.mvNaver
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
+    }
+
+    private fun updatePath(locationCoords: List<LatLng>) {
+        if (locationCoords.size >= 2) {
+            path.coords = locationCoords
+            path.map = naverMap
+        }
+        if (locationCoords.isNotEmpty()) {
+            naverMap?.locationOverlay?.position = locationCoords.last()
+            val bounds = LatLngBounds.Builder()
+                .include(locationCoords)
+                .build()
+            moveCamera(bounds)
+        }
+        if (locationCoords.isEmpty()) {
+            path.map = null
+        }
+    }
+
+    private fun moveCamera(bounds: LatLngBounds) {
+        val cameraUpdate = CameraUpdate.fitBounds(bounds)
+            .animate(CameraAnimation.Easing)
+        naverMap?.moveCamera(cameraUpdate)
     }
 
     private fun showDialog() {
@@ -175,16 +207,24 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         mapView.onLowMemory()
     }
 
-    companion object {
-        private val TAG = TrackingFragment::class.simpleName
-        private const val DIALOG = "dialog"
-    }
-
     override fun onDismiss(dialog: DialogInterface?) {
         trackingViewModel.checkPermission()
     }
 
-    override fun onMapReady(p0: NaverMap) {
-        //TODO("Map is ready")
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+        this.naverMap?.locationOverlay?.isVisible = true
+        trackingViewModel.locationList.value?.let { locationList ->
+            locationCoords = locationList.map { LatLng(it.latitude, it.longitude) }
+        }
+        updatePath(locationCoords)
+        path.color = requireContext().getColor(R.color.blue)
+        path.width = 30
+        path.outlineWidth = 0
+    }
+
+    companion object {
+        private val TAG = TrackingFragment::class.simpleName
+        private const val DIALOG = "dialog"
     }
 }
