@@ -1,17 +1,21 @@
 package com.boostcamp.mountainking.ui.tracking
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.data.RepositoryInterface
+import com.boostcamp.mountainking.data.Statistics
+import com.boostcamp.mountainking.entity.Achievement
+import com.boostcamp.mountainking.entity.Tracking
 import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.StringGetter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import com.boostcamp.mountainking.entity.Tracking
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +41,12 @@ class TrackingViewModel @Inject constructor(
 
     private val _showDialog = MutableLiveData<Event<Unit>>()
     val showDialog: LiveData<Event<Unit>> get() = _showDialog
+
+    private val _completedAchievementLiveData = MutableLiveData<Achievement>()
+    val completedAchievementLiveData: LiveData<Achievement> get() = _completedAchievementLiveData
+
+    private val _statisticsLiveData = MutableLiveData<Statistics>()
+    val statisticsLiveData: LiveData<Statistics> get() = _statisticsLiveData
 
     init {
         if (repository.isRunning) {
@@ -66,6 +76,7 @@ class TrackingViewModel @Inject constructor(
                     repository.updateStatistics()
                     repository.trackingMountain = null
                     repository.locations = emptyList()
+                    updateAchievement()
                 }
             }
         } else {
@@ -94,4 +105,26 @@ class TrackingViewModel @Inject constructor(
             locationServiceManager.unBindService()
         }
     }
+
+    fun updateAchievement() = viewModelScope.launch {
+        val statistics = repository.getStatistics()
+        val achievementList = repository.getAchievement()
+        achievementList.forEach {
+            if (it.progressAchievement(statistics)) {
+                repository.updateAchievement(it)
+                if (it.isComplete) {
+                    _completedAchievementLiveData.value = it
+                }
+            }
+        }
+    }
+
+    fun increaseDistance() = viewModelScope.launch {
+        val statistics = repository.getStatistics()
+        statistics.distance += 10
+        statistics.time += 5
+        repository.updateStatistics(statistics)
+        _statisticsLiveData.value = statistics
+    }
+
 }

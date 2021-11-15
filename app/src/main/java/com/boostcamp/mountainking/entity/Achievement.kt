@@ -31,7 +31,6 @@ data class Achievement(
             ).format(it)
         } ?: ""
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun progressAchievement(statistics: Statistics): Boolean {
         if (isComplete) return false
         curProgress = when (type) {

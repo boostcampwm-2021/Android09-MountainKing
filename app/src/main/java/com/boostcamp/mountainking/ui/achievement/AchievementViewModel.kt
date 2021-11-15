@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.mountainking.data.RepositoryInterface
-import com.boostcamp.mountainking.data.Statistics
 import com.boostcamp.mountainking.entity.Achievement
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -28,11 +27,6 @@ class AchievementViewModel @Inject constructor(
     }
 
     private var achievementList = listOf<Achievement>()
-    private val statistics = Statistics()
-    private val _statisticsLiveData = MutableLiveData<Statistics>()
-    val statisticsLiveData: LiveData<Statistics> get() = _statisticsLiveData
-    private val _completedAchievementLiveData = MutableLiveData<Achievement>()
-    val completedAchievementLiveData: LiveData<Achievement> get() = _completedAchievementLiveData
 
     fun loadAchievementList() = viewModelScope.launch {
         achievementList = repository.getAchievement()
@@ -46,24 +40,6 @@ class AchievementViewModel @Inject constructor(
             TabName.INCOMPLETE -> achievementList.filter { !it.isComplete }
             null -> achievementList
         }
-    }
-
-    fun updateAchievement() = viewModelScope.launch {
-        achievementList.forEach {
-            if (it.progressAchievement(statistics)){
-                repository.updateAchievement(it)
-                if (it.isComplete) {
-                    _completedAchievementLiveData.value = it
-                }
-            }
-        }
-        filterAchievementList()
-    }
-
-    fun increaseDistanceTest(){
-        statistics.distance += 10
-        statistics.time += 5
-        _statisticsLiveData.value = statistics
     }
 
     fun setTabName(tabName: TabName) {
