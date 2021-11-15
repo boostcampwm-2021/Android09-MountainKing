@@ -44,8 +44,9 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
 
-    override suspend fun getStatistics() {
-        //TODO("통계불러오기")
+    override suspend fun getStatistics() : Statistics  = withContext(Dispatchers.IO){
+        statisticsDao.insert(Statistics())
+        statisticsDao.getStatistics()
     }
 
     override suspend fun getWeather() {
@@ -85,6 +86,10 @@ class Repository(context: Context) : RepositoryInterface {
             else -> mountainMap[trackingMountainID] = count + 1
         }
         curDistance.value?.let { statisticsDao.update(it, intTime, mountainMap) }
+    }
+
+    override suspend fun updateStatistics(statistics: Statistics) = withContext(Dispatchers.IO) {
+        statisticsDao.update(statistics)
     }
 
     override suspend fun updateAchievement(achievement: Achievement) {

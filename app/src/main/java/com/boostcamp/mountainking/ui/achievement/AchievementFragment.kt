@@ -62,12 +62,6 @@ class AchievementFragment : Fragment() {
 
     private fun initView() {
         binding.rvAchievementList.adapter = adapter
-        binding.btnAchievementDistanceTest.setOnClickListener {
-            achievementViewModel.increaseDistanceTest()
-        }
-        binding.btnAchievementCompleteTest.setOnClickListener {
-            onAchievementComplete("TEST")
-        }
     }
 
     private fun initObserve() = with(achievementViewModel) {
@@ -78,15 +72,11 @@ class AchievementFragment : Fragment() {
                 Log.d("UpdateTest", "${achievement.name}: ${achievement.curProgress}")
             }
         }
-        statisticsLiveData.observe(viewLifecycleOwner) {
-            updateAchievement()
-        }
+
         tabNameLiveData.observe(viewLifecycleOwner) {
             filterAchievementList()
         }
-        completedAchievementLiveData.observe(viewLifecycleOwner) {
-            onAchievementComplete(it.name)
-        }
+
     }
 
     private fun initListener() = with(binding) {
@@ -162,7 +152,4 @@ class AchievementFragment : Fragment() {
 
     }
 
-    private fun onAchievementComplete(achievementName: String) {
-        AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
-    }
 }
