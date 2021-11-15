@@ -4,6 +4,10 @@
 ![logo](https://user-images.githubusercontent.com/54741149/141728118-696e172d-d3ab-4e9c-bbc1-326b12a58bf0.png)
   <h2>안드로이드 산악회와 함께해요! ⛰️ 우리는 등산왕</h2>
   <h4> < 등산 시간 및 거리 기록 | 업적 획득 시스템 | 전국 산 정보 조회 > </h3>
+  <img src="https://img.shields.io/github/issues/boostcampwm-2021/Android09-MountainKing"/>
+  <img src="https://img.shields.io/github/issues-closed/boostcampwm-2021/Android09-MountainKing"/>
+  <img src="https://img.shields.io/github/commit-activity/w/boostcampwm-2021/Android09-MountainKing">
+  <img src="https://img.shields.io/github/last-commit/boostcampwm-2021/Android09-MountainKing">
   <br><br>
 </div>
 
