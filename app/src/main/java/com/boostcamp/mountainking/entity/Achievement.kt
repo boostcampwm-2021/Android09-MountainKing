@@ -1,7 +1,5 @@
 package com.boostcamp.mountainking.entity
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.boostcamp.mountainking.data.Statistics
@@ -21,6 +19,7 @@ data class Achievement(
     var isComplete: Boolean = false,
     var completeDate: Date? = Date(),
     var score: Int = 0,
+    var mountainIdList: List<Int> = listOf()
 ) {
 
     val completeDateString: String
@@ -44,7 +43,9 @@ data class Achievement(
                 0
             }
             AchievementType.MOUNTAIN_COUNT -> {
-                statistics.mountainMap[0] ?: 0
+                mountainIdList.fold(0) {total, i ->
+                    total + (statistics.mountainMap[i] ?: 0)
+                }
             }
             AchievementType.MOUNTAIN_KIND_COUNT -> {
                 statistics.mountainMap.filter { entry ->

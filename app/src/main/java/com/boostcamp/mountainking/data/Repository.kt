@@ -1,7 +1,6 @@
 package com.boostcamp.mountainking.data
 
 import android.content.Context
-import android.util.Log
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.Mountain
 import androidx.lifecycle.MutableLiveData
@@ -36,7 +35,8 @@ class Repository(context: Context) : RepositoryInterface {
 
     override suspend fun getAchievement(): List<Achievement> = withContext(Dispatchers.IO) {
         if (achievementDao.countData() == 0) {
-            getInitAchievementList().forEach {
+            val namedMountainList = mountainDao.searchNamedMountain()
+            getInitAchievementList(namedMountainList).forEach {
                 achievementDao.insert(it)
             }
         }

@@ -23,6 +23,19 @@ class Converters {
     }
 
     @TypeConverter
+    fun stringToList(value: String): List<Int> {
+        val listType = object : TypeToken<List<Int>>() {}.type
+        val gson = Gson()
+        return gson.fromJson(value, listType)
+    }
+
+    @TypeConverter
+    fun listToString(list: List<Int>): String {
+        val gson = Gson()
+        return gson.toJson(list)
+    }
+
+    @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
         return value?.let { Date(it) }
     }
