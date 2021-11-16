@@ -59,7 +59,7 @@ class MountainDetailFragment : Fragment() {
         }
 
         binding.tbMountainDetailName.setNavigationOnClickListener {
-            findNavController().navigate(R.id.action_mountainDetailFragment_to_mountainListFragment)
+            findNavController().popBackStack()
         }
 
     }
