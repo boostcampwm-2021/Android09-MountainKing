@@ -58,10 +58,21 @@ class MountainListFragment : Fragment() {
 
         initObserve()
 
+        val cityList = mutableListOf("전체")
+        city[state]?.let {
+            cityList.addAll(it)
+        }
+
         binding.spMountainCityList.adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            city[state] ?: emptyList()
+            cityList
+        )
+
+        mountainListViewModel.searchMountainNameInCity(
+            state,
+            "",
+            ""
         )
 
         val observableTextQuery = Observable
@@ -74,11 +85,19 @@ class MountainListFragment : Fragment() {
             .subscribeOn(Schedulers.io())
         observableTextQuery.subscribe { name ->
             Log.d("cityName", binding.spMountainCityList.selectedItem.toString())
-            mountainListViewModel.searchMountainNameInCity(
-                state,
-                binding.spMountainCityList.selectedItem.toString(),
-                name
-            )
+            if (binding.spMountainCityList.selectedItem.toString() == "전체") {
+                mountainListViewModel.searchMountainNameInCity(
+                    state,
+                    "",
+                    name
+                )
+            } else {
+                mountainListViewModel.searchMountainNameInCity(
+                    state,
+                    binding.spMountainCityList.selectedItem.toString(),
+                    name
+                )
+            }
         }
     }
 
