@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -33,7 +34,7 @@ class MountainListFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private lateinit var state:String
+    private lateinit var state: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,7 +96,10 @@ class MountainListFragment : Fragment() {
     }
 
     private fun onMountainClicked(mountain: Mountain) {
-        //TODO "화면 전환"
+        findNavController().navigate(
+            R.id.action_mountainListFragment_to_mountainDetailFragment,
+            bundleOf("mountainId" to mountain.id)
+        )
     }
 
     private fun initToolbar() {
