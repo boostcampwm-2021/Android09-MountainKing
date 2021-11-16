@@ -23,7 +23,8 @@ class Repository(context: Context) : RepositoryInterface {
     override var intTime = 0
     override var curDistance = MutableLiveData<Int>()
     override var date = MutableLiveData<String>()
-    override var locations: List<LatLngAlt> = emptyList()
+    override var locations = mutableListOf<LatLngAlt>()
+    override var locationLiveData = MutableLiveData<List<LatLngAlt>>()
 
     override suspend fun getMountain() {
         //TODO("산정보 불러오기")

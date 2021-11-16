@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.boostcamp.mountainking.R
+import com.boostcamp.mountainking.data.LatLngAlt
 import com.boostcamp.mountainking.data.RepositoryInterface
 import com.boostcamp.mountainking.data.Statistics
 import com.boostcamp.mountainking.entity.Achievement
@@ -29,6 +30,7 @@ class TrackingViewModel @Inject constructor(
     val trackingTime: LiveData<String> get() = repository.curTime
     val trackingDistance: LiveData<Int> get() = repository.curDistance
     val date: LiveData<String> get() = repository.date
+    val locationList: LiveData<List<LatLngAlt>> get() = repository.locationLiveData
 
     private val _mountainName = MutableLiveData<String>()
     val mountainName: LiveData<String> get() = _mountainName
@@ -56,6 +58,10 @@ class TrackingViewModel @Inject constructor(
         }
     }
 
+    fun fetchMountainName() {
+        _mountainName.value = repository.trackingMountain?.substringBefore("(")
+    }
+
     fun toggleService() {
         if (repository.isRunning) {
             _buttonText.value = stringGetter.getString(R.string.title_start_tracking)
@@ -75,7 +81,8 @@ class TrackingViewModel @Inject constructor(
                     )
                     repository.updateStatistics()
                     repository.trackingMountain = null
-                    repository.locations = emptyList()
+                    repository.locations.clear()
+                    repository.locationLiveData.value = repository.locations
                     updateAchievement()
                 }
             }
@@ -92,7 +99,7 @@ class TrackingViewModel @Inject constructor(
 
     fun startService() {
         _buttonText.value = stringGetter.getString(R.string.title_stop_tracking)
-        _mountainName.value = repository.trackingMountain?.substringBefore("(")
+        fetchMountainName()
         locationServiceManager.startService()
     }
 
