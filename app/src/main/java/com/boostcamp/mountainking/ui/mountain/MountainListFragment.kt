@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
@@ -69,11 +70,31 @@ class MountainListFragment : Fragment() {
             cityList
         )
 
-        mountainListViewModel.searchMountainNameInCity(
-            state,
-            "",
-            ""
-        )
+        binding.spMountainCityList.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    Log.d("spinner_listener", binding.spMountainCityList.selectedItem.toString())
+                    mountainListViewModel.searchMountainNameInCity(
+                        state,
+                        binding.spMountainCityList.selectedItem.toString().let {
+                            if (it == "전체") {
+                                ""
+                            } else {
+                                it
+                            }
+                        },
+                        binding.etMountainName.text.toString()
+                    )
+                }
+            }
 
         val observableTextQuery = Observable
             .create { emitter: ObservableEmitter<String>? ->
