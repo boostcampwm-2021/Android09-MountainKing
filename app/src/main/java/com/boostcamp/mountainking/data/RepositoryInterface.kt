@@ -6,7 +6,7 @@ import com.boostcamp.mountainking.entity.Mountain
 import com.boostcamp.mountainking.entity.Tracking
 
 interface RepositoryInterface {
-    suspend fun getMountain()
+    suspend fun getMountain(id: Int): Mountain
     suspend fun getTracking(): List<Tracking>?
     suspend fun getAchievement(): List<Achievement>
     suspend fun getStatistics(): Statistics

@@ -26,8 +26,8 @@ class Repository(context: Context) : RepositoryInterface {
     override var locations = mutableListOf<LatLngAlt>()
     override var locationLiveData = MutableLiveData<List<LatLngAlt>>()
 
-    override suspend fun getMountain() {
-        //TODO("산정보 불러오기")
+    override suspend fun getMountain(id: Int): Mountain = withContext(Dispatchers.IO) {
+        mountainDao.getMountain(id)
     }
 
     override suspend fun getTracking(): List<Tracking> = withContext(Dispatchers.IO) {
