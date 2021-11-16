@@ -111,14 +111,14 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
             when(event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     binding.svHistoryDetails.requestDisallowInterceptTouchEvent(true)
-                    true
+                    false
                 }
                 MotionEvent.ACTION_UP -> {
                     binding.svHistoryDetails.requestDisallowInterceptTouchEvent(false)
-                    true
+                    false
                 }
                 else -> {
-                    false
+                    true
                 }
             }
         }
