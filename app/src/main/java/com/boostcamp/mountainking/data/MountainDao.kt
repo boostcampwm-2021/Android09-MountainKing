@@ -12,4 +12,7 @@ interface MountainDao {
 
     @Query("SELECT * FROM Mountain WHERE locationName LIKE '%'||:state||'%' AND locationName LIKE '%'||:cityName||'%' AND mountainName LIKE '%'||:name||'%'")
     fun searchMountainNameInCity(state: String, cityName: String, name: String): List<Mountain>
+
+    @Query("SELECT * FROM Mountain WHERE namedMountainDetails IS NOT NULL")
+    fun searchNamedMountain(): List<Mountain>
 }

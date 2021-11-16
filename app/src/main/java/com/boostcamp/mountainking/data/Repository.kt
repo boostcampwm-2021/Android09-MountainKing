@@ -1,7 +1,6 @@
 package com.boostcamp.mountainking.data
 
 import android.content.Context
-import android.util.Log
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.Mountain
 import androidx.lifecycle.MutableLiveData
@@ -37,7 +36,8 @@ class Repository(context: Context) : RepositoryInterface {
 
     override suspend fun getAchievement(): List<Achievement> = withContext(Dispatchers.IO) {
         if (achievementDao.countData() == 0) {
-            getInitAchievementList().forEach {
+            val namedMountainList = mountainDao.searchNamedMountain()
+            getInitAchievementList(namedMountainList).forEach {
                 achievementDao.insert(it)
             }
         }
@@ -45,8 +45,9 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
 
-    override suspend fun getStatistics() {
-        //TODO("통계불러오기")
+    override suspend fun getStatistics() : Statistics  = withContext(Dispatchers.IO){
+        statisticsDao.insert(Statistics())
+        statisticsDao.getStatistics()
     }
 
     override suspend fun getWeather() {
@@ -81,11 +82,24 @@ class Repository(context: Context) : RepositoryInterface {
         statisticsDao.insert(Statistics())
         val statistics = statisticsDao.getStatistics()
         val mountainMap = statistics.mountainMap.toMutableMap()
+        val trackingCountMap = statistics.trackingCountMap.toMutableMap()
+        val dateString = date.value
+
         when (val count = mountainMap[trackingMountainID]) {
             null -> mountainMap[trackingMountainID] = 1
             else -> mountainMap[trackingMountainID] = count + 1
         }
-        curDistance.value?.let { statisticsDao.update(it, intTime, mountainMap) }
+        dateString?.let { it ->
+            when (val count = trackingCountMap[it]) {
+                null -> trackingCountMap[it] = 1
+                else -> trackingCountMap[it] = count + 1
+            }
+        }
+        curDistance.value?.let { statisticsDao.update(it, intTime, mountainMap, trackingCountMap) }
+    }
+
+    override suspend fun updateStatistics(statistics: Statistics) = withContext(Dispatchers.IO) {
+        statisticsDao.update(statistics)
     }
 
     override suspend fun updateAchievement(achievement: Achievement) {

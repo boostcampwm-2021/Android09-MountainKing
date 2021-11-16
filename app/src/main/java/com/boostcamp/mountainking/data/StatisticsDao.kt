@@ -13,8 +13,8 @@ interface StatisticsDao {
     @Delete
     fun delete(statistics: Statistics)
 
-    @Query("UPDATE Statistics SET distance = distance + :distance, time = time + :time, mountainMap = :mountainMap")
-    fun update(distance: Int, time: Int, mountainMap: Map<Int, Int>)
+    @Query("UPDATE Statistics SET distance = distance + :distance, time = time + :time, mountainMap = :mountainMap, trackingCountMap = :trackingCountMap")
+    fun update(distance: Int, time: Int, mountainMap: Map<Int, Int>, trackingCountMap: Map<String, Int>)
 
     @Query("SELECT * FROM Statistics")
     fun getStatistics(): Statistics

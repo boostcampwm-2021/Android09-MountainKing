@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.boostcamp.mountainking.BuildConfig
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentTrackingBinding
+import com.boostcamp.mountainking.util.AchievementReceiver
 import com.boostcamp.mountainking.util.EventObserver
 import com.google.android.material.snackbar.Snackbar
 import com.naver.maps.geometry.LatLng
@@ -100,6 +101,24 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         mapView = binding.mvNaver
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
+
+        trackingViewModel.completedAchievementLiveData.observe(viewLifecycleOwner) {
+            if(it != null) {
+                onAchievementComplete(it.name)
+            }
+        }
+
+        trackingViewModel.statisticsLiveData.observe(viewLifecycleOwner) {
+            trackingViewModel.updateAchievement()
+        }
+
+        binding.tvTrackingDistanceTest.setOnClickListener {
+            trackingViewModel.increaseDistance()
+        }
+
+        binding.tvTrackingAchievementCompleteTest.setOnClickListener {
+            onAchievementComplete("test")
+        }
     }
 
     private fun updatePath(locationCoords: List<LatLng>) {
@@ -226,5 +245,9 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     companion object {
         private val TAG = TrackingFragment::class.simpleName
         private const val DIALOG = "dialog"
+    }
+
+    private fun onAchievementComplete(achievementName: String) {
+        AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
     }
 }
