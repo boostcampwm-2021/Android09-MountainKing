@@ -22,20 +22,25 @@
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
         tools:replace="android:allowBackup">
         <activity
-            android:name="com.boostcamp.mountainking.MainActivity"
-            android:exported="true">
+            android:name=".ui.SplashActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"/>
+
         <service
             android:name=".ui.tracking.LocationService"
             android:foregroundServiceType="location" />
+
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="3d410dea6299c6acb95670e4cae1bd4f" />
+
         <receiver
             android:name=".util.AchievementReceiver"
             android:enabled="true"
