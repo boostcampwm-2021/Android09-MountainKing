@@ -2,6 +2,7 @@ package com.boostcamp.mountainking.util
 
 import android.util.Log
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import com.boostcamp.mountainking.R
@@ -34,5 +35,13 @@ fun setDistance(view: AppCompatTextView, trackingDistance: Int?) {
     if (trackingDistance != null) {
         val distanceString = "$trackingDistance m"
         view.text = distanceString
+    }
+}
+
+@BindingAdapter("tracking_step")
+fun setStep(view: TextView, trackingStep: Int?) {
+    if(trackingStep != null) {
+        val stepString = "$trackingStep 걸음"
+        view.text = stepString
     }
 }
