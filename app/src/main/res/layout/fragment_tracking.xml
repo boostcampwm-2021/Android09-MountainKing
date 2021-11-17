@@ -16,22 +16,22 @@
         tools:context=".ui.tracking.TrackingFragment">
 
         <Button
-            android:visibility="invisible"
             android:id="@+id/tv_tracking_distance_test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="거리 10 증가"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:visibility="invisible"
             android:id="@+id/tv_tracking_achievement_complete_test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="업적완료"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_tracking_distance_test" />
