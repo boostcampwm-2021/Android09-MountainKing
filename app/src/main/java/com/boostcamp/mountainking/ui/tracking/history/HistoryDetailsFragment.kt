@@ -46,7 +46,12 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     private fun initView() {
         initToolbar()
         initAltitudeGraph()
+        initMountainName()
         setOnTouchListener()
+    }
+
+    private fun initMountainName() {
+        binding.tvHistoryDetailsToolbarTitle.text = args.mountainName
     }
 
     private fun initToolbar() {
@@ -63,11 +68,13 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
 
     private fun initAltitudeGraph() {
         val entries = mutableListOf<Entry>().apply {
-            addAll(args.altitudeList.map { BarEntry(
-                LocationService.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS.toFloat()
-                        * (args.altitudeList.indexOf(it) + 1) / 1000,
-                String.format("%.2f", it.altitude).toFloat()
-            ) })
+            addAll(args.altitudeList.map {
+                BarEntry(
+                    LocationService.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS.toFloat()
+                            * (args.altitudeList.indexOf(it) + 1) / 1000,
+                    String.format("%.2f", it.altitude).toFloat()
+                )
+            })
         }
 
         val set = LineDataSet(entries, "Altitude").apply {
@@ -108,14 +115,14 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     @SuppressLint("ClickableViewAccessibility")
     private fun setOnTouchListener() {
         binding.mvNaver.setOnTouchListener { _, event ->
-            when(event.action) {
+            when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     binding.svHistoryDetails.requestDisallowInterceptTouchEvent(true)
                     true
                 }
                 MotionEvent.ACTION_UP -> {
                     binding.svHistoryDetails.requestDisallowInterceptTouchEvent(false)
-                    true
+                    false
                 }
                 else -> {
                     false
@@ -126,21 +133,29 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(naverMap: NaverMap) {
-        val path = PathOverlay()
-        with(path) {
-            coords = args.altitudeList.map { LatLng(it.latitude, it.longitude) }
-            if(coords.size >= 2) {
+        if (args.altitudeList.size >= 2) {
+            val path = PathOverlay()
+            with(path) {
+                coords = args.altitudeList.map { LatLng(it.latitude, it.longitude) }
                 width = 10
                 outlineWidth = 0
                 color = this@HistoryDetailsFragment.requireContext().getColor(R.color.blue)
                 map = naverMap
+                val cameraPosition = CameraPosition(
+                    path.coords[path.coords.size / 2],
+                    16.0
+                )
+                naverMap.cameraPosition = cameraPosition
             }
+        } else if (args.altitudeList.isNotEmpty()) {
+            val cameraPosition = CameraPosition(
+                LatLng(
+                    args.altitudeList[0].latitude,
+                    args.altitudeList[0].longitude
+                ), 16.0
+            )
+            naverMap.cameraPosition = cameraPosition
         }
-        val cameraPosition = CameraPosition(
-            path.coords[path.coords.size / 2],
-            16.0
-        )
-        naverMap.cameraPosition = cameraPosition
     }
 
     override fun onStart() {
