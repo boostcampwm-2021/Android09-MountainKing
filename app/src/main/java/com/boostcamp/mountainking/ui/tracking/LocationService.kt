@@ -1,8 +1,13 @@
 package com.boostcamp.mountainking.ui.tracking
 
 import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Location
 import android.os.*
 import android.util.Log
@@ -15,26 +20,26 @@ import com.boostcamp.mountainking.MainActivity
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.data.LatLngAlt
 import com.boostcamp.mountainking.data.Repository
-import com.boostcamp.mountainking.util.Event
 import com.boostcamp.mountainking.util.setRequestingLocationUpdates
 import com.google.android.gms.location.*
 import kotlinx.coroutines.*
-import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.*
 
-class LocationService : LifecycleService() {
+class LocationService : LifecycleService(), SensorEventListener {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var notificationManager: NotificationManager
+    private lateinit var serviceHandler: Handler
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: LocationRequest
+    private lateinit var sensorManager: SensorManager
+    private lateinit var stepDetectorSensor: Sensor
 
     private val binder = LocationBinder()
     private var location: Location? = null
 
     private var curTime: Int = 0
     private var curDistance: Int = 0
-    private lateinit var serviceHandler: Handler
+    private var curStep: Int = 0
 
     private var isBound = true
     private val repository = Repository.getInstance(this)
@@ -56,6 +61,7 @@ class LocationService : LifecycleService() {
         serviceHandler = Handler(handlerThread.looper)
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
+        createSensor()
         createLocationRequest()
         getLastLocation()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -75,7 +81,7 @@ class LocationService : LifecycleService() {
 
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("${repository.trackingMountain?.substringBefore("(")} 등산 중...")
-            .setContentText("시간 : ${timeConverter(curTime)}   거리 : ${curDistance}m")
+            .setContentText("시간 : ${timeConverter(curTime)}, 거리 : ${curDistance}m,  걸음 수 : ${curStep}걸음")
             .setContentIntent(pendingIntent)
             .setOnlyAlertOnce(true)
             .setSmallIcon(R.drawable.ic_achievement_svgrepo_com)
@@ -85,7 +91,8 @@ class LocationService : LifecycleService() {
         lifecycleScope.launch(Dispatchers.IO) {
             while (isBound) {
                 delay(1000)
-                notificationBuilder.setContentText("시간 : ${timeConverter(++curTime)}   거리 : ${curDistance}m")
+                notificationBuilder.setContentText(
+                    "시간 : ${timeConverter(++curTime)}, 거리 : ${curDistance}m,  걸음 수 : ${curStep}걸음")
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
                 repository.curTime.postValue(timeConverter(curTime))
                 repository.intTime = curTime
@@ -180,13 +187,9 @@ class LocationService : LifecycleService() {
     // locationCallback 안에서 실행될 메소드
     private fun onNewLocation(lastLocation: Location) {
         val distance = location?.distanceTo(lastLocation)?.toInt()
-        Log.d("distance", "$distance, $curDistance $location, $lastLocation")
         curDistance += distance ?: 0
-        Log.i(TAG, "New location: $lastLocation distance: $curDistance")
         repository.curDistance.postValue(curDistance)
-//        repository.coordinates.postValue(locationList)
         this.location = lastLocation
-        // Notify anyone listening for broadcasts about the new location.
         val intent = Intent(ACTION_BROADCAST)
         intent.putExtra(EXTRA_LOCATION, lastLocation)
         LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
@@ -201,23 +204,52 @@ class LocationService : LifecycleService() {
     override fun onDestroy() {
         super.onDestroy()
         serviceHandler.removeCallbacksAndMessages(null)
+        sensorManager.unregisterListener(this)
     }
 
     inner class LocationBinder : Binder() {
         fun getService(): LocationService = this@LocationService
     }
 
+    private fun createSensor() {
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        if(sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null ) {
+            stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+            sensorManager.registerListener(this, stepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST)
+            Log.i(TAG, "connected step detector sensor!")
+        }
+        else {
+            Log.i(TAG, "this device hasn't step counter sensor!")
+        }
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        Log.i(TAG, "onSensorChanged()")
+        event ?: return
+        when(event.sensor.type) {
+            Sensor.TYPE_STEP_DETECTOR -> {
+                if(event.values[0] == 1.0f) {
+                    curStep ++
+                    Log.i(TAG, "$curStep 걸음")
+                }
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+        // implements StepEventListener
+    }
+
     companion object {
-        const val NOTIFICATION_ID = 10
-        const val CHANNEL_ID = "primary_notification_channel"
         private val TAG = LocationService::class.java.simpleName
         private const val UPDATE_INTERVAL_IN_MILLISECONDS = 10000.toLong()
-        const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2
         private const val SMALLEST_DISPLACEMENT = 0F
         private const val PACKAGE_NAME = "com.boostcamp.mountainking.ui.tracking.locationservice"
         private const val ACTION_BROADCAST = "$PACKAGE_NAME.broadcast"
         private const val EXTRA_LOCATION = "$PACKAGE_NAME.location"
 
+        const val NOTIFICATION_ID = 10
+        const val CHANNEL_ID = "primary_notification_channel"
+        const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2
     }
 }
