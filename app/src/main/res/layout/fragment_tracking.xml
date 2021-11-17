@@ -105,7 +105,9 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_distance"
-            app:layout_constraintTop_toTopOf="@id/tv_tracking_time" />
+            app:layout_constraintTop_toTopOf="@id/tv_tracking_time"
+            app:tracking_step="@{trackingViewModel.trackingStep}"
+            tools:text="11 걸음"/>
 
         <ImageView
             android:id="@+id/btn_tracking_history"

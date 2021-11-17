@@ -27,6 +27,7 @@ interface RepositoryInterface {
     var curTime: MutableLiveData<String>
     var intTime: Int
     var curDistance: MutableLiveData<Int>
+    var curStep: MutableLiveData<Int>
     var date: MutableLiveData<String>
     var locations: MutableList<LatLngAlt>
     var locationLiveData: MutableLiveData<List<LatLngAlt>>
