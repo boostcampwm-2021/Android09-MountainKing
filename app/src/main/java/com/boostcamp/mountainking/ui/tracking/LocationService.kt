@@ -81,7 +81,7 @@ class LocationService : LifecycleService(), SensorEventListener {
 
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("${repository.trackingMountain?.substringBefore("(")} 등산 중...")
-            .setContentText("시간 : ${timeConverter(curTime)}, 거리 : ${curDistance}m,  걸음 수 : ${curStep}걸음")
+            .setContentText("시간 : ${timeConverter(curTime)} 거리 : ${curDistance}m  걸음 수 : $curStep 걸음")
             .setContentIntent(pendingIntent)
             .setOnlyAlertOnce(true)
             .setSmallIcon(R.drawable.ic_achievement_svgrepo_com)
@@ -92,7 +92,7 @@ class LocationService : LifecycleService(), SensorEventListener {
             while (isBound) {
                 delay(1000)
                 notificationBuilder.setContentText(
-                    "시간 : ${timeConverter(++curTime)}, 거리 : ${curDistance}m,  걸음 수 : ${curStep}걸음")
+                    "시간 : ${timeConverter(++curTime)} 거리 : ${curDistance}m  걸음 수 : $curStep 걸음")
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
                 repository.curTime.postValue(timeConverter(curTime))
                 repository.intTime = curTime
@@ -156,6 +156,7 @@ class LocationService : LifecycleService(), SensorEventListener {
         Log.i(TAG, "Requesting location updates")
         setRequestingLocationUpdates(this, true)
         curDistance = 0
+        curStep = 0
         try {
             fusedLocationClient.requestLocationUpdates(
                 locationRequest,
@@ -223,13 +224,12 @@ class LocationService : LifecycleService(), SensorEventListener {
         }
     }
 
-    override fun onSensorChanged(event: SensorEvent?) {
+    override fun onSensorChanged(event: SensorEvent) {
         Log.i(TAG, "onSensorChanged()")
-        event ?: return
         when(event.sensor.type) {
             Sensor.TYPE_STEP_DETECTOR -> {
                 if(event.values[0] == 1.0f) {
-                    curStep ++
+                    repository.curStep.postValue( ++ curStep)
                     Log.i(TAG, "$curStep 걸음")
                 }
             }
