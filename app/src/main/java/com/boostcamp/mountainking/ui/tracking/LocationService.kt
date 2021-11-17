@@ -78,7 +78,7 @@ class LocationService : LifecycleService() {
             .setContentText("시간 : ${timeConverter(curTime)}   거리 : ${curDistance}m")
             .setContentIntent(pendingIntent)
             .setOnlyAlertOnce(true)
-            .setSmallIcon(R.drawable.ic_achievement_svgrepo_com)
+            .setSmallIcon(R.drawable.ic_notification)
 
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
 

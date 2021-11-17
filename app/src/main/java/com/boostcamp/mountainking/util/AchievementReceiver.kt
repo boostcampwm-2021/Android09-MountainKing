@@ -16,7 +16,7 @@ class AchievementReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         val achievementName = intent?.getStringExtra("achievementName") ?: "Error"
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(com.boostcamp.mountainking.R.drawable.ic_achievement_svgrepo_com)
+            .setSmallIcon(com.boostcamp.mountainking.R.drawable.ic_notification)
             .setContentTitle("업적 달성")
             .setContentText("$achievementName 업적을 달성했습니다.")
             .setPriority(NotificationCompat.PRIORITY_MAX)
