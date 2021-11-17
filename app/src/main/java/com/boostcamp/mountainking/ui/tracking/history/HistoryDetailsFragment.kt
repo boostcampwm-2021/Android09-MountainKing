@@ -18,9 +18,8 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraPosition
-import com.naver.maps.map.NaverMap
-import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.geometry.LatLngBounds
+import com.naver.maps.map.*
 import com.naver.maps.map.overlay.PathOverlay
 
 
@@ -143,11 +142,10 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
                 outlineWidth = 0
                 color = this@HistoryDetailsFragment.requireContext().getColor(R.color.blue)
                 map = naverMap
-                val cameraPosition = CameraPosition(
-                    path.coords[path.coords.size / 2],
-                    16.0
-                )
-                naverMap.cameraPosition = cameraPosition
+                val cameraUpdate =
+                    CameraUpdate.fitBounds(LatLngBounds.Builder().include(coords).build(), MAP_PADDING)
+                        .animate(CameraAnimation.Fly, FLY_DURATION)
+                naverMap.moveCamera(cameraUpdate)
             }
         } else if (args.altitudeList.isNotEmpty()) {
             val cameraPosition = CameraPosition(
@@ -193,5 +191,10 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     override fun onLowMemory() {
         super.onLowMemory()
         binding.mvNaver.onLowMemory()
+    }
+
+    companion object {
+        private const val FLY_DURATION = 2000L
+        private const val MAP_PADDING = 50
     }
 }

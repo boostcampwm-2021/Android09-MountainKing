@@ -132,15 +132,15 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             val bounds = LatLngBounds.Builder()
                 .include(locationCoords)
                 .build()
-            moveCamera(bounds)
+            moveCamera(bounds, MAP_PADDING)
         }
         if (locationCoords.isEmpty()) {
             path.map = null
         }
     }
 
-    private fun moveCamera(bounds: LatLngBounds) {
-        val cameraUpdate = CameraUpdate.fitBounds(bounds)
+    private fun moveCamera(bounds: LatLngBounds, padding: Int) {
+        val cameraUpdate = CameraUpdate.fitBounds(bounds, padding)
             .animate(CameraAnimation.Easing)
         naverMap?.moveCamera(cameraUpdate)
     }
@@ -290,5 +290,6 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     companion object {
         private val TAG = TrackingFragment::class.simpleName
         private const val DIALOG = "dialog"
+        private const val MAP_PADDING = 50
     }
 }
