@@ -67,47 +67,49 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initAltitudeGraph() {
-        val entries = mutableListOf<Entry>().apply {
-            addAll(args.altitudeList.map {
-                BarEntry(
-                    LocationService.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS.toFloat()
-                            * (args.altitudeList.indexOf(it) + 1) / 1000,
-                    String.format("%.2f", it.altitude).toFloat()
-                )
-            })
-        }
+        if (args.altitudeList.isNotEmpty()) {
+            val entries = mutableListOf<Entry>().apply {
+                addAll(args.altitudeList.map {
+                    BarEntry(
+                        LocationService.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS.toFloat()
+                                * (args.altitudeList.indexOf(it) + 1) / 1000,
+                        String.format("%.2f", it.altitude).toFloat()
+                    )
+                })
+            }
 
-        val set = LineDataSet(entries, "Altitude").apply {
-            color = ContextCompat.getColor(requireActivity(), R.color.light_green)
-            lineWidth = 5f
-            setCircleColor(ContextCompat.getColor(requireActivity(), R.color.thick_green))
-            setDrawValues(false)
-        }
+            val set = LineDataSet(entries, "Altitude").apply {
+                color = ContextCompat.getColor(requireActivity(), R.color.light_green)
+                lineWidth = 5f
+                setCircleColor(ContextCompat.getColor(requireActivity(), R.color.thick_green))
+                setDrawValues(false)
+            }
 
-        val dataSet: MutableList<ILineDataSet> = mutableListOf<ILineDataSet>().apply {
-            add(set)
-        }
-        val data = LineData(dataSet)
+            val dataSet: MutableList<ILineDataSet> = mutableListOf<ILineDataSet>().apply {
+                add(set)
+            }
+            val data = LineData(dataSet)
 
 
-        with(binding) {
-            lcHistoryAltitude.run {
-                axisLeft.run {
-                    axisMaximum = args.altitudeList.maxOf { it.altitude }.toFloat() + 10f
-                    axisMinimum = args.altitudeList.minOf { it.altitude }.toFloat()
-                    granularity = 10.0f
-                    setDrawLabels(true)
-                    setDrawAxisLine(true)
+            with(binding) {
+                lcHistoryAltitude.run {
+                    axisLeft.run {
+                        axisMaximum = args.altitudeList.maxOf { it.altitude }.toFloat() + 10f
+                        axisMinimum = args.altitudeList.minOf { it.altitude }.toFloat()
+                        granularity = 10.0f
+                        setDrawLabels(true)
+                        setDrawAxisLine(true)
+                    }
+                    xAxis.run {
+                        position = XAxis.XAxisPosition.BOTTOM
+                        granularity = 1.0f
+
+                    }
+                    axisRight.isEnabled = false
+                    animateY(1000)
+
+                    this.data = data
                 }
-                xAxis.run {
-                    position = XAxis.XAxisPosition.BOTTOM
-                    granularity = 1.0f
-
-                }
-                axisRight.isEnabled = false
-                animateY(1000)
-
-                this.data = data
             }
         }
     }
