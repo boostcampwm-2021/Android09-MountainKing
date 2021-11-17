@@ -41,7 +41,7 @@ class MountainDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mountainId = arguments?.getInt("mountainId") ?: 1
         initObserve()
-        binding.mountain = Mountain(1, "", "", "", 1, "", "", "", "", "", "", "")
+        binding.mountain = Mountain(1, "", "", "", 1, "", "", "", "", "", "", "", 0.0, 0.0)
         initToolbar()
     }
 
