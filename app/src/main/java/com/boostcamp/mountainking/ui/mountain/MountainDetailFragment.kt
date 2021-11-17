@@ -42,26 +42,14 @@ class MountainDetailFragment : Fragment() {
         mountainId = arguments?.getInt("mountainId") ?: 1
         initObserve()
         binding.mountain = Mountain(1, "", "", "", 1, "", "", "", "", "", "", "", 0.0, 0.0)
-        initToolbar()
+        binding.mtbMountainDetail.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun initToolbar() {
-        with(activity as AppCompatActivity) {
-            setSupportActionBar(binding.tbMountainDetailName)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setDisplayShowTitleEnabled(false)
-            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24)
-        }
-
-        binding.tbMountainDetailName.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
-
     }
 
     private fun initObserve() = with(mountainDetailViewModel) {
