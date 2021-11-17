@@ -15,14 +15,21 @@ class HistoryViewHolder(
     fun bind(tracking: Tracking) {
         binding.tracking = tracking
         with(itemView) {
-            setOnClickListener { onItemClickListener.onItemClick(tracking.coordinates) }
+            setOnClickListener {
+                onItemClickListener.onItemClick(
+                    tracking.coordinates,
+                    tracking.mountainName
+                )
+            }
             setOnLongClickListener { onItemClickListener.onItemLongClick(tracking) }
         }
     }
 
-    companion object{
-        fun from(parent : ViewGroup,
-                 onHistoryItemClickListener: OnHistoryItemClickListener) : HistoryViewHolder {
+    companion object {
+        fun from(
+            parent: ViewGroup,
+            onHistoryItemClickListener: OnHistoryItemClickListener
+        ): HistoryViewHolder {
             return HistoryViewHolder(
                 ItemTrackingHistoryBinding.inflate(
                     LayoutInflater.from(parent.context),

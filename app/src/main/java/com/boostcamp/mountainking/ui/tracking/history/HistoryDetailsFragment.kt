@@ -46,7 +46,12 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     private fun initView() {
         initToolbar()
         initAltitudeGraph()
+        initMountainName()
         setOnTouchListener()
+    }
+
+    private fun initMountainName() {
+        binding.tvHistoryDetailsToolbarTitle.text = args.mountainName
     }
 
     private fun initToolbar() {
@@ -62,45 +67,49 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initAltitudeGraph() {
-        val entries = mutableListOf<Entry>().apply {
-            addAll(args.altitudeList.map { BarEntry(
-                LocationService.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS.toFloat()
-                        * (args.altitudeList.indexOf(it) + 1) / 1000,
-                String.format("%.2f", it.altitude).toFloat()
-            ) })
-        }
+        if (args.altitudeList.isNotEmpty()) {
+            val entries = mutableListOf<Entry>().apply {
+                addAll(args.altitudeList.map {
+                    BarEntry(
+                        LocationService.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS.toFloat()
+                                * (args.altitudeList.indexOf(it) + 1) / 1000,
+                        String.format("%.2f", it.altitude).toFloat()
+                    )
+                })
+            }
 
-        val set = LineDataSet(entries, "Altitude").apply {
-            color = ContextCompat.getColor(requireActivity(), R.color.light_green)
-            lineWidth = 5f
-            setCircleColor(ContextCompat.getColor(requireActivity(), R.color.thick_green))
-            setDrawValues(false)
-        }
+            val set = LineDataSet(entries, "Altitude").apply {
+                color = ContextCompat.getColor(requireActivity(), R.color.light_green)
+                lineWidth = 5f
+                setCircleColor(ContextCompat.getColor(requireActivity(), R.color.thick_green))
+                setDrawValues(false)
+            }
 
-        val dataSet: MutableList<ILineDataSet> = mutableListOf<ILineDataSet>().apply {
-            add(set)
-        }
-        val data = LineData(dataSet)
+            val dataSet: MutableList<ILineDataSet> = mutableListOf<ILineDataSet>().apply {
+                add(set)
+            }
+            val data = LineData(dataSet)
 
 
-        with(binding) {
-            lcHistoryAltitude.run {
-                axisLeft.run {
-                    axisMaximum = args.altitudeList.maxOf { it.altitude }.toFloat() + 10f
-                    axisMinimum = args.altitudeList.minOf { it.altitude }.toFloat()
-                    granularity = 10.0f
-                    setDrawLabels(true)
-                    setDrawAxisLine(true)
+            with(binding) {
+                lcHistoryAltitude.run {
+                    axisLeft.run {
+                        axisMaximum = args.altitudeList.maxOf { it.altitude }.toFloat() + 10f
+                        axisMinimum = args.altitudeList.minOf { it.altitude }.toFloat()
+                        granularity = 10.0f
+                        setDrawLabels(true)
+                        setDrawAxisLine(true)
+                    }
+                    xAxis.run {
+                        position = XAxis.XAxisPosition.BOTTOM
+                        granularity = 1.0f
+
+                    }
+                    axisRight.isEnabled = false
+                    animateY(1000)
+
+                    this.data = data
                 }
-                xAxis.run {
-                    position = XAxis.XAxisPosition.BOTTOM
-                    granularity = 1.0f
-
-                }
-                axisRight.isEnabled = false
-                animateY(1000)
-
-                this.data = data
             }
         }
     }
@@ -108,7 +117,7 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     @SuppressLint("ClickableViewAccessibility")
     private fun setOnTouchListener() {
         binding.mvNaver.setOnTouchListener { _, event ->
-            when(event.action) {
+            when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     binding.svHistoryDetails.requestDisallowInterceptTouchEvent(true)
                     false
@@ -126,21 +135,29 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(naverMap: NaverMap) {
-        val path = PathOverlay()
-        with(path) {
-            coords = args.altitudeList.map { LatLng(it.latitude, it.longitude) }
-            if(coords.size >= 2) {
+        if (args.altitudeList.size >= 2) {
+            val path = PathOverlay()
+            with(path) {
+                coords = args.altitudeList.map { LatLng(it.latitude, it.longitude) }
                 width = 10
                 outlineWidth = 0
                 color = this@HistoryDetailsFragment.requireContext().getColor(R.color.blue)
                 map = naverMap
+                val cameraPosition = CameraPosition(
+                    path.coords[path.coords.size / 2],
+                    16.0
+                )
+                naverMap.cameraPosition = cameraPosition
             }
+        } else if (args.altitudeList.isNotEmpty()) {
+            val cameraPosition = CameraPosition(
+                LatLng(
+                    args.altitudeList[0].latitude,
+                    args.altitudeList[0].longitude
+                ), 16.0
+            )
+            naverMap.cameraPosition = cameraPosition
         }
-        val cameraPosition = CameraPosition(
-            path.coords[path.coords.size / 2],
-            16.0
-        )
-        naverMap.cameraPosition = cameraPosition
     }
 
     override fun onStart() {
