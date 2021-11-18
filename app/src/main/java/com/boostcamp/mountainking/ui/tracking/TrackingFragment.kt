@@ -29,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -50,8 +51,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             if (isGranted.values.all { it }) {
                 if (!isTracking) {
                     getLastLocation()
-                }
-                else {
+                } else {
                     trackingViewModel.startService()
                     isTracking = true
                 }
@@ -96,15 +96,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             btnTrackingHistory.setOnClickListener {
                 findNavController().navigate(R.id.action_tracking_to_history)
             }
-            tvTrackingAchievementCompleteTest.setOnClickListener {
-                onAchievementComplete("test")
-            }
         }
-
-        binding.tvTrackingDistanceTest.setOnClickListener {
-            trackingViewModel.increaseDistance()
-        }
-
         trackingViewModel.fetchMountainName()
         setObserve()
 
@@ -315,6 +307,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         this.naverMap?.locationOverlay?.isVisible = true
+        this.naverMap?.locationOverlay?.icon = OverlayImage.fromResource(R.drawable.ic_hiking)
 
         requestPermissions()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
@@ -330,15 +323,15 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         }
     }
 
-    private fun onAchievementComplete(achievementName: String) {
-        AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
-    }
-
     companion object {
         private val TAG = TrackingFragment::class.simpleName
         private const val DIALOG = "dialog"
         private const val MAP_PADDING = 50
         private const val MAP_PATH_WIDTH = 30
         private const val MAP_PATH_OUTLINE_WIDTH = 0
+    }
+
+    private fun onAchievementComplete(achievementName: String) {
+        AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
     }
 }
