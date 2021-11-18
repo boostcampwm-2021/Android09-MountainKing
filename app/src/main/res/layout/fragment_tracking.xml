@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="trackingViewModel"
             type="com.boostcamp.mountainking.ui.tracking.TrackingViewModel" />
@@ -14,27 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.tracking.TrackingFragment">
-
-        <Button
-            android:visibility="invisible"
-            android:id="@+id/tv_tracking_distance_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="거리 10 증가"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:visibility="invisible"
-            android:id="@+id/tv_tracking_achievement_complete_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="업적완료"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_tracking_distance_test" />
 
         <com.naver.maps.map.MapView
             android:id="@+id/mv_naver"
@@ -54,7 +32,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/shape_button_default"
-            android:drawableTint="@color/black"
+            android:drawableTint="@color/mountain_blue"
             android:onClick="@{() -> trackingViewModel.toggleService()}"
             android:paddingStart="30dp"
             android:paddingEnd="30dp"
@@ -105,15 +83,17 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_distance"
-            app:layout_constraintTop_toTopOf="@id/tv_tracking_time" />
+            app:layout_constraintTop_toTopOf="@id/tv_tracking_time"
+            app:tracking_step="@{trackingViewModel.trackingStep}"
+            tools:text="11 걸음"/>
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/btn_tracking_history"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
-            android:src="@drawable/ic_archive"
+            android:src="@drawable/ic_baseline_view_list_24"
             android:stateListAnimator="@null"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -127,7 +107,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:text="@{trackingViewModel.mountainName}"
-            android:textColor="@color/black"
             android:textSize="35sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"

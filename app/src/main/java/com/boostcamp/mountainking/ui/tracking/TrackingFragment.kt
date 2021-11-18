@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -22,26 +23,38 @@ import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentTrackingBinding
 import com.boostcamp.mountainking.util.AchievementReceiver
 import com.boostcamp.mountainking.util.EventObserver
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
+import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapReadyCallback {
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var mapView: MapView
     private val trackingViewModel: TrackingViewModel by viewModels()
+
     private var _binding: FragmentTrackingBinding? = null
     private val binding get() = _binding!!
-    private lateinit var mapView: MapView
     private var locationCoords = listOf<LatLng>()
     private var naverMap: NaverMap? = null
     private val path = PathOverlay()
-    private val requestLocationPermissions =
+    private var isTracking = false
+
+    private val requestPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGranted ->
             if (isGranted.values.all { it }) {
-                trackingViewModel.startService()
+                if (!isTracking) {
+                    getLastLocation()
+                } else {
+                    trackingViewModel.startService()
+                    isTracking = true
+                }
             } else {
                 Snackbar.make(
                     binding.root,
@@ -71,6 +84,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTrackingBinding.inflate(inflater, container, false)
+        mapView = binding.mvNaver
         return binding.root
     }
 
@@ -84,40 +98,60 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             }
         }
         trackingViewModel.fetchMountainName()
-        trackingViewModel.checkPermission.observe(viewLifecycleOwner, EventObserver {
-            if (isPermissionNotGranted()) {
-                requestPermissions()
-            } else {
-                trackingViewModel.startService()
+        setObserve()
+
+        with(mapView) {
+            onCreate(savedInstanceState)
+            mapView.getMapAsync(this@TrackingFragment)
+        }
+    }
+
+    private fun setObserve() {
+        with(trackingViewModel) {
+            checkPermission.observe(viewLifecycleOwner, EventObserver {
+                if (isPermissionNotGranted()) {
+                    requestPermissions()
+                } else {
+                    trackingViewModel.startService()
+                }
+            })
+
+            showDialog.observe(viewLifecycleOwner, EventObserver {
+                showDialog()
+            })
+
+            locationList.observe(viewLifecycleOwner) { locationList ->
+                locationCoords = locationList.map { LatLng(it.latitude, it.longitude) }
+                updatePath(locationCoords)
             }
-        })
-        trackingViewModel.showDialog.observe(viewLifecycleOwner, EventObserver {
-            showDialog()
-        })
-        trackingViewModel.locationList.observe(viewLifecycleOwner) { locationList ->
-            locationCoords = locationList.map { LatLng(it.latitude, it.longitude) }
-            updatePath(locationCoords)
-        }
-        mapView = binding.mvNaver
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
 
-        trackingViewModel.completedAchievementLiveData.observe(viewLifecycleOwner) {
-            if(it != null) {
-                onAchievementComplete(it.name)
+            completedAchievementLiveData.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    onAchievementComplete(it.name)
+                }
+            }
+
+            statisticsLiveData.observe(viewLifecycleOwner) {
+                trackingViewModel.updateAchievement()
             }
         }
+    }
 
-        trackingViewModel.statisticsLiveData.observe(viewLifecycleOwner) {
-            trackingViewModel.updateAchievement()
-        }
-
-        binding.tvTrackingDistanceTest.setOnClickListener {
-            trackingViewModel.increaseDistance()
-        }
-
-        binding.tvTrackingAchievementCompleteTest.setOnClickListener {
-            onAchievementComplete("test")
+    private fun getLastLocation() {
+        try {
+            fusedLocationClient.lastLocation
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful && task.result != null) {
+                        val location = LatLng(task.result.latitude, task.result.longitude)
+                        Log.d("location", location.toString())
+                        this.naverMap?.locationOverlay?.position = LatLng(task.result.latitude, task.result.longitude)
+                        this.naverMap?.moveCamera(CameraUpdate.scrollTo(location))
+                    } else {
+                        Log.e("lastLocation", "Failed to get location.")
+                    }
+                }
+        } catch (unlikely: SecurityException) {
+            Log.e("lastLocation", "Lost location permission.$unlikely")
         }
     }
 
@@ -139,7 +173,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     }
 
     private fun moveCamera(bounds: LatLngBounds) {
-        val cameraUpdate = CameraUpdate.fitBounds(bounds)
+        val cameraUpdate = CameraUpdate.fitBounds(bounds, MAP_PADDING)
             .animate(CameraAnimation.Easing)
         naverMap?.moveCamera(cameraUpdate)
     }
@@ -150,17 +184,37 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     }
 
     private fun isPermissionNotGranted(): Boolean {
-        return PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) || PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACTIVITY_RECOGNITION
+            )
+        } else {
+            PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        }
     }
 
     private fun requestPermissions() {
-        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
-            requireActivity(),
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
+        val shouldProvideRationale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) || ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.ACTIVITY_RECOGNITION
+            )
+        } else {
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        }
         if (shouldProvideRationale) {
             Log.i(TAG, "Displaying permission rationale to provide additional context.")
             Snackbar.make(
@@ -169,22 +223,42 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
                 Snackbar.LENGTH_INDEFINITE
             )
                 .setAction(R.string.ok) {
-                    requestLocationPermissions.launch(
-                        arrayOf(
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        requestPermissions.launch(
+                            arrayOf(
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACTIVITY_RECOGNITION
+                            )
                         )
-                    )
+                    } else {
+                        requestPermissions.launch(
+                            arrayOf(
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                            )
+                        )
+                    }
                 }
                 .show()
         } else {
             Log.i(TAG, "Requesting permission")
-            requestLocationPermissions.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                requestPermissions.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACTIVITY_RECOGNITION
+                    )
                 )
-            )
+            } else {
+                requestPermissions.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
+                )
+            }
         }
     }
 
@@ -233,18 +307,28 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         this.naverMap?.locationOverlay?.isVisible = true
+        this.naverMap?.locationOverlay?.icon = OverlayImage.fromResource(R.drawable.ic_hiking)
+
+        requestPermissions()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
         trackingViewModel.locationList.value?.let { locationList ->
             locationCoords = locationList.map { LatLng(it.latitude, it.longitude) }
         }
         updatePath(locationCoords)
-        path.color = requireContext().getColor(R.color.blue)
-        path.width = 30
-        path.outlineWidth = 0
+        with(path) {
+            color = requireContext().getColor(R.color.blue)
+            width = MAP_PATH_WIDTH
+            outlineWidth = MAP_PATH_OUTLINE_WIDTH
+        }
     }
 
     companion object {
         private val TAG = TrackingFragment::class.simpleName
         private const val DIALOG = "dialog"
+        private const val MAP_PADDING = 50
+        private const val MAP_PATH_WIDTH = 30
+        private const val MAP_PATH_OUTLINE_WIDTH = 0
     }
 
     private fun onAchievementComplete(achievementName: String) {

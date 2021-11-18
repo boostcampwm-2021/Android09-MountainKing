@@ -13,20 +13,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class Repository(context: Context) : RepositoryInterface {
-
+    // database
     private val appDatabase = AppDatabase.getInstance(context)
-
     private val mountainDao = MountainDatabase.getInstance(context).mountainDao()
     private val statisticsDao = appDatabase.statisticsDao()
+    private val trackingDao = appDatabase.trackingDao()
+    private val achievementDao = appDatabase.achievementDao()
+
+    // variable
     override var isRunning = false
     override var trackingMountain: String? = null
     override var trackingMountainID = -1
-    private val trackingDao = appDatabase.trackingDao()
-    private val achievementDao = appDatabase.achievementDao()
     private val weatherApi = RetrofitApi.openWeatherServer
     override var curTime = MutableLiveData<String>()
-    override var intTime = 0
     override var curDistance = MutableLiveData<Int>()
+    override var curStep = MutableLiveData<Int>()
+    override var intTime = 0
     override var date = MutableLiveData<String>()
     override var locations = mutableListOf<LatLngAlt>()
     override var locationLiveData = MutableLiveData<List<LatLngAlt>>()
