@@ -23,6 +23,8 @@ import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentTrackingBinding
 import com.boostcamp.mountainking.util.AchievementReceiver
 import com.boostcamp.mountainking.util.EventObserver
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
@@ -39,10 +41,19 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     private var locationCoords = listOf<LatLng>()
     private var naverMap: NaverMap? = null
     private val path = PathOverlay()
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    var isFirst = true
+
     private val requestPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGranted ->
             if (isGranted.values.all { it }) {
-                trackingViewModel.startService()
+                if (isFirst) {
+                    getLastLocation()
+                    isFirst = false
+                }
+                else {
+                    trackingViewModel.startService()
+                }
             } else {
                 Snackbar.make(
                     binding.root,
@@ -274,6 +285,10 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         this.naverMap?.locationOverlay?.isVisible = true
+
+        requestPermissions()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
         trackingViewModel.locationList.value?.let { locationList ->
             locationCoords = locationList.map { LatLng(it.latitude, it.longitude) }
         }
@@ -291,5 +306,27 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         private val TAG = TrackingFragment::class.simpleName
         private const val DIALOG = "dialog"
         private const val MAP_PADDING = 50
+    }
+
+    private fun onAchievementComplete(achievementName: String) {
+        AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
+    }
+
+    private fun getLastLocation() {
+        try {
+            fusedLocationClient.lastLocation
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful && task.result != null) {
+                        val location = LatLng(task.result.latitude, task.result.longitude)
+                        Log.d("location", location.toString())
+                        this.naverMap?.locationOverlay?.position = LatLng(task.result.latitude, task.result.longitude)
+                        this.naverMap?.moveCamera(CameraUpdate.scrollTo(location))
+                    } else {
+                        Log.e("lastLocation", "Failed to get location.")
+                    }
+                }
+        } catch (unlikely: SecurityException) {
+            Log.e("lastLocation", "Lost location permission.$unlikely")
+        }
     }
 }
