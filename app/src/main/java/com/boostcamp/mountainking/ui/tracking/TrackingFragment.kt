@@ -42,17 +42,17 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     private var naverMap: NaverMap? = null
     private val path = PathOverlay()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    var isFirst = true
+    var isTracking = false
 
     private val requestPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGranted ->
             if (isGranted.values.all { it }) {
-                if (isFirst) {
+                if (!isTracking) {
                     getLastLocation()
-                    isFirst = false
                 }
                 else {
                     trackingViewModel.startService()
+                    isTracking = true
                 }
             } else {
                 Snackbar.make(
