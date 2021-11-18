@@ -34,15 +34,16 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapReadyCallback {
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var mapView: MapView
     private val trackingViewModel: TrackingViewModel by viewModels()
+
     private var _binding: FragmentTrackingBinding? = null
     private val binding get() = _binding!!
-    private lateinit var mapView: MapView
     private var locationCoords = listOf<LatLng>()
     private var naverMap: NaverMap? = null
     private val path = PathOverlay()
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    var isTracking = false
+    private var isTracking = false
 
     private val requestPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGranted ->
@@ -83,6 +84,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTrackingBinding.inflate(inflater, container, false)
+        mapView = binding.mvNaver
         return binding.root
     }
 
@@ -94,42 +96,70 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             btnTrackingHistory.setOnClickListener {
                 findNavController().navigate(R.id.action_tracking_to_history)
             }
-        }
-        trackingViewModel.fetchMountainName()
-        trackingViewModel.checkPermission.observe(viewLifecycleOwner, EventObserver {
-            if (isPermissionNotGranted()) {
-                requestPermissions()
-            } else {
-                trackingViewModel.startService()
+            tvTrackingAchievementCompleteTest.setOnClickListener {
+                onAchievementComplete("test")
             }
-        })
-        trackingViewModel.showDialog.observe(viewLifecycleOwner, EventObserver {
-            showDialog()
-        })
-        trackingViewModel.locationList.observe(viewLifecycleOwner) { locationList ->
-            locationCoords = locationList.map { LatLng(it.latitude, it.longitude) }
-            updatePath(locationCoords)
-        }
-        mapView = binding.mvNaver
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
-
-        trackingViewModel.completedAchievementLiveData.observe(viewLifecycleOwner) {
-            if (it != null) {
-                onAchievementComplete(it.name)
-            }
-        }
-
-        trackingViewModel.statisticsLiveData.observe(viewLifecycleOwner) {
-            trackingViewModel.updateAchievement()
         }
 
         binding.tvTrackingDistanceTest.setOnClickListener {
             trackingViewModel.increaseDistance()
         }
 
-        binding.tvTrackingAchievementCompleteTest.setOnClickListener {
-            onAchievementComplete("test")
+        trackingViewModel.fetchMountainName()
+        setObserve()
+
+        with(mapView) {
+            onCreate(savedInstanceState)
+            mapView.getMapAsync(this@TrackingFragment)
+        }
+    }
+
+    private fun setObserve() {
+        with(trackingViewModel) {
+            checkPermission.observe(viewLifecycleOwner, EventObserver {
+                if (isPermissionNotGranted()) {
+                    requestPermissions()
+                } else {
+                    trackingViewModel.startService()
+                }
+            })
+
+            showDialog.observe(viewLifecycleOwner, EventObserver {
+                showDialog()
+            })
+
+            locationList.observe(viewLifecycleOwner) { locationList ->
+                locationCoords = locationList.map { LatLng(it.latitude, it.longitude) }
+                updatePath(locationCoords)
+            }
+
+            completedAchievementLiveData.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    onAchievementComplete(it.name)
+                }
+            }
+
+            statisticsLiveData.observe(viewLifecycleOwner) {
+                trackingViewModel.updateAchievement()
+            }
+        }
+    }
+
+    private fun getLastLocation() {
+        try {
+            fusedLocationClient.lastLocation
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful && task.result != null) {
+                        val location = LatLng(task.result.latitude, task.result.longitude)
+                        Log.d("location", location.toString())
+                        this.naverMap?.locationOverlay?.position = LatLng(task.result.latitude, task.result.longitude)
+                        this.naverMap?.moveCamera(CameraUpdate.scrollTo(location))
+                    } else {
+                        Log.e("lastLocation", "Failed to get location.")
+                    }
+                }
+        } catch (unlikely: SecurityException) {
+            Log.e("lastLocation", "Lost location permission.$unlikely")
         }
     }
 
@@ -143,15 +173,15 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             val bounds = LatLngBounds.Builder()
                 .include(locationCoords)
                 .build()
-            moveCamera(bounds, MAP_PADDING)
+            moveCamera(bounds)
         }
         if (locationCoords.isEmpty()) {
             path.map = null
         }
     }
 
-    private fun moveCamera(bounds: LatLngBounds, padding: Int) {
-        val cameraUpdate = CameraUpdate.fitBounds(bounds, padding)
+    private fun moveCamera(bounds: LatLngBounds) {
+        val cameraUpdate = CameraUpdate.fitBounds(bounds, MAP_PADDING)
             .animate(CameraAnimation.Easing)
         naverMap?.moveCamera(cameraUpdate)
     }
@@ -293,9 +323,11 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             locationCoords = locationList.map { LatLng(it.latitude, it.longitude) }
         }
         updatePath(locationCoords)
-        path.color = requireContext().getColor(R.color.blue)
-        path.width = 30
-        path.outlineWidth = 0
+        with(path) {
+            color = requireContext().getColor(R.color.blue)
+            width = MAP_PATH_WIDTH
+            outlineWidth = MAP_PATH_OUTLINE_WIDTH
+        }
     }
 
     private fun onAchievementComplete(achievementName: String) {
@@ -306,27 +338,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         private val TAG = TrackingFragment::class.simpleName
         private const val DIALOG = "dialog"
         private const val MAP_PADDING = 50
-    }
-
-    private fun onAchievementComplete(achievementName: String) {
-        AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
-    }
-
-    private fun getLastLocation() {
-        try {
-            fusedLocationClient.lastLocation
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful && task.result != null) {
-                        val location = LatLng(task.result.latitude, task.result.longitude)
-                        Log.d("location", location.toString())
-                        this.naverMap?.locationOverlay?.position = LatLng(task.result.latitude, task.result.longitude)
-                        this.naverMap?.moveCamera(CameraUpdate.scrollTo(location))
-                    } else {
-                        Log.e("lastLocation", "Failed to get location.")
-                    }
-                }
-        } catch (unlikely: SecurityException) {
-            Log.e("lastLocation", "Lost location permission.$unlikely")
-        }
+        private const val MAP_PATH_WIDTH = 30
+        private const val MAP_PATH_OUTLINE_WIDTH = 0
     }
 }
