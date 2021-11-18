@@ -15,4 +15,7 @@ interface MountainDao {
 
     @Query("SELECT * FROM Mountain WHERE namedMountainDetails IS NOT NULL")
     fun searchNamedMountain(): List<Mountain>
+
+    @Query("SELECT * FROM Mountain WHERE :id = id")
+    fun getMountain(id: Int): Mountain
 }
