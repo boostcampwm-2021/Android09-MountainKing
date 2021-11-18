@@ -5,8 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -33,7 +35,7 @@ class MountainListFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private lateinit var state:String
+    private lateinit var state: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,11 +59,42 @@ class MountainListFragment : Fragment() {
 
         initObserve()
 
+        val cityList = mutableListOf("전체")
+        city[state]?.let {
+            cityList.addAll(it)
+        }
+
         binding.spMountainCityList.adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            city[state] ?: emptyList()
+            cityList
         )
+
+        binding.spMountainCityList.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    Log.d("spinner_listener", binding.spMountainCityList.selectedItem.toString())
+                    mountainListViewModel.searchMountainNameInCity(
+                        state,
+                        binding.spMountainCityList.selectedItem.toString().let {
+                            if (it == "전체") {
+                                ""
+                            } else {
+                                it
+                            }
+                        },
+                        binding.etMountainName.text.toString()
+                    )
+                }
+            }
 
         val observableTextQuery = Observable
             .create { emitter: ObservableEmitter<String>? ->
@@ -73,11 +106,19 @@ class MountainListFragment : Fragment() {
             .subscribeOn(Schedulers.io())
         observableTextQuery.subscribe { name ->
             Log.d("cityName", binding.spMountainCityList.selectedItem.toString())
-            mountainListViewModel.searchMountainNameInCity(
-                state,
-                binding.spMountainCityList.selectedItem.toString(),
-                name
-            )
+            if (binding.spMountainCityList.selectedItem.toString() == "전체") {
+                mountainListViewModel.searchMountainNameInCity(
+                    state,
+                    "",
+                    name
+                )
+            } else {
+                mountainListViewModel.searchMountainNameInCity(
+                    state,
+                    binding.spMountainCityList.selectedItem.toString(),
+                    name
+                )
+            }
         }
     }
 
@@ -95,7 +136,10 @@ class MountainListFragment : Fragment() {
     }
 
     private fun onMountainClicked(mountain: Mountain) {
-        //TODO "화면 전환"
+        findNavController().navigate(
+            R.id.action_mountainListFragment_to_mountainDetailFragment,
+            bundleOf("mountainId" to mountain.id)
+        )
     }
 
     private fun initToolbar() {

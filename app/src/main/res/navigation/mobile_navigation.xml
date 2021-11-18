@@ -86,6 +86,21 @@
         <action
             android:id="@+id/action_mountainListFragment_to_navigation_mountain"
             app:destination="@id/navigation_mountain" />
+        <action
+            android:id="@+id/action_mountainListFragment_to_mountainDetailFragment"
+            app:destination="@id/mountainDetailFragment"
+            app:popUpTo="@id/mountainListFragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="mountainId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/mountainDetailFragment"
+        android:name="com.boostcamp.mountainking.ui.mountain.MountainDetailFragment"
+        android:label="MountainDetailFragment">
     </fragment>
 
 </navigation>
