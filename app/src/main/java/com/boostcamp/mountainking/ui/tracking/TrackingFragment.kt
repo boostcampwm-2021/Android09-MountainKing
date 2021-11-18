@@ -140,7 +140,6 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         }
         if (locationCoords.isNotEmpty()) {
             naverMap?.locationOverlay?.position = locationCoords.last()
-            naverMap?.locationOverlay?.icon = OverlayImage.fromResource(R.drawable.ic_hiking)
             val bounds = LatLngBounds.Builder()
                 .include(locationCoords)
                 .build()
