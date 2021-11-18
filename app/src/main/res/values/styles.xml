@@ -3,7 +3,7 @@
 
     <style name="header">
         <item name="android:textSize">40sp</item>
-        <item name="android:textColor">@color/mountain_blue</item>
+        <item name="android:textColor">@color/black</item>
         <item name="fontFamily">@font/gmarket_sans_bold</item>
     </style>
 
