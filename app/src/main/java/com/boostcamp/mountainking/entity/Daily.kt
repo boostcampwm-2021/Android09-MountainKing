@@ -1,6 +1,8 @@
 package com.boostcamp.mountainking.entity
 
 import com.google.gson.annotations.SerializedName
+import java.text.SimpleDateFormat
+import java.util.*
 
 data class Daily(
     @SerializedName("clouds")
@@ -8,7 +10,7 @@ data class Daily(
     @SerializedName("dew_point")
     val dewPoint: Double,
     @SerializedName("dt")
-    val dt: Int,
+    val dt: Long,
     @SerializedName("feels_like")
     val feelsLike: FeelsLike,
     @SerializedName("humidity")
@@ -41,4 +43,7 @@ data class Daily(
     val windGust: Double,
     @SerializedName("wind_speed")
     val windSpeed: Double
-)
+) {
+    val dateString: String
+        get() = SimpleDateFormat("MM/dd", Locale.KOREA).format(dt * 1000).toString()
+}

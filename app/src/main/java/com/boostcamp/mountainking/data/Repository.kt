@@ -5,6 +5,7 @@ import android.util.Log
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.Mountain
 import androidx.lifecycle.MutableLiveData
+import com.boostcamp.mountainking.OPEN_WEATHER_KEY
 import com.boostcamp.mountainking.data.retrofit.RetrofitApi
 import com.boostcamp.mountainking.entity.Tracking
 import com.boostcamp.mountainking.entity.WeatherResponse
@@ -56,10 +57,7 @@ class Repository(context: Context) : RepositoryInterface {
 
     override suspend fun getWeather(latitude: Double, longitude: Double): Result<WeatherResponse> = withContext(Dispatchers.IO) {
         kotlin.runCatching {
-//            weatherApi.getWeather(latitude, longitude, EXCLUDE_STRING, OPEN_WEATHER_KEY)
-            var test = weatherApi.getWeatherTest()
-            Log.d("weatherTest", test.toString())
-            test
+            weatherApi.getWeather(latitude, longitude, EXCLUDE_STRING, OPEN_WEATHER_KEY)
         }
     }
 

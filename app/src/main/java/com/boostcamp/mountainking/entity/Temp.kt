@@ -1,6 +1,7 @@
 package com.boostcamp.mountainking.entity
 
 import com.google.gson.annotations.SerializedName
+import kotlin.math.roundToInt
 
 data class Temp(
     @SerializedName("day")
@@ -15,4 +16,12 @@ data class Temp(
     val morn: Double,
     @SerializedName("night")
     val night: Double
-)
+) {
+    val maxString: String get() = (max - K).roundToInt().toString() + tempUnit
+    val minString: String get() = (min - K).roundToInt().toString() + tempUnit
+
+    companion object {
+        const val K = 273
+        const val tempUnit = "℃"
+    }
+}

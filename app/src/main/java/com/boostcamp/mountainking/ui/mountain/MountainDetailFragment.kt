@@ -16,7 +16,7 @@ class MountainDetailFragment : Fragment() {
 
     private var _binding: FragmentMountainDetailBinding? = null
     private val mountainDetailViewModel: MountainDetailViewModel by viewModels()
-
+    private val weatherListAdapter = WeatherListAdapter()
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -44,6 +44,7 @@ class MountainDetailFragment : Fragment() {
         binding.mtbMountainDetail.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
+        binding.rvMountainDetailWeather.adapter = weatherListAdapter
     }
 
     private fun loadData() = with(mountainDetailViewModel) {
@@ -67,6 +68,9 @@ class MountainDetailFragment : Fragment() {
             if(it?.transportationDetails == null) {
                 binding.tvMountainDetailTransportationLabel.visibility = View.GONE
             }
+        }
+        weatherLiveData.observe(viewLifecycleOwner) {
+            weatherListAdapter.submitList(it.daily)
         }
     }
 
