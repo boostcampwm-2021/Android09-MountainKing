@@ -1,10 +1,13 @@
 package com.boostcamp.mountainking.data
 
 import android.content.Context
+import android.util.Log
 import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.Mountain
 import androidx.lifecycle.MutableLiveData
+import com.boostcamp.mountainking.data.retrofit.RetrofitApi
 import com.boostcamp.mountainking.entity.Tracking
+import com.boostcamp.mountainking.entity.WeatherResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -19,6 +22,7 @@ class Repository(context: Context) : RepositoryInterface {
     override var trackingMountainID = -1
     private val trackingDao = appDatabase.trackingDao()
     private val achievementDao = appDatabase.achievementDao()
+    private val weatherApi = RetrofitApi.openWeatherServer
     override var curTime = MutableLiveData<String>()
     override var intTime = 0
     override var curDistance = MutableLiveData<Int>()
@@ -50,8 +54,13 @@ class Repository(context: Context) : RepositoryInterface {
         statisticsDao.getStatistics()
     }
 
-    override suspend fun getWeather() {
-        //TODO("날씨불러오기")
+    override suspend fun getWeather(latitude: Double, longitude: Double): Result<WeatherResponse> = withContext(Dispatchers.IO) {
+        kotlin.runCatching {
+//            weatherApi.getWeather(latitude, longitude, EXCLUDE_STRING, OPEN_WEATHER_KEY)
+            var test = weatherApi.getWeatherTest()
+            Log.d("weatherTest", test.toString())
+            test
+        }
     }
 
     override suspend fun searchMountainName(name: String): List<Mountain> {
@@ -108,7 +117,7 @@ class Repository(context: Context) : RepositoryInterface {
 
     companion object {
         private var instance: Repository? = null
-
+        private const val EXCLUDE_STRING = "current,minutely,hourly,alerts"
         @JvmStatic
         fun getInstance(context: Context): Repository =
             instance ?: synchronized(this) {
