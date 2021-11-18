@@ -59,7 +59,7 @@ val city: Map<String, List<String>> = mapOf<String, List<String>>(
     "울산광역시" to listOf(
         "중구", "남구", "동구", "북구", "울주군"
     ).sorted(),
-    "세종시" to listOf(""),
+    "세종시" to emptyList(),
     "경기도" to listOf(
         "수원시",
         "성남시",
