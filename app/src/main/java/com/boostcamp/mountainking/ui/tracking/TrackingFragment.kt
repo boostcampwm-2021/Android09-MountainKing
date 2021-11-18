@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -43,7 +44,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     var isFirst = true
 
-    private val requestLocationPermissions =
+    private val requestPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGranted ->
             if (isGranted.values.all { it }) {
                 if (isFirst) {
@@ -114,7 +115,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         mapView.getMapAsync(this)
 
         trackingViewModel.completedAchievementLiveData.observe(viewLifecycleOwner) {
-            if(it != null) {
+            if (it != null) {
                 onAchievementComplete(it.name)
             }
         }
@@ -142,15 +143,15 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             val bounds = LatLngBounds.Builder()
                 .include(locationCoords)
                 .build()
-            moveCamera(bounds)
+            moveCamera(bounds, MAP_PADDING)
         }
         if (locationCoords.isEmpty()) {
             path.map = null
         }
     }
 
-    private fun moveCamera(bounds: LatLngBounds) {
-        val cameraUpdate = CameraUpdate.fitBounds(bounds)
+    private fun moveCamera(bounds: LatLngBounds, padding: Int) {
+        val cameraUpdate = CameraUpdate.fitBounds(bounds, padding)
             .animate(CameraAnimation.Easing)
         naverMap?.moveCamera(cameraUpdate)
     }
@@ -161,17 +162,37 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     }
 
     private fun isPermissionNotGranted(): Boolean {
-        return PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) || PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACTIVITY_RECOGNITION
+            )
+        } else {
+            PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        }
     }
 
     private fun requestPermissions() {
-        val shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(
-            requireActivity(),
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
+        val shouldProvideRationale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) || ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.ACTIVITY_RECOGNITION
+            )
+        } else {
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        }
         if (shouldProvideRationale) {
             Log.i(TAG, "Displaying permission rationale to provide additional context.")
             Snackbar.make(
@@ -180,22 +201,42 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
                 Snackbar.LENGTH_INDEFINITE
             )
                 .setAction(R.string.ok) {
-                    requestLocationPermissions.launch(
-                        arrayOf(
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        requestPermissions.launch(
+                            arrayOf(
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACTIVITY_RECOGNITION
+                            )
                         )
-                    )
+                    } else {
+                        requestPermissions.launch(
+                            arrayOf(
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                            )
+                        )
+                    }
                 }
                 .show()
         } else {
             Log.i(TAG, "Requesting permission")
-            requestLocationPermissions.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                requestPermissions.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACTIVITY_RECOGNITION
+                    )
                 )
-            )
+            } else {
+                requestPermissions.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
+                )
+            }
         }
     }
 
@@ -257,9 +298,14 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         path.outlineWidth = 0
     }
 
+    private fun onAchievementComplete(achievementName: String) {
+        AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
+    }
+
     companion object {
         private val TAG = TrackingFragment::class.simpleName
         private const val DIALOG = "dialog"
+        private const val MAP_PADDING = 50
     }
 
     private fun onAchievementComplete(achievementName: String) {
