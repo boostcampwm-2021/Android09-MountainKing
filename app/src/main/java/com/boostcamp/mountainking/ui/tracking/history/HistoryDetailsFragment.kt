@@ -138,8 +138,8 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
             val path = PathOverlay()
             with(path) {
                 coords = args.altitudeList.map { LatLng(it.latitude, it.longitude) }
-                width = 10
-                outlineWidth = 0
+                width = MAP_PATH_WIDTH
+                outlineWidth = MAP_PATH_OUTLINE_WIDTH
                 color = this@HistoryDetailsFragment.requireContext().getColor(R.color.blue)
                 map = naverMap
                 val cameraUpdate =
@@ -196,5 +196,7 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     companion object {
         private const val FLY_DURATION = 2000L
         private const val MAP_PADDING = 50
+        private const val MAP_PATH_WIDTH = 10
+        private const val MAP_PATH_OUTLINE_WIDTH = 0
     }
 }
