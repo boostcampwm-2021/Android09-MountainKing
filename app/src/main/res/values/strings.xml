@@ -27,4 +27,6 @@
     <string name="cancel">취소</string>
     <string name="mountain_image">산 사진</string>
     <string name="tv_mountain_detail_label">산 소개</string>
+    <string name="tv_mountain_detail_tour_label">관광 정보</string>
+    <string name="tv_mountain_detail_transportation_label">교통 정보</string>
 </resources>

@@ -101,11 +101,50 @@
                     app:text="@{mountain.mountainDetails}" />
 
                 <TextView
+                    style="@style/body1"
+                    android:id="@+id/tv_mountain_detail_tour_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/tv_mountain_detail_tour_label"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/tv_mountain_detail"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    style="@style/body2"
                     android:id="@+id/tv_mountain_detail_tour"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/tv_mountain_detail"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_mountain_detail_tour_label"
                     app:text="@{mountain.tourDetails}" />
+
+                <TextView
+                    style="@style/body1"
+                    android:id="@+id/tv_mountain_detail_transportation_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/tv_mountain_detail_transportation_label"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/tv_mountain_detail_tour"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    style="@style/body2"
+                    android:id="@+id/tv_mountain_detail_transportation_tour"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_mountain_detail_transportation_label"
+                    app:text="@{mountain.transportationDetails}" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
