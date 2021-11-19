@@ -101,7 +101,7 @@ class MountainSelectFragment : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(location: LatLng): MountainSelectFragment {
+        fun newInstance(location: LatLng?): MountainSelectFragment {
             val fragment = MountainSelectFragment()
             val args = Bundle()
             args.putParcelable(LOCATION, location)
