@@ -5,6 +5,7 @@ import com.boostcamp.mountainking.entity.Achievement
 import com.boostcamp.mountainking.entity.Mountain
 import com.boostcamp.mountainking.entity.Tracking
 import com.boostcamp.mountainking.entity.WeatherResponse
+import com.naver.maps.geometry.LatLng
 
 interface RepositoryInterface {
     suspend fun getMountain(id: Int): Mountain
@@ -12,7 +13,7 @@ interface RepositoryInterface {
     suspend fun getAchievement(): List<Achievement>
     suspend fun getStatistics(): Statistics
     suspend fun getWeather(latitude: Double, longitude: Double): Result<WeatherResponse>
-    suspend fun searchMountainName(name: String): List<Mountain>
+    suspend fun searchMountainName(name: String, location: LatLng?): List<Mountain>
     suspend fun searchMountainNameInCity(state: String, cityName: String, name: String): List<Mountain>
 
     suspend fun putTracking(tracking: Tracking)

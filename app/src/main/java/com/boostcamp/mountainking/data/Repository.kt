@@ -9,6 +9,7 @@ import com.boostcamp.mountainking.OPEN_WEATHER_KEY
 import com.boostcamp.mountainking.data.retrofit.RetrofitApi
 import com.boostcamp.mountainking.entity.Tracking
 import com.boostcamp.mountainking.entity.WeatherResponse
+import com.naver.maps.geometry.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -52,20 +53,26 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
 
-    override suspend fun getStatistics() : Statistics  = withContext(Dispatchers.IO){
+    override suspend fun getStatistics(): Statistics = withContext(Dispatchers.IO) {
         statisticsDao.insert(Statistics())
         statisticsDao.getStatistics()
     }
 
-    override suspend fun getWeather(latitude: Double, longitude: Double): Result<WeatherResponse> = withContext(Dispatchers.IO) {
-        kotlin.runCatching {
-            weatherApi.getWeather(latitude, longitude, EXCLUDE_STRING, OPEN_WEATHER_KEY)
+    override suspend fun getWeather(latitude: Double, longitude: Double): Result<WeatherResponse> =
+        withContext(Dispatchers.IO) {
+            kotlin.runCatching {
+                weatherApi.getWeather(latitude, longitude, EXCLUDE_STRING, OPEN_WEATHER_KEY)
+            }
         }
-    }
 
-    override suspend fun searchMountainName(name: String): List<Mountain> {
+    override suspend fun searchMountainName(name: String, location: LatLng?): List<Mountain> {
         return withContext(Dispatchers.IO) {
-            mountainDao.searchMountainName(name)
+            val mountainList = mountainDao.searchMountainName(name)
+            if (location != null) {
+                mountainList.sortedBy { location.distanceTo(LatLng(it.latitude, it.longitude)) }
+            } else {
+                mountainList
+            }
         }
     }
 
@@ -118,6 +125,7 @@ class Repository(context: Context) : RepositoryInterface {
     companion object {
         private var instance: Repository? = null
         private const val EXCLUDE_STRING = "current,minutely,hourly,alerts"
+
         @JvmStatic
         fun getInstance(context: Context): Repository =
             instance ?: synchronized(this) {

@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import com.boostcamp.mountainking.databinding.FragmentMountainSelectBinding
 import com.boostcamp.mountainking.entity.Mountain
 import com.boostcamp.mountainking.util.EventObserver
+import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
@@ -25,6 +26,12 @@ class MountainSelectFragment : DialogFragment() {
     private val mountainSelectViewModel: MountainSelectViewModel by viewModels()
     private val mountainListAdapter =
         MountainListAdapter { mountain -> onMountainClicked(mountain) }
+    private var location: LatLng? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.location = arguments?.getParcelable(LOCATION)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +55,7 @@ class MountainSelectFragment : DialogFragment() {
         mountainSelectViewModel.dismiss.observe(viewLifecycleOwner, EventObserver {
             dismiss()
         })
-        mountainSelectViewModel.searchMountainName("")
+        mountainSelectViewModel.searchMountainName("", location)
         val observableTextQuery = Observable
             .create { emitter: ObservableEmitter<String>? ->
                 binding.etMountainName.addTextChangedListener { editable ->
@@ -58,7 +65,7 @@ class MountainSelectFragment : DialogFragment() {
             .debounce(500, TimeUnit.MILLISECONDS)
             .subscribeOn(Schedulers.io())
         observableTextQuery.subscribe { name ->
-            mountainSelectViewModel.searchMountainName(name)
+            mountainSelectViewModel.searchMountainName(name, location)
         }
     }
 
@@ -91,5 +98,17 @@ class MountainSelectFragment : DialogFragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    companion object {
+        fun newInstance(location: LatLng): MountainSelectFragment {
+            val fragment = MountainSelectFragment()
+            val args = Bundle()
+            args.putParcelable(LOCATION, location)
+            fragment.arguments = args
+            return fragment
+        }
+
+        private const val LOCATION = "location"
     }
 }
