@@ -15,6 +15,7 @@ import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
@@ -27,6 +28,15 @@ class MountainSelectFragment : DialogFragment() {
     private val mountainListAdapter =
         MountainListAdapter { mountain -> onMountainClicked(mountain) }
     private var location: LatLng? = null
+    private val observableTextQuery = Observable
+        .create { emitter: ObservableEmitter<String>? ->
+            binding.etMountainName.addTextChangedListener { editable ->
+                emitter?.onNext(editable.toString())
+            }
+        }
+        .debounce(500, TimeUnit.MILLISECONDS)
+        .subscribeOn(Schedulers.io())
+    private var disposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,15 +66,8 @@ class MountainSelectFragment : DialogFragment() {
             dismiss()
         })
         mountainSelectViewModel.searchMountainName("", location)
-        val observableTextQuery = Observable
-            .create { emitter: ObservableEmitter<String>? ->
-                binding.etMountainName.addTextChangedListener { editable ->
-                    emitter?.onNext(editable.toString())
-                }
-            }
-            .debounce(500, TimeUnit.MILLISECONDS)
-            .subscribeOn(Schedulers.io())
-        observableTextQuery.subscribe { name ->
+
+        disposable = observableTextQuery.subscribe { name ->
             mountainSelectViewModel.searchMountainName(name, location)
         }
     }
@@ -96,8 +99,9 @@ class MountainSelectFragment : DialogFragment() {
     }
 
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
+        disposable?.dispose()
     }
 
     companion object {
