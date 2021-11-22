@@ -1,10 +1,8 @@
 package com.boostcamp.mountainking.ui.tracking.history
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +13,10 @@ import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentHistoryDetailsBinding
 import com.boostcamp.mountainking.ui.tracking.LocationService
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
@@ -46,7 +47,6 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
         initToolbar()
         initAltitudeGraph()
         initMountainName()
-        setOnTouchListener()
     }
 
     private fun initMountainName() {
@@ -65,6 +65,34 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    override fun onMapReady(naverMap: NaverMap) {
+        if (args.altitudeList.size >= 2) {
+            val path = PathOverlay()
+            with(path) {
+                coords = args.altitudeList.map { LatLng(it.latitude, it.longitude) }
+                width = MAP_PATH_WIDTH
+                outlineWidth = MAP_PATH_OUTLINE_WIDTH
+                color = this@HistoryDetailsFragment.requireContext().getColor(R.color.blue)
+                map = naverMap
+                val cameraUpdate =
+                    CameraUpdate.fitBounds(
+                        LatLngBounds.Builder().include(coords).build(),
+                        MAP_PADDING
+                    )
+                        .animate(CameraAnimation.Fly, FLY_DURATION)
+                naverMap.moveCamera(cameraUpdate)
+            }
+        } else if (args.altitudeList.isNotEmpty()) {
+            val cameraPosition = CameraPosition(
+                LatLng(
+                    args.altitudeList[0].latitude,
+                    args.altitudeList[0].longitude
+                ), 16.0
+            )
+            naverMap.cameraPosition = cameraPosition
+        }
+    }
+
     private fun initAltitudeGraph() {
         if (args.altitudeList.isNotEmpty()) {
             val entries = mutableListOf<Entry>().apply {
@@ -78,9 +106,10 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
             }
 
             val set = LineDataSet(entries, "Altitude").apply {
-                color = ContextCompat.getColor(requireActivity(), R.color.light_green)
+                color = ContextCompat.getColor(requireActivity(), R.color.mountain_blue)
                 lineWidth = 5f
-                setCircleColor(ContextCompat.getColor(requireActivity(), R.color.thick_green))
+                circleRadius = 1.0f
+                setCircleColor(ContextCompat.getColor(requireActivity(), R.color.white))
                 setDrawValues(false)
             }
 
@@ -90,8 +119,8 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
             val data = LineData(dataSet)
 
 
-            with(binding) {
-                lcHistoryAltitude.run {
+            with(binding.loBottomSheet) {
+                lcAltitudeGraph.run {
                     axisLeft.run {
                         axisMaximum = args.altitudeList.maxOf { it.altitude }.toFloat() + 10f
                         axisMinimum = args.altitudeList.minOf { it.altitude }.toFloat()
@@ -110,51 +139,6 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
                     this.data = data
                 }
             }
-        }
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setOnTouchListener() {
-        binding.mvNaver.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    binding.svHistoryDetails.requestDisallowInterceptTouchEvent(true)
-                    true
-                }
-                MotionEvent.ACTION_UP -> {
-                    binding.svHistoryDetails.requestDisallowInterceptTouchEvent(false)
-                    false
-                }
-                else -> {
-                    false
-                }
-            }
-        }
-
-    }
-
-    override fun onMapReady(naverMap: NaverMap) {
-        if (args.altitudeList.size >= 2) {
-            val path = PathOverlay()
-            with(path) {
-                coords = args.altitudeList.map { LatLng(it.latitude, it.longitude) }
-                width = MAP_PATH_WIDTH
-                outlineWidth = MAP_PATH_OUTLINE_WIDTH
-                color = this@HistoryDetailsFragment.requireContext().getColor(R.color.blue)
-                map = naverMap
-                val cameraUpdate =
-                    CameraUpdate.fitBounds(LatLngBounds.Builder().include(coords).build(), MAP_PADDING)
-                        .animate(CameraAnimation.Fly, FLY_DURATION)
-                naverMap.moveCamera(cameraUpdate)
-            }
-        } else if (args.altitudeList.isNotEmpty()) {
-            val cameraPosition = CameraPosition(
-                LatLng(
-                    args.altitudeList[0].latitude,
-                    args.altitudeList[0].longitude
-                ), 16.0
-            )
-            naverMap.cameraPosition = cameraPosition
         }
     }
 

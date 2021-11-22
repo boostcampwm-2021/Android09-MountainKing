@@ -42,5 +42,8 @@
         <item name="windowSplashScreenBackground">#8095FF</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
     </style>
+    <declare-styleable name="RichPathView">
+        <attr name="vector" format="reference" />
+    </declare-styleable>
 
 </resources>
