@@ -135,6 +135,10 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             statisticsLiveData.observe(viewLifecycleOwner) {
                 trackingViewModel.updateAchievement()
             }
+
+            getLastLocationEvent.observe(viewLifecycleOwner, EventObserver {
+                this@TrackingFragment.getLastLocation()
+            })
         }
     }
 
@@ -145,8 +149,13 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
                     if (task.isSuccessful && task.result != null) {
                         initLocation = LatLng(task.result.latitude, task.result.longitude)
                         Log.d("location", initLocation.toString())
-                        this.naverMap?.locationOverlay?.position = LatLng(task.result.latitude, task.result.longitude)
-                        initLocation?.let { this.naverMap?.moveCamera(CameraUpdate.scrollTo(it)) }
+                        this.naverMap?.locationOverlay?.position =
+                            LatLng(task.result.latitude, task.result.longitude)
+                        initLocation?.let {
+                            this.naverMap?.moveCamera(
+                                CameraUpdate.scrollTo(it).animate(CameraAnimation.Easing)
+                            )
+                        }
                     } else {
                         Log.e("lastLocation", "Failed to get location.")
                     }

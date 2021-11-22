@@ -50,6 +50,9 @@ class TrackingViewModel @Inject constructor(
     private val _statisticsLiveData = MutableLiveData<Statistics>()
     val statisticsLiveData: LiveData<Statistics> get() = _statisticsLiveData
 
+    private val _getLastLocationEvent = MutableLiveData<Event<Unit>>()
+    val getLastLocationEvent: LiveData<Event<Unit>> get() = _getLastLocationEvent
+
     init {
         if (repository.isRunning) {
             _buttonText.value = stringGetter.getString(R.string.title_stop_tracking)
@@ -60,6 +63,10 @@ class TrackingViewModel @Inject constructor(
 
     fun fetchMountainName() {
         _mountainName.value = repository.trackingMountain?.substringBefore("(")
+    }
+
+    fun getLastLocation() {
+        _getLastLocationEvent.value = Event(Unit)
     }
 
     fun toggleService() {
