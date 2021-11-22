@@ -92,14 +92,14 @@
         <ImageButton
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginBottom="30dp"
             android:backgroundTint="@color/mountain_blue"
             android:contentDescription="@string/current_location_button"
             android:onClick="@{() -> trackingViewModel.getLastLocation()}"
             android:src="@drawable/ic_baseline_my_location_24"
-            app:layout_constraintBottom_toTopOf="@id/tv_walk_count"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_tracking_time"
+            app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/white" />
 
         <ImageButton
