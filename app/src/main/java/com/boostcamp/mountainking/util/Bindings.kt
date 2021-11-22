@@ -32,7 +32,7 @@ fun setImageFromLocationList(view: ImageView, list: List<LatLngAlt>) {
 
 @BindingAdapter("tracking_distance")
 fun setDistance(view: AppCompatTextView, trackingDistance: Int?) {
-    if (trackingDistance != null && trackingDistance > 0) {
+    if (trackingDistance != null && trackingDistance >= 0) {
         val distanceString = "$trackingDistance m"
         view.text = distanceString
     } else {
@@ -42,7 +42,7 @@ fun setDistance(view: AppCompatTextView, trackingDistance: Int?) {
 
 @BindingAdapter("tracking_step")
 fun setStep(view: TextView, trackingStep: Int?) {
-    if(trackingStep != null && trackingStep > 0) {
+    if(trackingStep != null && trackingStep >= 0) {
         val stepString = "$trackingStep 걸음"
         view.text = stepString
     } else {

@@ -156,6 +156,7 @@ class LocationService : LifecycleService(), SensorEventListener {
         setRequestingLocationUpdates(this, true)
         curDistance = 0
         curStep = 0
+        repository.curStep.value = curStep
         try {
             fusedLocationClient.requestLocationUpdates(
                 locationRequest,

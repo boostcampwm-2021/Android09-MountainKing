@@ -34,6 +34,10 @@ class Repository(context: Context) : RepositoryInterface {
     override var locations = mutableListOf<LatLngAlt>()
     override var locationLiveData = MutableLiveData<List<LatLngAlt>>()
 
+    init {
+        curStep.value = -1
+    }
+
     override suspend fun getMountain(id: Int): Mountain = withContext(Dispatchers.IO) {
         mountainDao.getMountain(id)
     }
