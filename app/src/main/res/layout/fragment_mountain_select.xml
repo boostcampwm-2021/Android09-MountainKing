@@ -19,7 +19,7 @@
             style="@style/body2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/mountain_name"
+            android:hint="@string/mountain_name_search"
             app:endIconMode="clear_text"
             app:hintTextAppearance="@style/caption"
             app:layout_constraintEnd_toEndOf="parent"
