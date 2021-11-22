@@ -52,6 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_button_full"
+            android:foreground="?android:attr/selectableItemBackground"
             android:onClick="@{() -> viewModel.cancel()}"
             android:stateListAnimator="@null"
             android:text="@string/cancel"
