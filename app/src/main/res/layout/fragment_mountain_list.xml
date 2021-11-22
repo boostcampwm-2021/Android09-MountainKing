@@ -37,7 +37,7 @@
             android:id="@+id/tf_mountain_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/mountain_name"
+            android:hint="@string/mountain_name_search"
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/sp_mountain_city_list"

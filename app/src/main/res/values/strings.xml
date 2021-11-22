@@ -20,11 +20,14 @@
     <string name="permission_rationale">세부 위치 정보 권한 제공에 동의해야 등산 기록이 가능합니다</string>
     <string name="ok">동의</string>
     <string name="settings">설정</string>
-    <string name="mountain_name">산 이름</string>
+    <string name="mountain_name_search">산 이름 입력</string>
     <string name="cancel">취소</string>
     <string name="mountain_image">산 사진</string>
     <string name="details">자세히 보기 ▶</string>
     <string name="tv_mountain_detail_label">산 소개</string>
     <string name="tv_mountain_detail_tour_label">관광 정보</string>
     <string name="tv_mountain_detail_transportation_label">교통 정보</string>
+    <string name="current_location_button">현재 위치 버튼</string>
+    <string name="delete_button">삭제 버튼</string>
+    <string name="history_button">등산 기록 목록 버튼</string>
 </resources>

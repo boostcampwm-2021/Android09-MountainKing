@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="trackingViewModel"
             type="com.boostcamp.mountainking.ui.tracking.TrackingViewModel" />
@@ -33,6 +34,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/shape_button_default"
             android:drawableTint="@color/mountain_blue"
+            android:foreground="?android:attr/selectableItemBackground"
             android:onClick="@{() -> trackingViewModel.toggleService()}"
             android:paddingStart="30dp"
             android:paddingEnd="30dp"
@@ -85,18 +87,34 @@
             app:layout_constraintStart_toEndOf="@id/tv_distance"
             app:layout_constraintTop_toTopOf="@id/tv_tracking_time"
             app:tracking_step="@{trackingViewModel.trackingStep}"
-            tools:text="11 걸음"/>
+            tools:text="11 걸음" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="30dp"
+            android:backgroundTint="@color/mountain_blue"
+            android:contentDescription="@string/current_location_button"
+            android:onClick="@{() -> trackingViewModel.getLastLocation()}"
+            android:src="@drawable/ic_baseline_my_location_24"
+            app:layout_constraintBottom_toTopOf="@id/tv_tracking_time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/white" />
+
+        <ImageButton
             android:id="@+id/btn_tracking_history"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
+            android:backgroundTint="?attr/colorPrimary"
+            android:contentDescription="@string/history_button"
             android:src="@drawable/ic_baseline_view_list_24"
             android:stateListAnimator="@null"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
 
 
         <androidx.appcompat.widget.AppCompatTextView

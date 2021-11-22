@@ -36,7 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var mapView: MapView
+    private var mapView: MapView? = null
     private val trackingViewModel: TrackingViewModel by viewModels()
 
     private var _binding: FragmentTrackingBinding? = null
@@ -101,10 +101,8 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         trackingViewModel.fetchMountainName()
         setObserve()
 
-        with(mapView) {
-            onCreate(savedInstanceState)
-            mapView.getMapAsync(this@TrackingFragment)
-        }
+        mapView?.onCreate(savedInstanceState)
+        mapView?.getMapAsync(this@TrackingFragment)
     }
 
     private fun setObserve() {
@@ -135,6 +133,10 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             statisticsLiveData.observe(viewLifecycleOwner) {
                 trackingViewModel.updateAchievement()
             }
+
+            getLastLocationEvent.observe(viewLifecycleOwner, EventObserver {
+                this@TrackingFragment.getLastLocation()
+            })
         }
     }
 
@@ -145,8 +147,13 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
                     if (task.isSuccessful && task.result != null) {
                         initLocation = LatLng(task.result.latitude, task.result.longitude)
                         Log.d("location", initLocation.toString())
-                        this.naverMap?.locationOverlay?.position = LatLng(task.result.latitude, task.result.longitude)
-                        initLocation?.let { this.naverMap?.moveCamera(CameraUpdate.scrollTo(it)) }
+                        this.naverMap?.locationOverlay?.position =
+                            LatLng(task.result.latitude, task.result.longitude)
+                        initLocation?.let {
+                            this.naverMap?.moveCamera(
+                                CameraUpdate.scrollTo(it).animate(CameraAnimation.Easing)
+                            )
+                        }
                     } else {
                         Log.e("lastLocation", "Failed to get location.")
                     }
@@ -265,40 +272,40 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
 
     override fun onStart() {
         super.onStart()
-        mapView.onStart()
+        mapView?.onStart()
         trackingViewModel.bindService()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
+        mapView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()
+        mapView?.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView.onSaveInstanceState(outState)
+        mapView?.onSaveInstanceState(outState)
     }
 
     override fun onStop() {
         super.onStop()
-        mapView.onStop()
+        mapView?.onStop()
         trackingViewModel.unbindService()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mapView.onDestroy()
+        mapView?.onDestroy()
         _binding = null
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView.onLowMemory()
+        mapView?.onLowMemory()
     }
 
     override fun onDismiss(dialog: DialogInterface?) {

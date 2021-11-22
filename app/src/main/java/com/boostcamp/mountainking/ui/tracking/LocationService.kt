@@ -15,7 +15,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.boostcamp.mountainking.MainActivity
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.data.LatLngAlt
@@ -157,6 +156,7 @@ class LocationService : LifecycleService(), SensorEventListener {
         setRequestingLocationUpdates(this, true)
         curDistance = 0
         curStep = 0
+        repository.curStep.value = curStep
         try {
             fusedLocationClient.requestLocationUpdates(
                 locationRequest,
@@ -191,9 +191,6 @@ class LocationService : LifecycleService(), SensorEventListener {
         curDistance += distance ?: 0
         repository.curDistance.postValue(curDistance)
         this.location = lastLocation
-        val intent = Intent(ACTION_BROADCAST)
-        intent.putExtra(EXTRA_LOCATION, lastLocation)
-        LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -244,10 +241,6 @@ class LocationService : LifecycleService(), SensorEventListener {
         private val TAG = LocationService::class.java.simpleName
         private const val UPDATE_INTERVAL_IN_MILLISECONDS = 10000.toLong()
         private const val SMALLEST_DISPLACEMENT = 0F
-        private const val PACKAGE_NAME = "com.boostcamp.mountainking.ui.tracking.locationservice"
-        private const val ACTION_BROADCAST = "$PACKAGE_NAME.broadcast"
-        private const val EXTRA_LOCATION = "$PACKAGE_NAME.location"
-
         const val NOTIFICATION_ID = 10
         const val CHANNEL_ID = "primary_notification_channel"
         const val FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2

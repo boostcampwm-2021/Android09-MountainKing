@@ -29,6 +29,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -82,15 +83,13 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
-
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:28.4.2')
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     //hilt
-    implementation 'com.google.dagger:hilt-android:2.40'
-    kapt 'com.google.dagger:hilt-compiler:2.40'
+    implementation 'com.google.dagger:hilt-android:2.40.1'
+    kapt 'com.google.dagger:hilt-compiler:2.40.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
 
     //gson
@@ -123,6 +122,9 @@ dependencies {
     //okhttp3
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
     implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+
+    //splash screen
+    implementation "androidx.core:core-splashscreen:1.0.0-alpha02"
 }
 
 kapt {

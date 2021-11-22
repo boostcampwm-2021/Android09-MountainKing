@@ -34,6 +34,10 @@ class Repository(context: Context) : RepositoryInterface {
     override var locations = mutableListOf<LatLngAlt>()
     override var locationLiveData = MutableLiveData<List<LatLngAlt>>()
 
+    init {
+        curStep.value = -1
+    }
+
     override suspend fun getMountain(id: Int): Mountain = withContext(Dispatchers.IO) {
         mountainDao.getMountain(id)
     }
@@ -92,6 +96,15 @@ class Repository(context: Context) : RepositoryInterface {
 
     override suspend fun deleteTracking(tracking: Tracking) {
         trackingDao.delete(tracking)
+    }
+
+    override fun resetVariables() {
+        trackingMountain = null
+        locations.clear()
+        locationLiveData.value = locations
+        curTime.value = ""
+        curDistance.value = -1
+        curStep.value = -1
     }
 
     override suspend fun updateStatistics(): Unit = withContext(Dispatchers.IO) {
