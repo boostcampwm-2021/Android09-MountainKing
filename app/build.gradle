@@ -122,6 +122,9 @@ dependencies {
     //okhttp3
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.2'
     implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+
+    //splash screen
+    implementation "androidx.core:core-splashscreen:1.0.0-alpha02"
 }
 
 kapt {
