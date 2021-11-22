@@ -110,7 +110,7 @@ dependencies {
     implementation group: 'com.kakao.sdk', name: 'kakaolink', version: '1.30.6'
 
     //RichPath
-    implementation 'com.github.tarek360.RichPath:animator:0.1.1'
+    //implementation 'com.github.tarek360.RichPath:animator:0.1.1'
     //ZoomLayout
     implementation 'com.otaliastudios:zoomlayout:1.8.0'
 
