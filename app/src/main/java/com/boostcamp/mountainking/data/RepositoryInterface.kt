@@ -22,6 +22,7 @@ interface RepositoryInterface {
     suspend fun deleteTracking(tracking: Tracking)
 
     suspend fun updateStatistics(statistics: Statistics)
+    fun resetVariables()
 
     var isRunning: Boolean
     var trackingMountain: String?

@@ -9,22 +9,37 @@
             type="com.boostcamp.mountainking.entity.Tracking" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
         android:padding="15dp">
 
         <TextView
             android:id="@+id/tv_mountain_name"
             style="@style/header"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{tracking.mountainName}"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/btn_delete"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="산 이름" />
+
+        <ImageView
+            android:id="@+id/btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/delete_button"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_baseline_delete_outline_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_mountain_name"
+            app:layout_constraintTop_toTopOf="@id/tv_mountain_name"
+            app:tint="@color/red" />
 
         <TextView
             android:id="@+id/tv_default_time"
