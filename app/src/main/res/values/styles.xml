@@ -37,4 +37,8 @@
         <item name="fontFamily">@font/gmarket_sans_light</item>
     </style>
 
+    <declare-styleable name="RichPathView">
+        <attr name="vector" format="reference" />
+    </declare-styleable>
+
 </resources>
