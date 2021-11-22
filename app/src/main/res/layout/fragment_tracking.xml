@@ -102,16 +102,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:tint="@color/white" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageButton
             android:id="@+id/btn_tracking_history"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="20dp"
+            android:backgroundTint="?attr/colorPrimary"
+            android:contentDescription="@string/history_button"
             android:src="@drawable/ic_baseline_view_list_24"
             android:stateListAnimator="@null"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
