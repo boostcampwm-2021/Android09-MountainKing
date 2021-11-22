@@ -88,12 +88,6 @@ class TrackingViewModel @Inject constructor(
                     )
                     repository.updateStatistics()
                     repository.resetVariables()
-//                    repository.trackingMountain = null
-//                    repository.locations.clear()
-//                    repository.locationLiveData.value = repository.locations
-//                    repository.curTime.value = null
-//                    repository.curDistance.value = null
-//                    repository.curStep.value = null
                     fetchMountainName()
                     updateAchievement()
                 }
