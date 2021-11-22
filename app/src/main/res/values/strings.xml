@@ -28,4 +28,5 @@
     <string name="tv_mountain_detail_tour_label">관광 정보</string>
     <string name="tv_mountain_detail_transportation_label">교통 정보</string>
     <string name="current_location_button">현재 위치 버튼</string>
+    <string name="delete_button">삭제 버튼</string>
 </resources>

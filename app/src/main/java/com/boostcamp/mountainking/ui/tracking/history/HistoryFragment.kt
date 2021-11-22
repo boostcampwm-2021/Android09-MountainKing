@@ -72,6 +72,15 @@ class HistoryFragment
     }
 
     override fun onItemLongClick(tracking: Tracking): Boolean {
+        deleteHistory(tracking)
+        return true
+    }
+
+    override fun onDeleteClick(tracking: Tracking) {
+        deleteHistory(tracking)
+    }
+
+    private fun deleteHistory(tracking: Tracking) {
         activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.setMessage(R.string.check_delete_tracking_history)
@@ -84,8 +93,6 @@ class HistoryFragment
                 }
             builder.create()
         }?.show() ?: throw IllegalStateException("Activity cannot be null")
-
-        return true
     }
 
     companion object {
