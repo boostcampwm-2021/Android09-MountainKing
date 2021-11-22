@@ -94,6 +94,15 @@ class Repository(context: Context) : RepositoryInterface {
         trackingDao.delete(tracking)
     }
 
+    override fun resetVariables() {
+        trackingMountain = null
+        locations.clear()
+        locationLiveData.value = locations
+        curTime.value = ""
+        curDistance.value = -1
+        curStep.value = -1
+    }
+
     override suspend fun updateStatistics(): Unit = withContext(Dispatchers.IO) {
         statisticsDao.insert(Statistics())
         val statistics = statisticsDao.getStatistics()
