@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.boostcamp.mountainking.data.RepositoryInterface
 import com.boostcamp.mountainking.entity.Mountain
 import com.boostcamp.mountainking.util.Event
+import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
@@ -30,8 +31,8 @@ class MountainSelectViewModel @Inject constructor(private val repository: Reposi
         _dismiss.value = Event(Unit)
     }
 
-    fun searchMountainName(name: String) = viewModelScope.launch {
-        _mountainNameList.postValue(repository.searchMountainName(name))
+    fun searchMountainName(name: String, location: LatLng? = null) = viewModelScope.launch {
+        _mountainNameList.postValue(repository.searchMountainName(name, location))
     }
 
     fun setTrackingMountain(mountainName: String, id: Int) {

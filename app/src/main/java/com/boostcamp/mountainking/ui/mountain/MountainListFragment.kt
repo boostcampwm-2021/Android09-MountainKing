@@ -21,6 +21,7 @@ import com.boostcamp.mountainking.ui.tracking.MountainListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
@@ -36,6 +37,15 @@ class MountainListFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var state: String
+    private val observableTextQuery = Observable
+        .create { emitter: ObservableEmitter<String>? ->
+            binding.etMountainName.addTextChangedListener { editable ->
+                emitter?.onNext(editable.toString())
+            }
+        }
+        .debounce(500, TimeUnit.MILLISECONDS)
+        .subscribeOn(Schedulers.io())
+    private var disposable: Disposable? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,16 +105,7 @@ class MountainListFragment : Fragment() {
                     )
                 }
             }
-
-        val observableTextQuery = Observable
-            .create { emitter: ObservableEmitter<String>? ->
-                binding.etMountainName.addTextChangedListener { editable ->
-                    emitter?.onNext(editable.toString())
-                }
-            }
-            .debounce(500, TimeUnit.MILLISECONDS)
-            .subscribeOn(Schedulers.io())
-        observableTextQuery.subscribe { name ->
+        disposable = observableTextQuery.subscribe { name ->
             Log.d("cityName", binding.spMountainCityList.selectedItem.toString())
             if (binding.spMountainCityList.selectedItem.toString() == "전체") {
                 mountainListViewModel.searchMountainNameInCity(
@@ -133,6 +134,7 @@ class MountainListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        disposable?.dispose()
     }
 
     private fun onMountainClicked(mountain: Mountain) {

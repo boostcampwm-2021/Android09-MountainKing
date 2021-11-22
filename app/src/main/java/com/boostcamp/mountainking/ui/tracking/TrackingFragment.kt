@@ -45,6 +45,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     private var naverMap: NaverMap? = null
     private val path = PathOverlay()
     private var isTracking = false
+    private var initLocation: LatLng? = null
 
     private val requestPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGranted ->
@@ -142,10 +143,10 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             fusedLocationClient.lastLocation
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful && task.result != null) {
-                        val location = LatLng(task.result.latitude, task.result.longitude)
-                        Log.d("location", location.toString())
+                        initLocation = LatLng(task.result.latitude, task.result.longitude)
+                        Log.d("location", initLocation.toString())
                         this.naverMap?.locationOverlay?.position = LatLng(task.result.latitude, task.result.longitude)
-                        this.naverMap?.moveCamera(CameraUpdate.scrollTo(location))
+                        initLocation?.let { this.naverMap?.moveCamera(CameraUpdate.scrollTo(it)) }
                     } else {
                         Log.e("lastLocation", "Failed to get location.")
                     }
@@ -179,7 +180,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     }
 
     private fun showDialog() {
-        val dialog = MountainSelectFragment()
+        val dialog = MountainSelectFragment.newInstance(initLocation)
         dialog.show(childFragmentManager, DIALOG)
     }
 

@@ -11,9 +11,11 @@ import androidx.fragment.app.viewModels
 import com.boostcamp.mountainking.databinding.FragmentMountainSelectBinding
 import com.boostcamp.mountainking.entity.Mountain
 import com.boostcamp.mountainking.util.EventObserver
+import com.naver.maps.geometry.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
@@ -25,6 +27,21 @@ class MountainSelectFragment : DialogFragment() {
     private val mountainSelectViewModel: MountainSelectViewModel by viewModels()
     private val mountainListAdapter =
         MountainListAdapter { mountain -> onMountainClicked(mountain) }
+    private var location: LatLng? = null
+    private val observableTextQuery = Observable
+        .create { emitter: ObservableEmitter<String>? ->
+            binding.etMountainName.addTextChangedListener { editable ->
+                emitter?.onNext(editable.toString())
+            }
+        }
+        .debounce(500, TimeUnit.MILLISECONDS)
+        .subscribeOn(Schedulers.io())
+    private var disposable: Disposable? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.location = arguments?.getParcelable(LOCATION)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,17 +65,10 @@ class MountainSelectFragment : DialogFragment() {
         mountainSelectViewModel.dismiss.observe(viewLifecycleOwner, EventObserver {
             dismiss()
         })
-        mountainSelectViewModel.searchMountainName("")
-        val observableTextQuery = Observable
-            .create { emitter: ObservableEmitter<String>? ->
-                binding.etMountainName.addTextChangedListener { editable ->
-                    emitter?.onNext(editable.toString())
-                }
-            }
-            .debounce(500, TimeUnit.MILLISECONDS)
-            .subscribeOn(Schedulers.io())
-        observableTextQuery.subscribe { name ->
-            mountainSelectViewModel.searchMountainName(name)
+        mountainSelectViewModel.searchMountainName("", location)
+
+        disposable = observableTextQuery.subscribe { name ->
+            mountainSelectViewModel.searchMountainName(name, location)
         }
     }
 
@@ -89,7 +99,20 @@ class MountainSelectFragment : DialogFragment() {
     }
 
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
+        disposable?.dispose()
+    }
+
+    companion object {
+        fun newInstance(location: LatLng?): MountainSelectFragment {
+            val fragment = MountainSelectFragment()
+            val args = Bundle()
+            args.putParcelable(LOCATION, location)
+            fragment.arguments = args
+            return fragment
+        }
+
+        private const val LOCATION = "location"
     }
 }

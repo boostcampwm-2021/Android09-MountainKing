@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">등산왕</string>
-    <string name="title_activity_main2">MainActivity2</string>
     <string name="title_tracking">등산</string>
     <string name="title_achievement">업적</string>
     <string name="title_mountain">산 정보</string>
@@ -14,11 +13,9 @@
     <string name="title_start_tracking">등산 시작</string>
     <string name="title_stop_tracking">등산 종료</string>
     <string name="title_tracking_history">등산 기록</string>
-    <string name="title_mountain_name">산 이름</string>
     <string name="title_time">등산 시간</string>
     <string name="title_distance">등산 거리</string>
     <string name="title_date">등산 날짜</string>
-    <string name="title_check_report">나의 등산 기록</string>
     <string name="check_delete_tracking_history">등산 기록을 지우시겠습니까?</string>
     <string name="permission_rationale">세부 위치 정보 권한 제공에 동의해야 등산 기록이 가능합니다</string>
     <string name="ok">동의</string>
