@@ -1,7 +1,6 @@
 package com.richpath.pathparser
 
 import android.graphics.Path
-import android.os.Build
 
 object PathParser {
 
@@ -10,11 +9,7 @@ object PathParser {
      * @return the generated Path object.
      */
     fun createPathFromPathData(pathData: String?): Path {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            PathParserCompatApi21.createPathFromPathData(pathData) ?: Path()
-        } else {
-            PathParserCompat.createPathFromPathData(pathData)
-        }
+        return PathParserCompatApi21.createPathFromPathData(pathData) ?: Path()
     }
 
 }
