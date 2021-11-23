@@ -53,7 +53,7 @@ class HistoryFragment
         }
 
         binding.tbHistory.setNavigationOnClickListener {
-            findNavController().navigate(R.id.action_history_to_tracking)
+            findNavController().navigateUp()
         }
     }
 
