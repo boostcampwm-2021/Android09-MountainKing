@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -54,6 +55,8 @@ class AchievementAdapter(private val onClick: (Achievement) -> Unit) :
                     Color.LTGRAY
                 }
             )
+            binding.ivAchievementItemShare.isVisible = achievement.isComplete
+
             Log.d("bindtest", achievement.name)
         }
 

@@ -146,7 +146,6 @@ class AchievementFragment : Fragment() {
     }
 
     private fun onClick(achievement: Achievement) {
-        //TODO "complete 일때만 클릭 가능하게"
         Log.d("onClick", achievement.name)
         sendKakao(achievement)
     }
