@@ -16,4 +16,9 @@ class HistoryAdapter(
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
+
+    override fun onViewRecycled(holder: HistoryViewHolder) {
+        super.onViewRecycled(holder)
+        holder.freeImage()
+    }
 }

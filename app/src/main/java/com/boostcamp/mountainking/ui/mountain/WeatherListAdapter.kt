@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.mountainking.databinding.ItemWeatherBinding
 import com.boostcamp.mountainking.entity.Daily
+import com.bumptech.glide.Glide
 
 class WeatherListAdapter :
     ListAdapter<Daily, WeatherListAdapter.DailyViewHolder>(DailyDiffCallback) {
@@ -23,6 +24,11 @@ class WeatherListAdapter :
         holder.bind(daily)
     }
 
+    override fun onViewRecycled(holder: DailyViewHolder) {
+        super.onViewRecycled(holder)
+        holder.freeImage()
+    }
+
     class DailyViewHolder(
         private val binding: ItemWeatherBinding,
     ) :
@@ -35,6 +41,10 @@ class WeatherListAdapter :
 
             binding.daily = daily
             binding.executePendingBindings()
+        }
+
+        fun freeImage() {
+            Glide.with(itemView.context).clear(binding.ivWeatherImage)
         }
     }
 }
