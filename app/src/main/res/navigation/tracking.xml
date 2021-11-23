@@ -46,10 +46,7 @@
         tools:layout="@layout/fragment_history_details">
 
         <argument
-            android:name="altitudeList"
-            app:argType="com.boostcamp.mountainking.data.LatLngAlt[]" />
-        <argument
-            android:name="mountainName"
-            app:argType="string" />
+            android:name="tracking"
+            app:argType="com.boostcamp.mountainking.entity.Tracking" />
     </fragment>
 </navigation>
