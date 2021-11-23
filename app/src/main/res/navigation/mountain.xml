@@ -25,9 +25,7 @@
         tools:layout="@layout/fragment_mountain_list">
         <action
             android:id="@+id/action_mountainListFragment_to_mountainDetailFragment"
-            app:destination="@id/mountainDetailFragment"
-            app:popUpTo="@id/mountainListFragment"
-            app:popUpToInclusive="false">
+            app:destination="@id/mountainDetailFragment">
             <argument
                 android:name="mountainId"
                 app:argType="integer" />

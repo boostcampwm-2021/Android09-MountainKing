@@ -125,8 +125,11 @@ class MountainListFragment : Fragment() {
 
     private fun initObserve() = with(mountainListViewModel) {
         mountainNameList.observe(viewLifecycleOwner) {
+            val originalSize = mountainListAdapter.itemCount
             mountainListAdapter.submitList(it) {
-                binding.rvMountainList.scrollToPosition(0)
+                if (originalSize > 0 && mountainListAdapter.itemCount != originalSize) {
+                    binding.rvMountainList.scrollToPosition(0)
+                }
             }
         }
     }
