@@ -76,17 +76,23 @@ class TrackingViewModel @Inject constructor(
             //기록 저장
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.Main) {
-                    repository.putTracking(
-                        Tracking(
-                            id = 0,
-                            repository.trackingMountain.toString(),
-                            date.value,
-                            repository.locations,
-                            trackingTime.value.toString(),
-                            trackingDistance.value.toString() + " m"
+
+                    val distance = trackingDistance.value ?: -1
+
+                    if (trackingTime.value != null && distance >= 0) {
+                        repository.putTracking(
+                            Tracking(
+                                id = 0,
+                                repository.trackingMountain.toString(),
+                                date.value,
+                                repository.locations,
+                                trackingTime.value.toString(),
+                                trackingDistance.value.toString() + " m"
+                            )
                         )
-                    )
-                    repository.updateStatistics()
+                        repository.updateStatistics()
+                    }
+
                     repository.resetVariables()
                     fetchMountainName()
                     updateAchievement()
