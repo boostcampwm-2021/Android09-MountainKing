@@ -10,6 +10,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('key.jks')
+            storePassword 'emdtksdhkd'
+            keyAlias 'key0'
+            keyPassword 'emdtksdhkd'
+        }
+    }
     compileSdk 31
 
     defaultConfig {
@@ -29,7 +37,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
