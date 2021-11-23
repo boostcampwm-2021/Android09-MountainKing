@@ -71,12 +71,8 @@
             app:popUpToInclusive="true" />
 
         <argument
-            android:name="altitudeList"
-            app:argType="com.boostcamp.mountainking.data.LatLngAlt[]"
-            app:popUpToInclusive="true" />
-        <argument
-            android:name="mountainName"
-            app:argType="string" />
+            android:name="tracking"
+            app:argType="com.boostcamp.mountainking.entity.Tracking" />
     </fragment>
 
     <fragment
