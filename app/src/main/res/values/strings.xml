@@ -34,4 +34,6 @@
     <string name="delete_button">삭제 버튼</string>
     <string name="history_button">등산 기록 목록 버튼</string>
     <string name="weather_image">날씨 이미지</string>
+    <string name="save_fail">유효하지 않은 기록이라 저장되지 않았습니다</string>
+    <string name="save_success">기록이 저장되었습니다</string>
 </resources>

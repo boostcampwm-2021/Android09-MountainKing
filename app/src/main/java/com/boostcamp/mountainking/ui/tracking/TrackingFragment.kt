@@ -138,6 +138,10 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             getLastLocationEvent.observe(viewLifecycleOwner, EventObserver {
                 this@TrackingFragment.getLastLocation()
             })
+
+            showSaveEvent.observe(viewLifecycleOwner, EventObserver {
+                showSaveSnackbar(it)
+            })
         }
     }
 
@@ -349,5 +353,14 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
 
     private fun onAchievementComplete(achievementName: String) {
         AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
+    }
+
+    private fun showSaveSnackbar(isSaved: Boolean) {
+        val string = if (isSaved) {
+            getString(R.string.save_success)
+        } else {
+            getString(R.string.save_fail)
+        }
+        Snackbar.make(binding.root, string, Snackbar.LENGTH_SHORT).show()
     }
 }

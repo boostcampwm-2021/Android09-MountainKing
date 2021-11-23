@@ -53,6 +53,9 @@ class TrackingViewModel @Inject constructor(
     private val _getLastLocationEvent = MutableLiveData<Event<Unit>>()
     val getLastLocationEvent: LiveData<Event<Unit>> get() = _getLastLocationEvent
 
+    private val _showSaveEvent = MutableLiveData<Event<Boolean>>()
+    val showSaveEvent: LiveData<Event<Boolean>> get() = _showSaveEvent
+
     init {
         if (repository.isRunning) {
             _buttonText.value = stringGetter.getString(R.string.title_stop_tracking)
@@ -91,8 +94,10 @@ class TrackingViewModel @Inject constructor(
                             )
                         )
                         repository.updateStatistics()
+                        _showSaveEvent.value = Event(true)
+                    } else {
+                        _showSaveEvent.value = Event(false)
                     }
-
                     repository.resetVariables()
                     fetchMountainName()
                     updateAchievement()
@@ -137,13 +142,4 @@ class TrackingViewModel @Inject constructor(
             }
         }
     }
-
-    fun increaseDistance() = viewModelScope.launch {
-        val statistics = repository.getStatistics()
-        statistics.distance += 10
-        statistics.time += 5
-        repository.updateStatistics(statistics)
-        _statisticsLiveData.value = statistics
-    }
-
 }
