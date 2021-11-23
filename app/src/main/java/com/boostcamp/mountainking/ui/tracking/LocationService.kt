@@ -40,6 +40,8 @@ class LocationService : LifecycleService(), SensorEventListener {
     private var curDistance: Int = 0
     private var curStep: Int = 0
 
+    private var tempStep: Int = 0
+
     private var isBound = true
     private val repository = Repository.getInstance(this)
 
@@ -50,9 +52,13 @@ class LocationService : LifecycleService(), SensorEventListener {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
-                onNewLocation(locationResult.lastLocation)
-                repository.locations.add(LatLngAlt.fromLocation(locationResult.lastLocation))
-                repository.locationLiveData.postValue(repository.locations)
+                // 걸음수가 늘어난 경우에만 new location이라고 취급
+                if (tempStep < curStep) {
+                    onNewLocation(locationResult.lastLocation)
+                    repository.locations.add(LatLngAlt.fromLocation(locationResult.lastLocation))
+                    repository.locationLiveData.postValue(repository.locations)
+                }
+                tempStep = curStep
             }
         }
         val handlerThread = HandlerThread(TAG)
@@ -156,6 +162,7 @@ class LocationService : LifecycleService(), SensorEventListener {
         setRequestingLocationUpdates(this, true)
         curDistance = 0
         curStep = 0
+        tempStep = 0
         repository.curStep.value = curStep
         try {
             fusedLocationClient.requestLocationUpdates(
