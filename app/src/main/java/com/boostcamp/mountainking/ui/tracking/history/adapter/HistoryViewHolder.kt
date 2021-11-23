@@ -23,6 +23,9 @@ class HistoryViewHolder(
             }
             setOnLongClickListener { onItemClickListener.onItemLongClick(tracking) }
         }
+        binding.btnDelete.setOnClickListener {
+            onItemClickListener.onDeleteClick(tracking)
+        }
     }
 
     companion object {
