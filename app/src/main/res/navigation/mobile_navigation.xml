@@ -3,20 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_tracking">
-
-    <fragment
-        android:id="@+id/navigation_tracking"
-        android:name="com.boostcamp.mountainking.ui.tracking.TrackingFragment"
-        android:label="@string/title_tracking"
-        tools:layout="@layout/fragment_tracking">
-        <action
-            android:id="@+id/action_navigation_tracking_to_mountainSelectFragment"
-            app:destination="@id/mountainSelectFragment" />
-        <action
-            android:id="@+id/action_tracking_to_history"
-            app:destination="@id/navigation_history" />
-    </fragment>
+    app:startDestination="@id/tracking">
+    <include app:graph="@navigation/tracking" />
 
     <fragment
         android:id="@+id/navigation_achievement"
@@ -98,5 +86,6 @@
         android:name="com.boostcamp.mountainking.ui.mountain.MountainDetailFragment"
         android:label="MountainDetailFragment">
     </fragment>
-
+  
+    <include app:graph="@navigation/mountain" />
 </navigation>

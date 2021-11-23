@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mountain"
+    app:startDestination="@id/navigation_mountain">
+    <fragment
+        android:id="@+id/navigation_mountain"
+        android:name="com.boostcamp.mountainking.ui.mountain.MountainFragment"
+        android:label="@string/title_mountain"
+        tools:layout="@layout/fragment_mountain">
+        <action
+            android:id="@+id/action_navigation_mountain_to_mountainListFragment"
+            app:destination="@id/mountainListFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:popEnterAnim="@android:anim/fade_in">
+            <argument
+                android:name="city"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/mountainListFragment"
+        android:name="com.boostcamp.mountainking.ui.mountain.MountainListFragment"
+        android:label="MountainListFragment"
+        tools:layout="@layout/fragment_mountain_list">
+        <action
+            android:id="@+id/action_mountainListFragment_to_mountainDetailFragment"
+            app:destination="@id/mountainDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right">
+            <argument
+                android:name="mountainId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/mountainDetailFragment"
+        android:name="com.boostcamp.mountainking.ui.mountain.MountainDetailFragment"
+        android:label="MountainDetailFragment"
+        tools:layout="@layout/fragment_mountain_detail" />
+</navigation>

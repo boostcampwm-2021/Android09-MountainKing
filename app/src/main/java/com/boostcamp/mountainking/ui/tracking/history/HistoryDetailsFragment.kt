@@ -63,7 +63,7 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
             supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_new_24)
         }
         binding.tbHistoryDetails.setNavigationOnClickListener {
-            findNavController().navigate(R.id.action_historyDetails_to_history)
+            findNavController().navigateUp()
         }
     }
 

@@ -33,4 +33,5 @@
     <string name="current_location_button">현재 위치 버튼</string>
     <string name="delete_button">삭제 버튼</string>
     <string name="history_button">등산 기록 목록 버튼</string>
+    <string name="weather_image">날씨 이미지</string>
 </resources>

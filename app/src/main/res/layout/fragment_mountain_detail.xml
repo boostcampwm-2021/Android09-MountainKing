@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -12,8 +13,7 @@
             type="com.boostcamp.mountainking.entity.WeatherResponse" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -35,6 +35,7 @@
                     android:id="@+id/iv_mountain_detail_mountain_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:contentDescription="@string/mountain_image"
                     android:scaleType="fitXY"
                     app:imageURL="@{mountain.mountainImageURL}"
                     tools:src="@drawable/ic_baseline_terrain_24" />
@@ -44,13 +45,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
-                    app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+                    app:navigationIcon="@drawable/ic_baseline_arrow_back_ios_new_24"
                     app:titleCentered="true"
                     app:titleTextColor="@color/black" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:padding="5dp"
@@ -62,8 +63,8 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    style="@style/body1"
                     android:id="@+id/tv_mountain_detail_name"
+                    style="@style/body1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{mountain.mountainName}"
@@ -72,7 +73,7 @@
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    />
+                    tools:text="산 이름" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_mountain_detail_weather"
@@ -80,14 +81,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@id/v_placeholder"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_mountain_detail_name"
-                    />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/v_placeholder"
+                    tools:listitem="@layout/item_weather" />
+
 
                 <TextView
-                    style="@style/body1"
                     android:id="@+id/tv_mountain_detail_label"
+                    style="@style/body1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -95,13 +98,12 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@id/rv_mountain_detail_weather"
                     app:layout_constraintStart_toStartOf="parent"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/v_placeholder" />
 
                 <TextView
-                    style="@style/body2"
                     android:id="@+id/tv_mountain_detail"
+                    style="@style/body2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -110,8 +112,8 @@
                     app:text="@{mountain.mountainDetails}" />
 
                 <TextView
-                    style="@style/body1"
                     android:id="@+id/tv_mountain_detail_tour_label"
+                    style="@style/body1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -119,12 +121,12 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@id/tv_mountain_detail"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_mountain_detail" />
 
                 <TextView
-                    style="@style/body2"
                     android:id="@+id/tv_mountain_detail_tour"
+                    style="@style/body2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
@@ -133,8 +135,8 @@
                     app:text="@{mountain.tourDetails}" />
 
                 <TextView
-                    style="@style/body1"
                     android:id="@+id/tv_mountain_detail_transportation_label"
+                    style="@style/body1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -142,19 +144,35 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@id/tv_mountain_detail_tour"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_mountain_detail_tour" />
 
                 <TextView
-                    style="@style/body2"
                     android:id="@+id/tv_mountain_detail_transportation_tour"
+                    style="@style/body2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     app:layout_constraintTop_toBottomOf="@id/tv_mountain_detail_transportation_label"
                     app:text="@{mountain.transportationDetails}" />
+
+                <View
+                    android:id="@+id/v_placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
+                    app:layout_constraintTop_toBottomOf="@id/tv_mountain_detail_name" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/pi_weather_loading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    app:layout_constraintBottom_toBottomOf="@id/v_placeholder"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/v_placeholder" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
