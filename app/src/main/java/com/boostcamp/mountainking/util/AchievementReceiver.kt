@@ -14,7 +14,7 @@ class AchievementReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent?) {
-        val achievementName = intent?.getStringExtra("achievementName") ?: "Error"
+        val achievementName = intent?.getStringExtra("achievementName") ?: return
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(com.boostcamp.mountainking.R.drawable.ic_notification)
             .setContentTitle("업적 달성")
