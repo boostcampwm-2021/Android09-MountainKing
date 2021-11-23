@@ -1,6 +1,7 @@
 package com.boostcamp.mountainking.ui.tracking.history
 
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -47,10 +48,11 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
         initToolbar()
         initAltitudeGraph()
         initMountainName()
+        binding.tracking = args.tracking
     }
 
     private fun initMountainName() {
-        binding.tvHistoryDetailsToolbarTitle.text = args.mountainName
+        binding.tvHistoryDetailsToolbarTitle.text = args.tracking.mountainName
     }
 
     private fun initToolbar() {
@@ -66,10 +68,15 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(naverMap: NaverMap) {
-        if (args.altitudeList.size >= 2) {
+        val uiSettings = naverMap.uiSettings
+        with(uiSettings) {
+            logoGravity = Gravity.START
+            isLogoClickEnabled = true
+        }
+        if (args.tracking.coordinates.size >= 2) {
             val path = PathOverlay()
             with(path) {
-                coords = args.altitudeList.map { LatLng(it.latitude, it.longitude) }
+                coords = args.tracking.coordinates.map { LatLng(it.latitude, it.longitude) }
                 width = MAP_PATH_WIDTH
                 outlineWidth = MAP_PATH_OUTLINE_WIDTH
                 color = this@HistoryDetailsFragment.requireContext().getColor(R.color.blue)
@@ -82,11 +89,11 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
                         .animate(CameraAnimation.Fly, FLY_DURATION)
                 naverMap.moveCamera(cameraUpdate)
             }
-        } else if (args.altitudeList.isNotEmpty()) {
+        } else if (args.tracking.coordinates.isNotEmpty()) {
             val cameraPosition = CameraPosition(
                 LatLng(
-                    args.altitudeList[0].latitude,
-                    args.altitudeList[0].longitude
+                    args.tracking.coordinates[0].latitude,
+                    args.tracking.coordinates[0].longitude
                 ), 16.0
             )
             naverMap.cameraPosition = cameraPosition
@@ -94,12 +101,12 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun initAltitudeGraph() {
-        if (args.altitudeList.isNotEmpty()) {
+        if (args.tracking.coordinates.isNotEmpty()) {
             val entries = mutableListOf<Entry>().apply {
-                addAll(args.altitudeList.map {
+                addAll(args.tracking.coordinates.map {
                     BarEntry(
                         LocationService.FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS.toFloat()
-                                * (args.altitudeList.indexOf(it) + 1) / 1000,
+                                * (args.tracking.coordinates.indexOf(it) + 1) / 1000,
                         String.format("%.2f", it.altitude).toFloat()
                     )
                 })
@@ -122,8 +129,9 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
             with(binding.loBottomSheet) {
                 lcAltitudeGraph.run {
                     axisLeft.run {
-                        axisMaximum = args.altitudeList.maxOf { it.altitude }.toFloat() + 10f
-                        axisMinimum = args.altitudeList.minOf { it.altitude }.toFloat()
+                        axisMaximum =
+                            args.tracking.coordinates.maxOf { it.altitude }.toFloat() + 10f
+                        axisMinimum = args.tracking.coordinates.minOf { it.altitude }.toFloat()
                         granularity = 10.0f
                         setDrawLabels(true)
                         setDrawAxisLine(true)
