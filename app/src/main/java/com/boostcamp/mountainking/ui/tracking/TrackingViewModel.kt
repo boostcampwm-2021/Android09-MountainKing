@@ -44,8 +44,8 @@ class TrackingViewModel @Inject constructor(
     private val _showDialog = MutableLiveData<Event<Unit>>()
     val showDialog: LiveData<Event<Unit>> get() = _showDialog
 
-    private val _completedAchievementLiveData = MutableLiveData<Achievement>()
-    val completedAchievementLiveData: LiveData<Achievement> get() = _completedAchievementLiveData
+    private val _completedAchievementLiveData = MutableLiveData<Event<Achievement>>()
+    val completedAchievementLiveData: LiveData<Event<Achievement>> get() = _completedAchievementLiveData
 
     private val _statisticsLiveData = MutableLiveData<Statistics>()
     val statisticsLiveData: LiveData<Statistics> get() = _statisticsLiveData
@@ -137,7 +137,7 @@ class TrackingViewModel @Inject constructor(
             if (it.progressAchievement(statistics)) {
                 repository.updateAchievement(it)
                 if (it.isComplete) {
-                    _completedAchievementLiveData.value = it
+                    _completedAchievementLiveData.value = Event(it)
                 }
             }
         }
