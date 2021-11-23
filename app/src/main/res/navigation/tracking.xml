@@ -14,7 +14,9 @@
             app:destination="@id/mountainSelectFragment" />
         <action
             android:id="@+id/action_tracking_to_history"
-            app:destination="@id/navigation_history" />
+            app:destination="@id/navigation_history"
+            app:enterAnim="@android:anim/fade_in"
+            app:popEnterAnim="@android:anim/fade_in" />
     </fragment>
 
     <dialog
@@ -30,7 +32,11 @@
         tools:layout="@layout/fragment_history">
         <action
             android:id="@+id/action_history_to_historyDetails"
-            app:destination="@id/historyDetailsFragment" />
+            app:destination="@id/historyDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
 
     <fragment
