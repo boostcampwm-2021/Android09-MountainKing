@@ -62,6 +62,20 @@ class AchievementFragment : Fragment() {
 
     private fun initView() {
         binding.rvAchievementList.adapter = adapter
+        binding.tlAchievementCategory.selectTab(
+            when(achievementViewModel.tabNameLiveData.value) {
+                AchievementViewModel.TabName.TOTAL -> {
+                    binding.tlAchievementCategory.getTabAt(0)
+                }
+                AchievementViewModel.TabName.COMPLETE -> {
+                    binding.tlAchievementCategory.getTabAt(1)
+                }
+                AchievementViewModel.TabName.INCOMPLETE -> {
+                    binding.tlAchievementCategory.getTabAt(2)
+                }
+                else -> {binding.tlAchievementCategory.getTabAt(0)}
+            }
+        )
     }
 
     private fun initObserve() = with(achievementViewModel) {
