@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tracking"
+    app:startDestination="@id/navigation_tracking">
+    <fragment
+        android:id="@+id/navigation_tracking"
+        android:name="com.boostcamp.mountainking.ui.tracking.TrackingFragment"
+        android:label="@string/title_tracking"
+        tools:layout="@layout/fragment_tracking">
+        <action
+            android:id="@+id/action_navigation_tracking_to_mountainSelectFragment"
+            app:destination="@id/mountainSelectFragment" />
+        <action
+            android:id="@+id/action_tracking_to_history"
+            app:destination="@id/navigation_history" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/mountainSelectFragment"
+        android:name="com.boostcamp.mountainking.ui.tracking.MountainSelectFragment"
+        android:label="MountainSelectFragment"
+        tools:layout="@layout/fragment_mountain_select" />
+
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.boostcamp.mountainking.ui.tracking.history.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_history_to_historyDetails"
+            app:destination="@id/historyDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyDetailsFragment"
+        android:name="com.boostcamp.mountainking.ui.tracking.history.HistoryDetailsFragment"
+        android:label="HistoryDetailsFragment"
+        tools:layout="@layout/fragment_history_details">
+
+        <argument
+            android:name="altitudeList"
+            app:argType="com.boostcamp.mountainking.data.LatLngAlt[]"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="mountainName"
+            app:argType="string" />
+    </fragment>
+</navigation>

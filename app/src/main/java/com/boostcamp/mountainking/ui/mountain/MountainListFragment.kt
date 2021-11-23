@@ -153,7 +153,7 @@ class MountainListFragment : Fragment() {
         }
 
         binding.tbState.setNavigationOnClickListener {
-            findNavController().navigate(R.id.action_mountainListFragment_to_navigation_mountain)
+            findNavController().navigateUp()
         }
 
         binding.tbState.title = state

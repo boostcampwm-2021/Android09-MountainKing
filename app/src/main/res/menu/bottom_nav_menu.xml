@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_tracking"
+        android:id="@+id/tracking"
         android:icon="@drawable/ic_baseline_directions_walk_24"
         android:title="@string/title_tracking" />
 
@@ -12,7 +12,7 @@
         android:title="@string/title_achievement" />
 
     <item
-        android:id="@+id/navigation_mountain"
+        android:id="@+id/mountain"
         android:icon="@drawable/ic_baseline_terrain_24"
         android:title="@string/title_mountain" />
 
