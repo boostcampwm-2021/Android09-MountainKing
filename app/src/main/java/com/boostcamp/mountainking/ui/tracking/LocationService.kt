@@ -97,7 +97,8 @@ class LocationService : LifecycleService(), SensorEventListener {
             while (isBound) {
                 delay(1000)
                 notificationBuilder.setContentText(
-                    "시간 : ${timeConverter(++curTime)} 거리 : ${curDistance}m  걸음 수 : $curStep 걸음")
+                    "시간 : ${timeConverter(++curTime)} 거리 : ${curDistance}m  걸음 수 : $curStep 걸음"
+                )
                 notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
                 repository.curTime.postValue(timeConverter(curTime))
                 repository.intTime = curTime
@@ -163,7 +164,9 @@ class LocationService : LifecycleService(), SensorEventListener {
         curDistance = 0
         curStep = 0
         tempStep = 0
+        repository.curDistance.value = curDistance
         repository.curStep.value = curStep
+        repository.curTime.value = timeConverter(curTime)
         try {
             fusedLocationClient.requestLocationUpdates(
                 locationRequest,
@@ -218,22 +221,25 @@ class LocationService : LifecycleService(), SensorEventListener {
 
     private fun createSensor() {
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        if(sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null ) {
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
-            sensorManager.registerListener(this, stepDetectorSensor, SensorManager.SENSOR_DELAY_FASTEST)
+            sensorManager.registerListener(
+                this,
+                stepDetectorSensor,
+                SensorManager.SENSOR_DELAY_FASTEST
+            )
             Log.i(TAG, "connected step detector sensor!")
-        }
-        else {
+        } else {
             Log.i(TAG, "this device hasn't step counter sensor!")
         }
     }
 
     override fun onSensorChanged(event: SensorEvent) {
         Log.i(TAG, "onSensorChanged()")
-        when(event.sensor.type) {
+        when (event.sensor.type) {
             Sensor.TYPE_STEP_DETECTOR -> {
-                if(event.values[0] == 1.0f) {
-                    repository.curStep.postValue( ++ curStep)
+                if (event.values[0] == 1.0f) {
+                    repository.curStep.postValue(++curStep)
                     Log.i(TAG, "$curStep 걸음")
                 }
             }

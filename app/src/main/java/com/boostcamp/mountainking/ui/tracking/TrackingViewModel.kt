@@ -82,7 +82,7 @@ class TrackingViewModel @Inject constructor(
 
                     val distance = trackingDistance.value ?: -1
 
-                    if (trackingTime.value != null && distance >= 0) {
+                    if (trackingTime.value != null && distance > 0) {
                         repository.putTracking(
                             Tracking(
                                 id = 0,
