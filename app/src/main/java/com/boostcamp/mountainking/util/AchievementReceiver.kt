@@ -19,7 +19,7 @@ class AchievementReceiver : BroadcastReceiver() {
             .setSmallIcon(com.boostcamp.mountainking.R.drawable.ic_notification)
             .setContentTitle("업적 달성")
             .setContentText("$achievementName 업적을 달성했습니다.")
-            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         NotificationManagerCompat.from(context)
             .notify(System.currentTimeMillis().toInt(), builder.build())
     }

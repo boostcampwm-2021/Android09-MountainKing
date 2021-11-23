@@ -1,5 +1,6 @@
 package com.boostcamp.mountainking.ui.achievement
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -43,11 +44,31 @@ class AchievementFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initObserve()
         initListener()
+        binding.rvAchievementList.setOnTouchListener(object :
+            OnSwipeTouchListener(requireContext()) {
+            override fun onSwipeLeft() {
+                Log.d("swipe", "left")
+                binding.tlAchievementCategory.getTabAt(
+                    kotlin.math.min(
+                        binding.tlAchievementCategory.selectedTabPosition + 1,
+                        binding.tlAchievementCategory.tabCount - 1
+                    )
+                )!!.select()
+                Log.d("tabinfo_after", "$binding.tlAchievementCategory.selectedTabPosition ${binding.tlAchievementCategory.tabCount}")
+            }
+
+            override fun onSwipeRight() {
+                Log.d("swipe", "right")
+                binding.tlAchievementCategory.getTabAt(kotlin.math.max(binding.tlAchievementCategory.selectedTabPosition - 1, 0))!!.select()
+            }
+
+        })
     }
 
     override fun onResume() {
@@ -63,7 +84,7 @@ class AchievementFragment : Fragment() {
     private fun initView() {
         binding.rvAchievementList.adapter = adapter
         binding.tlAchievementCategory.selectTab(
-            when(achievementViewModel.tabNameLiveData.value) {
+            when (achievementViewModel.tabNameLiveData.value) {
                 AchievementViewModel.TabName.TOTAL -> {
                     binding.tlAchievementCategory.getTabAt(0)
                 }
@@ -73,7 +94,9 @@ class AchievementFragment : Fragment() {
                 AchievementViewModel.TabName.INCOMPLETE -> {
                     binding.tlAchievementCategory.getTabAt(2)
                 }
-                else -> {binding.tlAchievementCategory.getTabAt(0)}
+                else -> {
+                    binding.tlAchievementCategory.getTabAt(0)
+                }
             }
         )
     }
@@ -87,7 +110,7 @@ class AchievementFragment : Fragment() {
             }
         }
         completedAchievementLiveData.observe(viewLifecycleOwner) {
-            if(it != null) {
+            if (it != null) {
                 onAchievementComplete(it.name)
             }
         }
@@ -156,7 +179,8 @@ class AchievementFragment : Fragment() {
             .sendDefault(requireContext(), params, object : ResponseCallback<KakaoLinkResponse>() {
                 override fun onFailure(errorResult: ErrorResult) {
                     Log.e("KAKAO_API", "카카오링크 공유 실패: $errorResult")
-                    Toast.makeText(requireContext(), errorResult.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), errorResult.toString(), Toast.LENGTH_SHORT)
+                        .show()
                 }
 
                 override fun onSuccess(result: KakaoLinkResponse) {
