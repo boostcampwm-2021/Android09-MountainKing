@@ -86,3 +86,5 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 /app/src/main/java/com/boostcamp/mountainking/Keys.kt
+
+/app/*.jks
