@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -17,6 +18,7 @@ class MountainDetailFragment : Fragment() {
     private var _binding: FragmentMountainDetailBinding? = null
     private val mountainDetailViewModel: MountainDetailViewModel by viewModels()
     private val weatherListAdapter = WeatherListAdapter()
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -59,17 +61,18 @@ class MountainDetailFragment : Fragment() {
     private fun initObserve() = with(mountainDetailViewModel) {
         mountainLiveData.observe(viewLifecycleOwner) {
             binding.mountain = mountainDetailViewModel.mountainLiveData.value
-            if(it?.mountainDetails == null) {
+            if (it?.mountainDetails == null) {
                 binding.tvMountainDetailLabel.visibility = View.GONE
             }
-            if(it?.tourDetails == null) {
+            if (it?.tourDetails == null) {
                 binding.tvMountainDetailTourLabel.visibility = View.GONE
             }
-            if(it?.transportationDetails == null) {
+            if (it?.transportationDetails == null) {
                 binding.tvMountainDetailTransportationLabel.visibility = View.GONE
             }
         }
         weatherLiveData.observe(viewLifecycleOwner) {
+            binding.piWeatherLoading.isVisible = false
             weatherListAdapter.submitList(it.daily)
         }
     }

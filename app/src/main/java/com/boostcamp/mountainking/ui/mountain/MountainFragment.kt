@@ -41,7 +41,10 @@ class MountainFragment : Fragment() {
         binding.rpMap.findAllRichPaths().forEach { path ->
             path.onPathClickListener = object : RichPath.OnPathClickListener {
                 override fun onClick(richPath: RichPath) {
-                    findNavController().navigate(R.id.action_navigation_mountain_to_mountainListFragment, bundleOf("state" to richPath.name))
+                    findNavController().navigate(
+                        R.id.action_navigation_mountain_to_mountainListFragment,
+                        bundleOf("state" to richPath.name)
+                    )
                 }
             }
         }
