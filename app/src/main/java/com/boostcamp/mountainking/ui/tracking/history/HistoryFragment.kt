@@ -63,10 +63,9 @@ class HistoryFragment
         }
     }
 
-    override fun onItemClick(altitudes: List<LatLngAlt>, mountainName: String) {
+    override fun onItemClick(tracking: Tracking) {
         val action = HistoryFragmentDirections.actionHistoryToHistoryDetails(
-            altitudes.toTypedArray(),
-            mountainName
+            tracking
         )
         findNavController().navigate(action)
     }

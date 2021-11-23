@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -313,6 +314,12 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     }
 
     override fun onMapReady(naverMap: NaverMap) {
+        val uiSettings = naverMap.uiSettings
+        with(uiSettings) {
+            logoGravity = Gravity.START
+            isLogoClickEnabled = true
+        }
+
         this.naverMap = naverMap
         this.naverMap?.locationOverlay?.isVisible = true
         this.naverMap?.locationOverlay?.icon = OverlayImage.fromResource(R.drawable.ic_hiking)
@@ -329,6 +336,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             width = MAP_PATH_WIDTH
             outlineWidth = MAP_PATH_OUTLINE_WIDTH
         }
+
     }
 
     companion object {

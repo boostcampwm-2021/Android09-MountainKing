@@ -12,6 +12,80 @@
         android:label="@string/title_achievement"
         tools:layout="@layout/fragment_achievement" />
 
-    <include app:graph="@navigation/mountain" />
+    <fragment
+        android:id="@+id/navigation_mountain"
+        android:name="com.boostcamp.mountainking.ui.mountain.MountainFragment"
+        android:label="@string/title_mountain"
+        tools:layout="@layout/fragment_mountain">
+        <action
+            android:id="@+id/action_navigation_mountain_to_mountainListFragment"
+            app:destination="@id/mountainListFragment">
+            <argument
+                android:name="city"
+                app:argType="string" />
+        </action>
 
+    </fragment>
+
+    <dialog
+        android:id="@+id/mountainSelectFragment"
+        android:name="com.boostcamp.mountainking.ui.tracking.MountainSelectFragment"
+        android:label="MountainSelectFragment"
+        tools:layout="@layout/fragment_mountain_select" />
+
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.boostcamp.mountainking.ui.tracking.history.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_history_to_tracking"
+            app:destination="@id/navigation_tracking"
+            app:popUpTo="@id/navigation_tracking"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_history_to_historyDetails"
+            app:destination="@id/historyDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyDetailsFragment"
+        android:name="com.boostcamp.mountainking.ui.tracking.history.HistoryDetailsFragment"
+        android:label="HistoryDetailsFragment">
+        <action
+            android:id="@+id/action_historyDetails_to_history"
+            app:destination="@id/navigation_history"
+            app:popUpTo="@id/navigation_history"
+            app:popUpToInclusive="true" />
+
+        <argument
+            android:name="tracking"
+            app:argType="com.boostcamp.mountainking.entity.Tracking" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mountainListFragment"
+        android:name="com.boostcamp.mountainking.ui.mountain.MountainListFragment"
+        android:label="MountainListFragment">
+        <action
+            android:id="@+id/action_mountainListFragment_to_navigation_mountain"
+            app:destination="@id/navigation_mountain" />
+        <action
+            android:id="@+id/action_mountainListFragment_to_mountainDetailFragment"
+            app:destination="@id/mountainDetailFragment"
+            app:popUpTo="@id/mountainListFragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="mountainId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/mountainDetailFragment"
+        android:name="com.boostcamp.mountainking.ui.mountain.MountainDetailFragment"
+        android:label="MountainDetailFragment">
+    </fragment>
+  
+    <include app:graph="@navigation/mountain" />
 </navigation>

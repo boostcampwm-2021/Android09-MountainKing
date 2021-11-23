@@ -16,10 +16,7 @@ class HistoryViewHolder(
         binding.tracking = tracking
         with(itemView) {
             setOnClickListener {
-                onItemClickListener.onItemClick(
-                    tracking.coordinates,
-                    tracking.mountainName
-                )
+                onItemClickListener.onItemClick(tracking)
             }
             setOnLongClickListener { onItemClickListener.onItemLongClick(tracking) }
         }
