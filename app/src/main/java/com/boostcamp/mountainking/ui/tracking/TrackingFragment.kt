@@ -125,11 +125,9 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
                 updatePath(locationCoords)
             }
 
-            completedAchievementLiveData.observe(viewLifecycleOwner) {
-                if (it != null) {
-                    onAchievementComplete(it.name)
-                }
-            }
+            completedAchievementLiveData.observe(viewLifecycleOwner, EventObserver {
+                onAchievementComplete(it.name)
+            })
 
             statisticsLiveData.observe(viewLifecycleOwner) {
                 trackingViewModel.updateAchievement()

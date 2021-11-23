@@ -74,5 +74,6 @@ data class Achievement(
     private fun completeAchievement() {
         isComplete = true
         completeDate = Date()
+        curProgress = maxProgress
     }
 }
