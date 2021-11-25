@@ -113,7 +113,7 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
             }
 
             val set = LineDataSet(entries, "Altitude").apply {
-                color = ContextCompat.getColor(requireActivity(), R.color.mountain_blue)
+                color = ContextCompat.getColor(requireActivity(), R.color.thick_green)
                 lineWidth = 5f
                 circleRadius = 1.0f
                 setCircleColor(ContextCompat.getColor(requireActivity(), R.color.white))
