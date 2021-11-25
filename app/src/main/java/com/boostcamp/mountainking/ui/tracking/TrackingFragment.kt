@@ -26,6 +26,7 @@ import com.boostcamp.mountainking.util.AchievementReceiver
 import com.boostcamp.mountainking.util.EventObserver
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.naver.maps.geometry.LatLng
@@ -368,8 +369,8 @@ class TrackingFragment :
             R.id.tracking_history -> {
                 findNavController().navigate(R.id.action_tracking_to_history)
             }
-            R.id.rg_map_type -> {
-
+            R.id.open_source -> {
+                startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
             }
         }
         return false
