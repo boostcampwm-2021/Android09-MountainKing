@@ -63,7 +63,7 @@
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/tv_default_time"
             app:layout_constraintTop_toBottomOf="@id/tv_mountain_name"
-            tools:text="00:15:13"/>
+            tools:text="00:15:13" />
 
         <TextView
             android:id="@+id/tv_default_distance"
@@ -82,12 +82,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:textColor="@color/black"
             android:text="@{tracking.distance}"
+            android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/tv_default_distance"
             app:layout_constraintTop_toBottomOf="@id/tv_default_time"
-            tools:text="10 m"/>
+            tools:text="10 m" />
 
         <TextView
             android:id="@+id/tv_default_date"
@@ -111,7 +111,32 @@
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/tv_default_date"
             app:layout_constraintTop_toBottomOf="@id/tv_default_distance"
-            tools:text="2021.11.23"/>
+            tools:text="2021.11.23" />
+
+        <TextView
+            android:id="@+id/tv_default_steps"
+            style="@style/body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/steps"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_default_date" />
+
+        <TextView
+            style="@style/body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@{tracking.steps.toString()}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/tv_default_date"
+            app:layout_constraintTop_toBottomOf="@id/tv_default_date"
+            tools:text="23" />
+
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_map"
@@ -121,7 +146,7 @@
             android:src="@drawable/round_stroke"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_default_date"
+            app:layout_constraintTop_toBottomOf="@id/tv_default_steps"
             app:locationList="@{tracking.coordinates}" />
 
         <TextView
