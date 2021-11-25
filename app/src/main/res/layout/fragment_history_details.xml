@@ -35,6 +35,44 @@
                     tools:text="등산 기록" />
             </androidx.appcompat.widget.Toolbar>
 
+            <RadioGroup
+                android:id="@+id/rg_map_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tb_history_details">
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/btn_type_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:buttonTint="@color/mountain_blue"
+                    android:checked="true"
+                    android:fontFamily="@font/gmarket_sans_medium"
+                    android:text="@string/radio_normal" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/btn_type_satellite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:buttonTint="@color/mountain_blue"
+                    android:fontFamily="@font/gmarket_sans_medium"
+                    android:text="@string/radio_satellite" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/btn_type_hybrid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/mountain_blue"
+                    android:fontFamily="@font/gmarket_sans_medium"
+                    android:text="@string/radio_hybrid" />
+            </RadioGroup>
+
             <com.naver.maps.map.MapView
                 android:id="@+id/mv_naver"
                 android:layout_width="match_parent"
@@ -42,14 +80,15 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tb_history_details" />
+                app:layout_constraintTop_toBottomOf="@id/rg_map_type" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:background="@drawable/round_stroke"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tb_history_details">
+                app:layout_constraintTop_toTopOf="@id/mv_naver">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_default_date"
@@ -58,7 +97,6 @@
                     android:layout_margin="10dp"
                     android:fontFamily="@font/gmarket_sans_medium"
                     android:text="@string/title_date"
-                    app:layout_constraintEnd_toStartOf="@id/tv_date"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -114,13 +152,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
                     android:fontFamily="@font/gmarket_sans_medium"
                     android:text="@string/steps"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tv_steps"
                     app:layout_constraintStart_toStartOf="@id/tv_default_date" />
 
                 <TextView
+                    android:id="@+id/tv_steps"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/gmarket_sans_bold"
@@ -137,7 +178,6 @@
                     android:background="@drawable/shape_polyline_blue"
                     app:layout_constraintBottom_toBottomOf="@id/tv_default_path"
                     app:layout_constraintStart_toStartOf="@id/tv_date"
-
                     app:layout_constraintTop_toTopOf="@id/tv_default_path" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
