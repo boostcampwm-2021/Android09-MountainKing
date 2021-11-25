@@ -12,11 +12,12 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.*
+import android.widget.RadioButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.boostcamp.mountainking.BuildConfig
 import com.boostcamp.mountainking.R
@@ -25,6 +26,7 @@ import com.boostcamp.mountainking.util.AchievementReceiver
 import com.boostcamp.mountainking.util.EventObserver
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
@@ -32,13 +34,11 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapReadyCallback {
+class TrackingFragment :
+    Fragment(), DialogInterface.OnDismissListener, OnMapReadyCallback,
+    NavigationView.OnNavigationItemSelectedListener {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var mapView: MapView? = null
     private val trackingViewModel: TrackingViewModel by viewModels()
@@ -90,27 +90,44 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     ): View {
         _binding = FragmentTrackingBinding.inflate(inflater, container, false)
         mapView = binding.mvNaver
-        binding.testBtn.setOnClickListener {
-            testNotify()
-        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.trackingViewModel = trackingViewModel
-        with(binding) {
-            lifecycleOwner = viewLifecycleOwner
-            btnTrackingHistory.setOnClickListener {
-                findNavController().navigate(R.id.action_tracking_to_history)
-            }
-        }
+        binding.lifecycleOwner = viewLifecycleOwner
         trackingViewModel.fetchMountainName()
+
+        setListener()
         setObserve()
+        setNavigationView()
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this@TrackingFragment)
 
+    }
+
+    private fun setListener() {
+        binding.btnOpenDrawer.setOnClickListener {
+            if (!binding.dlContainer.isDrawerOpen(GravityCompat.END)) {
+                binding.dlContainer.openDrawer(GravityCompat.END)
+            }
+        }
+        val menu = binding.nvSideDrawer.menu
+        val actionView = menu.findItem(R.id.rg_map_type).actionView
+        val typeNormal = actionView.findViewById<RadioButton>(R.id.btn_type_normal)
+        val typeSatellite = actionView.findViewById<RadioButton>(R.id.btn_type_satellite)
+        val typeHybrid = actionView.findViewById<RadioButton>(R.id.btn_type_hybrid)
+
+        typeNormal.setOnClickListener { onRadioClick(it) }
+        typeSatellite.setOnClickListener { onRadioClick(it) }
+        typeHybrid.setOnClickListener { onRadioClick(it) }
+
+    }
+
+    private fun setNavigationView() {
+        binding.nvSideDrawer.setNavigationItemSelectedListener(this)
     }
 
     private fun setObserve() {
@@ -322,6 +339,42 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         trackingViewModel.checkPermission()
     }
 
+    private fun onRadioClick(view: View) {
+        if (view is RadioButton) {
+            val isChecked = view.isChecked
+
+            when (view.id) {
+                R.id.btn_type_normal -> {
+                    if (isChecked) {
+                        naverMap?.mapType = NaverMap.MapType.Basic
+                    }
+                }
+                R.id.btn_type_satellite -> {
+                    if (isChecked) {
+                        naverMap?.mapType = NaverMap.MapType.Satellite
+                    }
+                }
+                R.id.btn_type_hybrid -> {
+                    if (isChecked) {
+                        naverMap?.mapType = NaverMap.MapType.Hybrid
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.tracking_history -> {
+                findNavController().navigate(R.id.action_tracking_to_history)
+            }
+            R.id.rg_map_type -> {
+
+            }
+        }
+        return false
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onMapReady(naverMap: NaverMap) {
         val uiSettings = naverMap.uiSettings
@@ -334,7 +387,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         this.naverMap?.locationOverlay?.isVisible = true
         this.naverMap?.locationOverlay?.icon = OverlayImage.fromResource(R.drawable.ic_hiking)
 
-        binding.mvNaver.setOnTouchListener { v, event ->
+        binding.mvNaver.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_MOVE -> {
                     Log.d(
@@ -347,15 +400,6 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
             }
             false
         }
-//        lifecycleScope.launch(Dispatchers.IO) {
-//            while (true) {
-//                delay(10)
-//                withContext(Dispatchers.Main) {
-//                    this@TrackingFragment.naverMap?.locationOverlay?.bearing =
-//                        (this@TrackingFragment.naverMap?.cameraPosition?.bearing ?: 0).toFloat()
-//                }
-//            }
-//        }
 
         requestPermissions()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
@@ -372,20 +416,8 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
 
     }
 
-    companion object {
-        private val TAG = TrackingFragment::class.simpleName
-        private const val DIALOG = "dialog"
-        private const val MAP_PADDING = 50
-        private const val MAP_PATH_WIDTH = 30
-        private const val MAP_PATH_OUTLINE_WIDTH = 0
-    }
-
     private fun onAchievementComplete(achievementName: String) {
         AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
-    }
-
-    fun testNotify() {
-        AchievementReceiver().notifyAchievementComplete(requireContext(), "Test")
     }
 
     private fun showSaveSnackbar(isSaved: Boolean) {
@@ -396,4 +428,14 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         }
         Snackbar.make(binding.root, string, Snackbar.LENGTH_SHORT).show()
     }
+
+
+    companion object {
+        private val TAG = TrackingFragment::class.simpleName
+        private const val DIALOG = "dialog"
+        private const val MAP_PADDING = 50
+        private const val MAP_PATH_WIDTH = 30
+        private const val MAP_PATH_OUTLINE_WIDTH = 0
+    }
+
 }

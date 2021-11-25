@@ -16,5 +16,6 @@ data class Tracking (
     val date: String?,
     val coordinates: List<LatLngAlt>,
     val duration: String,
-    val distance: String?
+    val distance: String?,
+    val steps: Int?
 ) : Parcelable
