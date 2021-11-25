@@ -90,7 +90,8 @@ class TrackingViewModel @Inject constructor(
                                 date.value,
                                 repository.locations,
                                 trackingTime.value.toString(),
-                                trackingDistance.value.toString() + " m"
+                                trackingDistance.value.toString() + " m",
+                                repository.curStep.value
                             )
                         )
                         repository.updateStatistics()
