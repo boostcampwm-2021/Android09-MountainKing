@@ -105,6 +105,7 @@ class TrackingFragment :
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this@TrackingFragment)
+
     }
 
     private fun setListener() {
