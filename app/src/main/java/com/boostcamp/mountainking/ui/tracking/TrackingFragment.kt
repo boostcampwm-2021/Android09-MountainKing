@@ -2,6 +2,7 @@ package com.boostcamp.mountainking.ui.tracking
 
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,14 +11,12 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.boostcamp.mountainking.BuildConfig
 import com.boostcamp.mountainking.R
@@ -33,6 +32,10 @@ import com.naver.maps.map.*
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapReadyCallback {
@@ -315,6 +318,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         trackingViewModel.checkPermission()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onMapReady(naverMap: NaverMap) {
         val uiSettings = naverMap.uiSettings
         with(uiSettings) {
@@ -325,6 +329,29 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
         this.naverMap = naverMap
         this.naverMap?.locationOverlay?.isVisible = true
         this.naverMap?.locationOverlay?.icon = OverlayImage.fromResource(R.drawable.ic_hiking)
+
+        binding.mvNaver.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_MOVE -> {
+                    Log.d(
+                        "touch",
+                        "${this.naverMap?.locationOverlay?.bearing} ${this.naverMap?.cameraPosition?.bearing}"
+                    )
+                    this.naverMap?.locationOverlay?.bearing =
+                        (this.naverMap?.cameraPosition?.bearing ?: 0).toFloat()
+                }
+            }
+            false
+        }
+//        lifecycleScope.launch(Dispatchers.IO) {
+//            while (true) {
+//                delay(10)
+//                withContext(Dispatchers.Main) {
+//                    this@TrackingFragment.naverMap?.locationOverlay?.bearing =
+//                        (this@TrackingFragment.naverMap?.cameraPosition?.bearing ?: 0).toFloat()
+//                }
+//            }
+//        }
 
         requestPermissions()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
