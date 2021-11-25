@@ -13,13 +13,13 @@
     <string name="title_start_tracking">등산 시작</string>
     <string name="title_stop_tracking">등산 종료</string>
     <string name="title_tracking_history">등산 기록</string>
-    <string name="title_time">등산 시간</string>
-    <string name="title_distance">등산 거리</string>
-    <string name="title_date">등산 날짜</string>
+    <string name="title_time">시간</string>
+    <string name="title_distance">거리</string>
+    <string name="title_date">날짜</string>
     <string name="title_show_altitude_graph">그래프 보기</string>
     <string name="title_altitude_graph_per_time">시간별 고도 그래프</string>
     <string name="check_delete_tracking_history">등산 기록을 지우시겠습니까?</string>
-    <string name="title_polyline">경로선</string>
+    <string name="title_polyline">경로</string>
     <string name="permission_rationale">세부 위치 정보 권한 제공에 동의해야 등산 기록이 가능합니다</string>
     <string name="ok">동의</string>
     <string name="settings">설정</string>
@@ -36,4 +36,7 @@
     <string name="weather_image">날씨 이미지</string>
     <string name="save_fail">유효하지 않은 기록이라 저장되지 않았습니다</string>
     <string name="save_success">기록이 저장되었습니다</string>
+    <string name="radio_normal">일반 지도</string>
+    <string name="radio_satellite">위성 지도</string>
+    <string name="radio_hybrid">하이브리드 지도</string>
 </resources>
