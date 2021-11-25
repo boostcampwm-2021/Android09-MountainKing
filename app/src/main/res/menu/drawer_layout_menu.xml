@@ -2,20 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="@string/select_map"
-        android:checkable="false">
+    <item
+        android:checkable="false"
+        android:title="@string/select_map">
         <menu>
             <item
                 android:id="@+id/rg_map_type"
+                android:checkable="false"
                 android:title=""
                 app:actionLayout="@layout/radio_group_layout"
-                android:checkable="false"
-                app:showAsAction="always"/>
+                app:showAsAction="always" />
         </menu>
     </item>
 
     <item
         android:id="@+id/tracking_history"
-        android:title="@string/title_confirm_tracking_history"/>
+        android:title="@string/title_confirm_tracking_history" />
+
+    <item
+        android:id="@+id/open_source"
+        android:title="@string/open_source_licence" />
 
 </menu>
