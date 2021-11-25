@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="@string/select_map"
+        android:checkable="false">
+        <menu>
+            <item
+                android:id="@+id/rg_map_type"
+                android:title=""
+                app:actionLayout="@layout/radio_group_layout"
+                android:checkable="false"
+                app:showAsAction="always"/>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/tracking_history"
+        android:title="@string/title_confirm_tracking_history"/>
+
+</menu>
