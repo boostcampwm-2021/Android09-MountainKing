@@ -1,5 +1,6 @@
 package com.boostcamp.mountainking.ui.tracking.history
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import androidx.fragment.app.Fragment
@@ -22,7 +23,10 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
+import com.naver.maps.map.overlay.Align
+import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.PathOverlay
+import com.naver.maps.map.util.MarkerIcons
 
 
 class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
@@ -73,6 +77,8 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
             logoGravity = Gravity.START
             isLogoClickEnabled = true
         }
+
+        // Path initialize
         if (args.tracking.coordinates.size >= 2) {
             val path = PathOverlay()
             with(path) {
@@ -98,6 +104,37 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
             )
             naverMap.cameraPosition = cameraPosition
         }
+
+        // Marker initialize
+        val startMarker = Marker()
+        val startPosition = args.tracking.coordinates[0]
+        with(startMarker) {
+            position = LatLng(startPosition.latitude, startPosition.longitude)
+            icon = MarkerIcons.RED
+            width = Marker.SIZE_AUTO
+            height = Marker.SIZE_AUTO
+            captionText = "시작지점"
+            captionColor = Color.RED
+            setCaptionAligns(Align.Top)
+
+            map = naverMap
+        }
+
+        val endMarker = Marker()
+        val endPosition = args.tracking.coordinates.last()
+        with(endMarker) {
+            position = LatLng(endPosition.latitude, endPosition.longitude)
+            icon = MarkerIcons.RED
+            width = Marker.SIZE_AUTO
+            height = Marker.SIZE_AUTO
+            captionText = "도착지점"
+            captionColor = Color.RED
+            setCaptionAligns(Align.Top)
+
+            map = naverMap
+        }
+
+
     }
 
     private fun initAltitudeGraph() {
