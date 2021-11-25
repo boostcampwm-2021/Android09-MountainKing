@@ -7,7 +7,7 @@
         android:title="@string/title_tracking" />
 
     <item
-        android:id="@+id/navigation_achievement"
+        android:id="@+id/achievement"
         android:icon="@drawable/ic_achievement_svgrepo_com"
         android:title="@string/title_achievement" />
 
