@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.boostcamp.mountainking.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -22,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen().setOnExitAnimationListener { splashScreenView ->
@@ -41,17 +39,22 @@ class MainActivity : AppCompatActivity() {
         createNotificationChannel()
 
         val navView: BottomNavigationView = binding.navView
-
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        navView.setupWithNavController(navController)
+        val inflater = navHostFragment.navController.navInflater
+        val graph = inflater.inflate(R.navigation.mobile_navigation)
 
         Log.d("IntentTest", intent.getStringExtra("fragment").toString())
+
         if (intent.getStringExtra("fragment") == "achievement") {
-            navController.navigate(R.id.action_navigation_tracking_to_achievementFragment)
+            graph.setStartDestination(R.id.achievement)
+        } else {
+            graph.setStartDestination(R.id.tracking)
         }
+
+        val navController = navHostFragment.navController
+        navController.setGraph(graph, intent.extras)
+        navView.setupWithNavController(navController)
     }
 
     private fun createNotificationChannel() {
