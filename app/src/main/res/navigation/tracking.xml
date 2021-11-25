@@ -17,6 +17,9 @@
             app:destination="@id/navigation_history"
             app:enterAnim="@android:anim/fade_in"
             app:popEnterAnim="@android:anim/fade_in" />
+        <action
+            android:id="@+id/action_navigation_tracking_to_achievementFragment"
+            app:destination="@id/achievementFragment" />
     </fragment>
 
     <dialog
@@ -49,4 +52,8 @@
             android:name="tracking"
             app:argType="com.boostcamp.mountainking.entity.Tracking" />
     </fragment>
+    <fragment
+        android:id="@+id/achievementFragment"
+        android:name="com.boostcamp.mountainking.ui.achievement.AchievementFragment"
+        android:label="AchievementFragment" />
 </navigation>

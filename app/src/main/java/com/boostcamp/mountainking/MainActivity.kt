@@ -6,11 +6,13 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.boostcamp.mountainking.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -45,6 +47,11 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         navView.setupWithNavController(navController)
+
+        Log.d("IntentTest", intent.getStringExtra("fragment").toString())
+        if (intent.getStringExtra("fragment") == "achievement") {
+            navController.navigate(R.id.action_navigation_tracking_to_achievementFragment)
+        }
     }
 
     private fun createNotificationChannel() {
