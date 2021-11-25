@@ -47,6 +47,7 @@ class MountainFragment : Fragment() {
                         .animationListener(object : AnimationListener {
                             override fun onStart() {
 
+
                             }
                             override fun onStop() {
                                 findNavController().navigate(
