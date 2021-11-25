@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.os.bundleOf
+import com.boostcamp.mountainking.MainActivity
 
 class AchievementReceiver : BroadcastReceiver() {
     companion object {
@@ -19,12 +21,23 @@ class AchievementReceiver : BroadcastReceiver() {
             .setSmallIcon(com.boostcamp.mountainking.R.drawable.ic_notification)
             .setContentTitle("업적 달성")
             .setContentText("$achievementName 업적을 달성했습니다.")
-            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    context,
+                    achievementName.hashCode(),
+                    Intent(context, MainActivity::class.java).apply {
+                        putExtra("fragment", "achievement")
+                    },
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            )
+            .setAutoCancel(true)
         NotificationManagerCompat.from(context)
             .notify(System.currentTimeMillis().toInt(), builder.build())
     }
 
-    fun notifyAchievementComplete(context: Context, achievementName: String){
+    fun notifyAchievementComplete(context: Context, achievementName: String) {
         val receiverIntent = Intent(context, AchievementReceiver::class.java).apply {
             putExtra("achievementName", achievementName)
         }

@@ -90,6 +90,9 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
     ): View {
         _binding = FragmentTrackingBinding.inflate(inflater, container, false)
         mapView = binding.mvNaver
+        binding.testBtn.setOnClickListener {
+            testNotify()
+        }
         return binding.root
     }
 
@@ -107,6 +110,7 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
 
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this@TrackingFragment)
+
     }
 
     private fun setObserve() {
@@ -378,6 +382,10 @@ class TrackingFragment : Fragment(), DialogInterface.OnDismissListener, OnMapRea
 
     private fun onAchievementComplete(achievementName: String) {
         AchievementReceiver().notifyAchievementComplete(requireContext(), achievementName)
+    }
+
+    fun testNotify() {
+        AchievementReceiver().notifyAchievementComplete(requireContext(), "Test")
     }
 
     private fun showSaveSnackbar(isSaved: Boolean) {
