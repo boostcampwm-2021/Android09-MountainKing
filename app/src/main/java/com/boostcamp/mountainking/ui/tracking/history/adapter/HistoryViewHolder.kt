@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.mountainking.databinding.ItemTrackingHistoryBinding
 import com.boostcamp.mountainking.entity.Tracking
 import com.boostcamp.mountainking.ui.tracking.history.OnHistoryItemClickListener
+import com.bumptech.glide.Glide
 
 class HistoryViewHolder(
     val binding: ItemTrackingHistoryBinding,
@@ -23,6 +24,10 @@ class HistoryViewHolder(
         binding.btnDelete.setOnClickListener {
             onItemClickListener.onDeleteClick(tracking)
         }
+    }
+
+    fun freeImage() {
+        Glide.with(itemView.context).clear(binding.ivMap)
     }
 
     companion object {

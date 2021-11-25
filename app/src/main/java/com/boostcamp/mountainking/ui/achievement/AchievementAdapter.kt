@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.boostcamp.mountainking.databinding.ItemAchievementBinding
 import com.boostcamp.mountainking.entity.Achievement
+import com.bumptech.glide.Glide
 
 class AchievementAdapter(private val onClick: (Achievement) -> Unit) :
     ListAdapter<Achievement, AchievementAdapter.AchievementViewHolder>(AchievementDiffCallback) {
@@ -23,6 +24,11 @@ class AchievementAdapter(private val onClick: (Achievement) -> Unit) :
     override fun onBindViewHolder(holder: AchievementViewHolder, position: Int) {
         val achievement = getItem(position)
         holder.bind(achievement)
+    }
+
+    override fun onViewRecycled(holder: AchievementViewHolder) {
+        super.onViewRecycled(holder)
+        holder.freeImage()
     }
 
     class AchievementViewHolder(
@@ -55,6 +61,11 @@ class AchievementAdapter(private val onClick: (Achievement) -> Unit) :
                 }
             )
             Log.d("bindtest", achievement.name)
+        }
+
+        fun freeImage() {
+            Glide.with(itemView.context).clear(binding.ivAchievementItemShare)
+            Glide.with(itemView.context).clear(binding.ivAchievementItemThumbnail)
         }
 
     }
