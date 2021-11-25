@@ -89,7 +89,7 @@ fun getInitAchievementList(namedMountainList: List<Mountain>): List<Achievement>
             id = 6,
             name = "수헬리베붕탄질산",
             description = "화학산을 7회 이상 등산하세요",
-            thumbnailUrl = "",
+            thumbnailUrl = "https://firebasestorage.googleapis.com/v0/b/mountainking-d5724.appspot.com/o/chemistry.png?alt=media&token=27642cdf-ebe5-4392-8a37-28726ef51d27",
             type = AchievementType.MOUNTAIN_COUNT,
             curProgress = 0,
             maxProgress = 7,
