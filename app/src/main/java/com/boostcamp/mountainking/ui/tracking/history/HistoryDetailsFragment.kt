@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
@@ -31,6 +32,8 @@ import com.naver.maps.map.util.MarkerIcons
 
 class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentHistoryDetailsBinding
+    private var mapView: MapView? = null
+    private var naverMap: NaverMap? = null
     private val args: HistoryDetailsFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -38,14 +41,17 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHistoryDetailsBinding.inflate(inflater, container, false)
+
+        mapView = binding.mvNaver
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.mvNaver.onCreate(savedInstanceState)
-        binding.mvNaver.getMapAsync(this)
+        mapView?.onCreate(savedInstanceState)
+        mapView?.getMapAsync(this)
         initView()
+        setListener()
     }
 
     private fun initView() {
@@ -68,6 +74,38 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
         }
         binding.tbHistoryDetails.setNavigationOnClickListener {
             findNavController().navigateUp()
+        }
+    }
+
+    private fun setListener() {
+        with(binding) {
+            btnTypeNormal.setOnClickListener { onRadioClicked(it) }
+            btnTypeSatellite.setOnClickListener { onRadioClicked(it) }
+            btnTypeHybrid.setOnClickListener { onRadioClicked(it) }
+        }
+    }
+
+    private fun onRadioClicked(view: View) {
+        if(view is RadioButton) {
+            val checked = view.isChecked
+
+            when(view.id) {
+                R.id.btn_type_normal -> {
+                    if(checked) {
+                        naverMap?.mapType = NaverMap.MapType.Basic
+                    }
+                }
+                R.id.btn_type_satellite -> {
+                    if(checked) {
+                        naverMap?.mapType = NaverMap.MapType.Satellite
+                    }
+                }
+                R.id.btn_type_hybrid -> {
+                    if(checked) {
+                        naverMap?.mapType = NaverMap.MapType.Hybrid
+                    }
+                }
+            }
         }
     }
 
@@ -100,7 +138,7 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
                 LatLng(
                     args.tracking.coordinates[0].latitude,
                     args.tracking.coordinates[0].longitude
-                ), 16.0
+                ), MAP_ZOOM_LEVEL
             )
             naverMap.cameraPosition = cameraPosition
         }
@@ -134,7 +172,7 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
             map = naverMap
         }
 
-
+        this.naverMap = naverMap
     }
 
     private fun initAltitudeGraph() {
@@ -189,43 +227,44 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
 
     override fun onStart() {
         super.onStart()
-        binding.mvNaver.onStart()
+        mapView?.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        binding.mvNaver.onResume()
+        mapView?.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        binding.mvNaver.onPause()
+        mapView?.onPause()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        binding.mvNaver.onSaveInstanceState(outState)
+        mapView?.onSaveInstanceState(outState)
     }
 
     override fun onStop() {
         super.onStop()
-        binding.mvNaver.onStop()
+        mapView?.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.mvNaver.onDestroy()
+        mapView?.onDestroy()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        binding.mvNaver.onLowMemory()
+        mapView?.onLowMemory()
     }
 
     companion object {
         private const val FLY_DURATION = 2000L
-        private const val MAP_PADDING = 50
+        private const val MAP_PADDING = 200
         private const val MAP_PATH_WIDTH = 10
         private const val MAP_PATH_OUTLINE_WIDTH = 0
+        private const val MAP_ZOOM_LEVEL = 14.0
     }
 }
