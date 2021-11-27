@@ -15,6 +15,8 @@ import androidx.navigation.fragment.navArgs
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentHistoryDetailsBinding
 import com.boostcamp.mountainking.ui.tracking.LocationService
+import com.boostcamp.mountainking.ui.tracking.history.valueformatter.XAxisLabelFormatter
+import com.boostcamp.mountainking.ui.tracking.history.valueformatter.YAxisLabelFormatter
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
@@ -200,7 +202,6 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
             }
             val data = LineData(dataSet)
 
-
             with(binding.loBottomSheet) {
                 lcAltitudeGraph.run {
                     axisLeft.run {
@@ -210,15 +211,16 @@ class HistoryDetailsFragment : Fragment(), OnMapReadyCallback {
                         granularity = 10.0f
                         setDrawLabels(true)
                         setDrawAxisLine(true)
+                        valueFormatter = YAxisLabelFormatter()
+                        description.text = "단위 m"
                     }
                     xAxis.run {
                         position = XAxis.XAxisPosition.BOTTOM
                         granularity = 1.0f
-
+                        valueFormatter = XAxisLabelFormatter()
+                        description.text = "단위 sec"
                     }
                     axisRight.isEnabled = false
-                    animateY(1000)
-
                     this.data = data
                 }
             }
