@@ -414,7 +414,15 @@ class TrackingFragment :
             width = MAP_PATH_WIDTH
             outlineWidth = MAP_PATH_OUTLINE_WIDTH
         }
+        initMapState()
+    }
 
+    private fun initMapState() {
+        val menu = binding.nvSideDrawer.menu
+        val actionView = menu.findItem(R.id.rg_map_type).actionView
+        onRadioClick(actionView.findViewById(R.id.btn_type_normal))
+        onRadioClick(actionView.findViewById(R.id.btn_type_satellite))
+        onRadioClick(actionView.findViewById(R.id.btn_type_hybrid))
     }
 
     private fun onAchievementComplete(achievementName: String) {
