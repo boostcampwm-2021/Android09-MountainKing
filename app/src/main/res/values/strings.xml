@@ -43,4 +43,7 @@
     <string name="radio_satellite">위성 지도</string>
     <string name="radio_hybrid">하이브리드 지도</string>
     <string name="open_source_licence">오픈 소스 라이선스</string>
+    <string name="slash">/</string>
+    <string name="achievement_status">업적 현황</string>
+    <string name="achievement_score">업적 점수</string>
 </resources>
