@@ -37,7 +37,7 @@ data class Achievement(
         if (isComplete) return false
         curProgress = when (type) {
             AchievementType.TRACKING_TOTAL_DISTANCE -> {
-                statistics.distance
+                statistics.distance / 1000
             }
             AchievementType.TRACKING_TOTAL_COUNT -> {
                 statistics.mountainMap.values.sum()
