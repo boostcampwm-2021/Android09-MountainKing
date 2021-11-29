@@ -14,7 +14,7 @@ import com.boostcamp.mountainking.util.Converters
 
 @Database(
     entities = [Statistics::class, Achievement::class, Tracking::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -35,6 +35,15 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("""
+                    UPDATE Achievement
+                    SET thumbnailUrl = ""
+                """.trimIndent())
+            }
+        }
+
         @Synchronized
         fun getInstance(context: Context): AppDatabase {
             if (instance == null) {
@@ -44,7 +53,7 @@ abstract class AppDatabase : RoomDatabase() {
                         AppDatabase::class.java,
                         DATABASE_NAME
                     )
-                        .addMigrations(MIGRATION_1_2)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                         .build()
                 }
             }

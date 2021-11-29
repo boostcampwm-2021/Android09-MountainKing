@@ -47,10 +47,22 @@ class Repository(context: Context) : RepositoryInterface {
     }
 
     override suspend fun getAchievement(): List<Achievement> = withContext(Dispatchers.IO) {
+        val namedMountainList = mountainDao.searchNamedMountain()
+        val newAchievements = getInitAchievementList(namedMountainList)
         if (achievementDao.countData() == 0) {
-            val namedMountainList = mountainDao.searchNamedMountain()
-            getInitAchievementList(namedMountainList).forEach {
+            newAchievements.forEach {
                 achievementDao.insert(it)
+            }
+        } else {
+            achievementDao.getAchievementData().forEach { originalAchievement ->
+                if (originalAchievement.thumbnailUrl.isEmpty()) {
+                    newAchievements.find { it.id == originalAchievement.id }?.let {
+                        achievementDao.updateThumbnailUrl(
+                            it.thumbnailUrl,
+                            originalAchievement.id
+                        )
+                    }
+                }
             }
         }
         achievementDao.getAchievementData()
