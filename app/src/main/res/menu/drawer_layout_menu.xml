@@ -3,17 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/rg_map_type"
         android:checkable="false"
-        android:title="@string/select_map">
-        <menu>
-            <item
-                android:id="@+id/rg_map_type"
-                android:checkable="false"
-                android:title=""
-                app:actionLayout="@layout/radio_group_layout"
-                app:showAsAction="always" />
-        </menu>
-    </item>
+        android:title="@string/select_map"
+        app:actionLayout="@layout/radio_group_layout"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/tracking_history"
