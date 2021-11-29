@@ -13,9 +13,19 @@ fun getURL(list: List<LatLngAlt>): String {
         val zoom = "zoom=15"
         val size = "size=800,800"
         val route =
-            "route=point:" + list.joinToString(",") { "${it.longitude} ${it.latitude}" } + "|width:3|color:blue"
+            "route=point:" + filterList(list) + "|width:3|color:blue"
         listOf(baseURL, centerString, zoom, size, route).joinToString("&")
     } else {
         ""
     }
+}
+
+fun filterList(list: List<LatLngAlt>): String {
+    if (list.size > 293) {
+        val n = list.size / 293
+        val filtered = list.filterIndexed { index, latLngAlt -> index % n == 0 }
+        return filtered.joinToString(",") { "${it.longitude} ${it.latitude}" }
+    }
+
+    return list.joinToString(",") { "${it.longitude} ${it.latitude}" }
 }
