@@ -37,6 +37,7 @@ class MountainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initListener()
+        binding.rpMap.setLayerType(View.LAYER_TYPE_HARDWARE, null)
     }
 
     private fun initListener() {
