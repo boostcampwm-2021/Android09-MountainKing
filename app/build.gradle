@@ -63,6 +63,7 @@ android {
 dependencies {
 
     def room_version = "2.3.0"
+    def lottieVersion = "4.2.2"
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'
@@ -135,6 +136,9 @@ dependencies {
 
     //oss
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
+
+    //lottie animation
+    implementation "com.airbnb.android:lottie:$lottieVersion"
 }
 
 kapt {
