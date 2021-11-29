@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.ItemAchievementBinding
 import com.boostcamp.mountainking.entity.Achievement
 import com.bumptech.glide.Glide
@@ -54,11 +55,11 @@ class AchievementAdapter(private val onClick: (Achievement) -> Unit) :
 
             binding.achievement = achievement
             binding.executePendingBindings()
-            binding.root.setBackgroundColor(
-                if (achievement.isComplete) {
-                    Color.WHITE
+            binding.root.setBackgroundResource(
+                if(achievement.isComplete) {
+                    R.drawable.shape_achievement_complete
                 } else {
-                    Color.LTGRAY
+                    R.drawable.shape_achievement_not_complete
                 }
             )
             binding.ivAchievementItemShare.isVisible = achievement.isComplete
