@@ -26,12 +26,10 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp"
             app:layout_constraintBottom_toBottomOf="@id/tf_mountain_name"
             app:layout_constraintEnd_toStartOf="@id/tf_mountain_name"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/tb_state" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tf_mountain_name"
@@ -55,6 +53,7 @@
             android:id="@+id/rv_mountain_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@color/mountain_light_gray"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
