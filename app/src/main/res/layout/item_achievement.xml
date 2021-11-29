@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
 
         <variable
             name="achievement"
@@ -13,9 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
+        android:layout_margin="20dp">
 
         <ImageView
             android:id="@+id/iv_achievement_item_thumbnail"
@@ -23,6 +22,7 @@
             android:layout_height="80dp"
             android:contentDescription="@string/iv_achievement_item_thumbnail_description"
             android:scaleType="fitXY"
+            android:layout_marginStart="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -30,11 +30,11 @@
 
         <ImageView
             android:id="@+id/iv_achievement_item_share"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:contentDescription="@string/iv_achievement_item_share_description"
             android:src="@drawable/ic_share"
-            app:layout_constraintBottom_toTopOf="@id/tv_achievement_complete_date"
+            android:layout_margin="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -92,8 +92,10 @@
             style="@style/caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/tv_achievement_complete_date"
+            android:visibility="@{achievement.complete ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_achievement_complete_date"
             app:layout_constraintTop_toBottomOf="@id/view_achievement_item_progress" />
@@ -103,6 +105,8 @@
             style="@style/caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             android:text="@{achievement.completeDateString}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

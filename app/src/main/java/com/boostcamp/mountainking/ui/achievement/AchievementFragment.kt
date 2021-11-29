@@ -50,6 +50,7 @@ class AchievementFragment : Fragment() {
         initView()
         initObserve()
         initListener()
+        achievementViewModel.loadAchievementList()
         binding.rvAchievementList.setOnTouchListener(object :
             OnSwipeTouchListener(requireContext()) {
             override fun onSwipeLeft() {
@@ -69,11 +70,6 @@ class AchievementFragment : Fragment() {
             }
 
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-        achievementViewModel.loadAchievementList()
     }
 
     override fun onDestroyView() {
@@ -104,7 +100,6 @@ class AchievementFragment : Fragment() {
     private fun initObserve() = with(achievementViewModel) {
         achievementListLiveData.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-            adapter.notifyDataSetChanged()
             it.forEach { achievement ->
                 Log.d("UpdateTest", "${achievement.name}: ${achievement.curProgress}")
             }
@@ -116,6 +111,18 @@ class AchievementFragment : Fragment() {
         }
         tabNameLiveData.observe(viewLifecycleOwner) {
             filterAchievementList()
+        }
+
+        totalAchievementCount.observe(viewLifecycleOwner) {
+            binding.tvAchievementTotalCount.text = it.toString()
+        }
+
+        completeAchievementCount.observe(viewLifecycleOwner) {
+            binding.tvAchievementCompleteCount.text = it.toString()
+        }
+
+        achievementScore.observe(viewLifecycleOwner) {
+            binding.tvAchievementScore.text = it.toString()
         }
 
     }
@@ -163,16 +170,7 @@ class AchievementFragment : Fragment() {
             )
                 .setDescrption("업적을 달성했습니다.")
                 .build()
-        )
-            .addButton(
-                ButtonObject(
-                    "앱 연결",
-                    LinkObject.newBuilder()
-                        .setAndroidExecutionParams("key1=value1")
-                        .build()
-                )
-            )
-            .build()
+        ).build()
 
         KakaoLinkService.getInstance()
             .sendDefault(requireContext(), params, object : ResponseCallback<KakaoLinkResponse>() {

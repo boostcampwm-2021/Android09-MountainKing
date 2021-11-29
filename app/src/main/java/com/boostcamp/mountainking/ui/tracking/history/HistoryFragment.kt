@@ -11,7 +11,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.boostcamp.mountainking.R
-import com.boostcamp.mountainking.data.LatLngAlt
 import com.boostcamp.mountainking.databinding.FragmentHistoryBinding
 import com.boostcamp.mountainking.entity.Tracking
 import com.boostcamp.mountainking.ui.tracking.history.adapter.HistoryAdapter
