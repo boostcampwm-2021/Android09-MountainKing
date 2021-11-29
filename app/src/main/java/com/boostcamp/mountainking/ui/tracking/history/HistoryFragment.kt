@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.boostcamp.mountainking.R
@@ -40,6 +41,7 @@ class HistoryFragment
         initView()
         historyViewModel.getTrackingList()
         historyViewModel.historyList.observe(viewLifecycleOwner) {
+            binding.tvNoHistory.isVisible = (it == null || it.isEmpty())
             historyAdapter.submitList(it)
         }
     }
