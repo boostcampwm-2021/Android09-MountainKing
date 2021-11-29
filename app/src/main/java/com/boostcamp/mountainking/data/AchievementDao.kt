@@ -2,7 +2,6 @@ package com.boostcamp.mountainking.data
 
 import androidx.room.*
 import com.boostcamp.mountainking.entity.Achievement
-import com.boostcamp.mountainking.entity.Tracking
 
 @Dao
 interface AchievementDao {
@@ -18,6 +17,9 @@ interface AchievementDao {
 
     @Query("SELECT COUNT(*) FROM Achievement")
     fun countData(): Int
+
+    @Query("UPDATE Achievement SET thumbnailUrl = :thumbnailUrl WHERE id = :id")
+    fun updateThumbnailUrl(thumbnailUrl: String, id: Long)
 
     @Update
     suspend fun updateAchievement(achievement: Achievement)
