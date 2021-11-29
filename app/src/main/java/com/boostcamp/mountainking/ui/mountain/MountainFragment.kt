@@ -11,6 +11,8 @@ import androidx.navigation.fragment.findNavController
 import com.boostcamp.mountainking.R
 import com.boostcamp.mountainking.databinding.FragmentMountainBinding
 import com.richpath.RichPath
+import com.richpath.RichPathDrawable
+import com.richpath.RichPathView
 import com.richpathanimator.AnimationListener
 import com.richpathanimator.RichPathAnimator
 
@@ -44,18 +46,28 @@ class MountainFragment : Fragment() {
         binding.rpMap.findAllRichPaths().forEach { path ->
             path.onPathClickListener = object : RichPath.OnPathClickListener {
                 override fun onClick(richPath: RichPath) {
-                    RichPathAnimator.animate(richPath).fillColor(Color.GRAY)
-                        .animationListener(object : AnimationListener {
-                            override fun onStart() {
+                    val name = richPath.name
+                    val realName = if (name != null && name.last() == '_') {
+                        name.dropLast(1)
+                    } else {
+                        name
+                    }
+                    val realPath = realName?.let { binding.rpMap.findRichPathByName(it) }
+                    if (realPath != null) {
+                        RichPathAnimator.animate(realPath).fillColor(Color.GRAY)
+                            .animationListener(object : AnimationListener {
+                                override fun onStart() {
 
-                            }
-                            override fun onStop() {
-                                findNavController().navigate(
-                                    R.id.action_navigation_mountain_to_mountainListFragment,
-                                    bundleOf("state" to richPath.name)
-                                )
-                            }
-                        }).start()
+                                }
+
+                                override fun onStop() {
+                                    findNavController().navigate(
+                                        R.id.action_navigation_mountain_to_mountainListFragment,
+                                        bundleOf("state" to realPath.name)
+                                    )
+                                }
+                            }).start()
+                    }
                 }
             }
         }
