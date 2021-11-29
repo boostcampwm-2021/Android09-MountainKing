@@ -64,6 +64,8 @@ class AchievementAdapter(private val onClick: (Achievement) -> Unit) :
             )
             binding.ivAchievementItemShare.isVisible = achievement.isComplete
 
+            Glide.with(itemView.context).load(achievement.thumbnailUrl).into(binding.ivAchievementItemThumbnail)
+
             Log.d("bindtest", achievement.name)
         }
 
