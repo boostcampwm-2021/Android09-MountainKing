@@ -47,4 +47,5 @@
     <string name="achievement_status">업적 현황</string>
     <string name="achievement_score">업적 점수</string>
     <string name="no_history">등산 기록이 아직 없습니다!\n등산을 하며 목록을 채워보세요.</string>
+    <string name="time">시간</string>
 </resources>

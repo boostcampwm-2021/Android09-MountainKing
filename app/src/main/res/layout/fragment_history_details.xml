@@ -135,6 +135,30 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_default_date"
                     tools:text="200 m" />
 
+                <TextView
+                    android:id="@+id/tv_default_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/gmarket_sans_medium"
+                    android:text="@string/time"
+                    app:layout_constraintBottom_toTopOf="@id/tv_default_path"
+                    app:layout_constraintStart_toStartOf="@id/tv_default_steps"
+                    app:layout_constraintTop_toBottomOf="@id/tv_default_distance" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/gmarket_sans_bold"
+                    android:text="@{tracking.duration}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tv_date"
+                    app:layout_constraintTop_toBottomOf="@id/tv_default_distance"
+                    tools:text="00:13:00" />
+
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_default_path"
                     android:layout_width="wrap_content"
@@ -145,7 +169,7 @@
                     android:text="@string/title_polyline"
                     app:layout_constraintBottom_toTopOf="@id/tv_default_steps"
                     app:layout_constraintStart_toStartOf="@id/tv_default_date"
-                    app:layout_constraintTop_toBottomOf="@id/tv_default_distance" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_default_time" />
 
                 <TextView
                     android:id="@+id/tv_default_steps"
