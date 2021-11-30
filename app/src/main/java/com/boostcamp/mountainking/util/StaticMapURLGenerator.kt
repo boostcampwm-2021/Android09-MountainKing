@@ -1,5 +1,6 @@
 package com.boostcamp.mountainking.util
 
+import android.util.Log
 import com.boostcamp.mountainking.STATIC_MAP_KEY
 import com.boostcamp.mountainking.data.LatLngAlt
 
@@ -21,9 +22,11 @@ fun getURL(list: List<LatLngAlt>): String {
 }
 
 fun filterList(list: List<LatLngAlt>): String {
-    if (list.size > 293) {
-        val n = list.size / 293
+    Log.d("filter", list.toString())
+    if (list.size > 250) {
+        val n = list.size / 250
         val filtered = list.filterIndexed { index, latLngAlt -> index % n == 0 }
+        Log.d("filter", filtered.toString())
         return filtered.joinToString(",") { "${it.longitude} ${it.latitude}" }
     }
 
